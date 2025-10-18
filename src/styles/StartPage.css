@@ -1,0 +1,72 @@
+.start-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 120px);
+}
+
+
+/* ✅ 카드 (확대 버전) */
+.login-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 100px 300px; /* 카드 크기 확대 */
+  width: 700px;
+  text-align: left;
+}
+
+/* ✅ 제목 - 비율 맞춰 키움 */
+.login-card h1 {
+  font-size: 64px; /* 기존 42 → 64 */
+  font-weight: 900;
+  border-left: 10px solid #2563eb;
+  padding-left: 24px;
+  margin-bottom: 90px;
+}
+
+/* ✅ 입력창 - 폭, 높이, 폰트 모두 확대 */
+.login-card input {
+  width: 100%;
+  padding: 34px 38px; /* 여백 커짐 */
+  font-size: 30px; /* 기존 20 → 30 */
+  border: 3px solid #e5e7eb;
+  border-radius: 14px;
+  margin-bottom: 60px;
+}
+
+.login-card input::placeholder {
+  font-size: 28px;
+  color: #9ca3af;
+}
+
+.login-card input:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+/* ✅ 버튼 - 카드 비율에 맞춰 확대 */
+.login-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 60px;
+  gap: 250px; /* 🔹 버튼 사이 여백 추가 */
+}
+
+
+.login-btns button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 28px 60px; /* 기존 14x28 → 2배 */
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-btns button:hover {
+  background-color: #1e40af;
+}

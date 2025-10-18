@@ -1,0 +1,74 @@
+/* 전체 네비게이션 바 */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  background-color: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+/* 왼쪽 영역: 로고 + 메뉴 */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.logo {
+  font-size: 1.5rem; /* ✅ 로고 글자 크기 키움 */
+  font-weight: 800;
+  color: #111;
+  text-decoration: none;
+}
+
+/* 네비게이션 메뉴 링크 */
+.nav-links a {
+  text-decoration: none;
+  color: #111; /* ✅ 검정색으로 통일 */
+  font-size: 1.5rem; /* ✅ 글자 크기 키움 */
+  font-weight: 600;
+  margin-right: 24px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #2563eb; /* 호버 시만 파란색 */
+}
+
+/* 오른쪽 영역 (마이페이지, 로그아웃 등) */
+.navbar-right {
+  display: flex;
+   align-items: baseline; /* ✅ 글자 기준으로 맞춤 */
+  gap: 24px;
+  white-space: nowrap;
+}
+
+/* 마이페이지 */
+.mypage-link {
+  text-decoration: none;
+  color: #111; /* ✅ 검정색으로 변경 */
+  font-weight: 600;
+  font-size: 1.5rem; /* ✅ 글자 크기 키움 */
+  transition: color 0.2s;
+}
+
+.mypage-link:hover {
+  color: #2563eb; /* ✅ 마우스 올릴 때만 파란색 */
+}
+
+/* 로그아웃 버튼 */
+.logout-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.logout-btn:hover {
+  color: #000;
+}

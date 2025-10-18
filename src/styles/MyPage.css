@@ -1,0 +1,16 @@
+.mypage-container {
+  text-align: center;
+  padding-top: 120px;
+  font-family: "Pretendard", sans-serif;
+}
+
+.mypage-container h1 {
+  font-size: 32px;
+  color: #2563eb;
+  margin-bottom: 20px;
+}
+
+.mypage-container p {
+  font-size: 18px;
+  color: #333;
+}

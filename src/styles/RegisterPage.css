@@ -1,0 +1,81 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 120px);
+}
+
+.register-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  padding: 80px 120px;
+  width: 700px;
+  text-align: left;
+}
+
+.register-card h1 {
+  font-size: 40px;
+  font-weight: 800;
+  border-left: 6px solid #2563eb;
+  padding-left: 16px;
+  margin-bottom: 50px;
+}
+
+.register-card input {
+  width: 100%;
+  padding: 18px 20px;
+  font-size: 20px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.register-card input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+/* ✅ 버튼 2개 정렬 */
+.register-btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* ✅ 이전 버튼 */
+.prev-btn {
+  flex: 1;
+  background-color: #9ca3af; /* 회색 */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 16px 0;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.prev-btn:hover {
+  background-color: #6b7280;
+}
+
+/* ✅ 가입하기 버튼 */
+.submit-btn {
+  flex: 1;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 16px 0;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #1e40af;
+}

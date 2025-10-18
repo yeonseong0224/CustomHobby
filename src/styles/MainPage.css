@@ -1,0 +1,84 @@
+/* 전체 레이아웃 */
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 140px; /* 카드 간 간격 확대 */
+  margin-top: 300px; /* ✅ 아래로 내림 */
+}
+
+/* 각 취미 카드 */
+.hobby-card {
+  width: 700px; /* ✅ 카드 크기 확대 */
+  min-height: 450px;
+  padding: 80px 60px; /* ✅ 내부 여백 확대 */
+  background-color: #fff;
+  border: 6px solid #1b1411;
+  border-radius: 45px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.hobby-card:hover {
+  transform: translateY(-10px) scale(1.02); /* ✅ 살짝 커지는 효과 */
+}
+
+/* 제목 스타일 */
+.hobby-card h2 {
+  font-size: 2.2rem; /* ✅ 제목 크기 증가 */
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 60px;
+}
+
+/* 내부 아이콘 정렬 */
+.hobby-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px; /* ✅ 아이콘 간격 확대 */
+  flex-wrap: nowrap;
+}
+
+/* 각 아이콘 */
+.hobby-item {
+  text-align: center;
+}
+
+.hobby-item img {
+  width: 160px; /* ✅ 이미지 크기 크게 */
+  height: 160px;
+  margin-bottom: 15px;
+}
+
+.hobby-item p {
+  font-size: 1.4rem; /* ✅ 글자 크기 키움 */
+  font-weight: 500;
+  color: #222;
+}
+
+/* 반응형 */
+@media (max-width: 1300px) {
+  .main-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 80px;
+    margin-top: 80px;
+  }
+
+  .hobby-card {
+    width: 90%;
+    padding: 60px 40px;
+  }
+
+  .hobby-list {
+    flex-wrap: wrap;
+    gap: 60px;
+  }
+
+  .hobby-item img {
+    width: 130px;
+    height: 130px;
+  }
+}

@@ -1,0 +1,90 @@
+/* ✅ 전체 네비게이션 바 */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 40px; /* 18→14, 60→45 */
+  background-color: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  padding: 5px 0 5px 0;
+
+}
+
+/* ✅ 왼쪽 영역: 로고 + 메뉴 */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 28px; /* 36 → 28 */
+}
+
+.logo {
+  font-size: 1.25rem; /* 1.5rem → 1.25rem */
+  font-weight: 800;
+  color: #111;
+  text-decoration: none;
+}
+
+/* ✅ 네비게이션 메뉴 링크 */
+.nav-links a {
+  text-decoration: none;
+  color: #111;
+  font-size: 1rem; /* 1.5rem → 1.25rem */
+  font-weight: 600;
+  margin-right: 18px; /* 24 → 18 */
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: #2563eb;
+}
+
+/* ✅ 오른쪽 영역 (마이페이지, 로그아웃 등) */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px; 
+  white-space: nowrap;
+}
+
+/* ✅ 마이페이지 */
+.mypage-link {
+  text-decoration: none;
+  color: #111;
+  font-weight: 600;
+  font-size: 1rem; /* 1.5rem → 1.25rem */
+  transition: color 0.2s;
+  
+}
+
+.mypage-link,
+.logout-btn {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+}
+.mypage-link:hover {
+  color: #2563eb;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s;
+  position: relative;
+  top: -10px; /* ✅ 미세하게 한 픽셀 위로 올림 */
+  padding: 0;
+  line-height: 2;
+  display: flex;              /* ✅ 버튼 내부를 flex로 전환 */
+  align-items: center;        /* ✅ 텍스트 수직 중앙 정렬 */
+  justify-content: center;    /* (선택) 내용 가로 중앙 정렬 */
+}
+
+
+.logout-btn:hover {
+  color: #000;
+}

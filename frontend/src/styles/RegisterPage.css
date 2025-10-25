@@ -1,0 +1,103 @@
+/* ✅ 전체 페이지 중앙 정렬 */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  background-color: #f9fafb;
+}
+
+/* ✅ 카드 본체 */
+.register-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 5px 40px;
+  width: 600px;
+  height: 550px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ✅ 제목 (조금 더 아래로 내림) */
+.register-card h1 {
+  font-size: 25px;
+  font-weight: 800;
+  border-left: 6px solid #2563eb;
+  padding-left: 10px;
+  margin-top: 30px;   /* ✅ 추가 - 제목을 조금 아래로 내림 */
+  margin-bottom: 30px; /* 기존 45 → 살짝 줄여서 균형 맞춤 */
+}
+
+/* ✅ 폼 영역 */
+.register-card form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* ✅ 입력창 */
+.register-card input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.register-card input::placeholder {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.register-card input:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* ✅ 버튼 그룹 (위로 살짝 올림) */
+.register-btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: auto; /* ✅ 기존 auto 제거 → 여백 줄여 위로 올림 */
+  margin-bottom: 10px; /* ✅ 추가 - 버튼이 카드 하단에 너무 붙지 않게 */
+}
+
+/* ✅ 버튼 공통 */
+.register-btns button {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* 이전 버튼 */
+.prev-btn {
+  background-color: #9ca3af;
+  color: white;
+}
+.prev-btn:hover {
+  background-color: #6b7280;
+}
+
+/* 가입 버튼 */
+.submit-btn {
+  background-color: #2563eb;
+  color: white;
+}
+.submit-btn:hover {
+  background-color: #1e40af;
+}

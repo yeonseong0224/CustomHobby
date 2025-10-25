@@ -1,0 +1,94 @@
+/* ✅ 전체 페이지 컨테이너 */
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 100px;
+  margin-top: 80px;
+}
+
+/* ✅ 제목 + 카드 래퍼 */
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* ✅ 제목 */
+.main-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #111;
+  margin-bottom: 25px;
+}
+
+/* ✅ 카드 박스 */
+.main-card {
+  width: 420px;
+  min-height: 280px;
+  padding: 40px 30px;
+  background-color: #fff;
+  border: 3px solid #1c1411;
+  border-radius: 25px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ✅ 내부 아이콘 리스트 */
+.main-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  flex-wrap: nowrap;
+}
+
+/* ✅ 각 아이콘 */
+.main-item {
+  text-align: center;
+}
+
+.main-item img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.main-item p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #222;
+}
+
+/* ✅ 호버 효과 */
+.main-card:hover {
+  transform: translateY(-8px);
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* ✅ 반응형 */
+@media (max-width: 1200px) {
+  .main-container {
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .main-card {
+    width: 85%;
+    padding: 30px 20px;
+  }
+
+  .main-list {
+    gap: 50px;
+    flex-wrap: wrap;
+  }
+
+  .main-item img {
+    width: 90px;
+    height: 90px;
+  }
+}

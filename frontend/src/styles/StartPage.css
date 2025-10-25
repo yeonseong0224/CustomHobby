@@ -1,0 +1,82 @@
+.start-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 120px);
+}
+
+/* ✅ 카드 컨테이너 */
+.login-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 40px 60px; /* 내부 여백 충분히 확보 */
+  width: 500px;
+  text-align: left;
+
+  /* 내용 중앙 정렬 보정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ✅ 제목 */
+.login-card h1 {
+  font-size: 30px;
+  font-weight: 700;
+  border-left: 6px solid #2563eb;
+  padding-left: 10px;
+  margin-bottom: 30px;
+}
+
+/* ✅ 입력창 */
+.login-card input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box; /* ✅ 여백 포함 계산 */
+}
+
+.login-card input::placeholder {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.login-card input:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* ✅ 버튼 그룹 */
+.login-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+/* ✅ 버튼 */
+.login-btns button {
+  flex: 1; /* ✅ 버튼 너비 균등 분배 */
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-btns button:first-child {
+  background-color: #9ca3af; /* ‘이전’ 버튼은 회색 */
+}
+
+.login-btns button:hover {
+  background-color: #1e40af;
+}

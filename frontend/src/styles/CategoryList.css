@@ -1,0 +1,65 @@
+/* 전체 페이지 */
+.category-page {
+  text-align: center;
+  padding: 40px;
+}
+
+/* 제목 스타일 */
+.category-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* 카드 리스트 컨테이너 */
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* 화면 크기에 맞춰 자동 줄바꿈 */
+  gap: 50px; /* 카드 사이 간격 */
+  justify-items: center;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 개별 카드 */
+.category-card {
+  background-color: #f8f9ff;
+  border: 2px solid #2563eb;
+  border-radius: 15px;
+  padding: 30px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 250px; /* 카드 최대 너비 제한 */
+  min-height: 180px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* hover 시 확대 및 그림자 강조 */
+.category-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 아이콘 이미지 */
+.category-icon {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+/* 텍스트 */
+.category-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e3a8a;
+}

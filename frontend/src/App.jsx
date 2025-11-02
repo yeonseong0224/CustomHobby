@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import NavbarSimple from "./components/NavbarSimple";
 
@@ -17,13 +18,8 @@ import CreateGroupPage from "./pages/CreateGroupPage";
 import MyGroupDetailPage from "./pages/MyGroupDetailPage";
 
 function AppContent() {
-  const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
+  const { user, isAuthenticated } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
   const location = useLocation();
-
-  useEffect(() => {
-    if (userId) localStorage.setItem("userId", userId);
-    else localStorage.removeItem("userId");
-  }, [userId]);
 
   // ✅ 로그인(시작) / 회원가입 / 설문조사 페이지 → 로고만 있는 Navbar 표시
   const simpleNavbarPaths = ["/", "/register", "/survey"];
@@ -34,12 +30,12 @@ function AppContent() {
       {isSimpleNavbar ? (
         <NavbarSimple />
       ) : (
-        <Navbar userId={userId} setUserId={setUserId} />
+        <Navbar />
       )}
 
       <main className="container">
         <Routes>
-          <Route path="/" element={<StartPage setUserId={setUserId} />} />
+          <Route path="/" element={<StartPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/survey" element={<SurveyPage />} />
           <Route path="/main" element={<MainPage />} />
@@ -47,10 +43,10 @@ function AppContent() {
           <Route path="/hobby-info/:id" element={<HobbyInfoPage />} />
           <Route path="/hobby-detail/:id" element={<HobbyDetailPage />} />
           <Route path="/recommend" element={<RecommendPage />} />
-          <Route path="/mypage" element={<MyPage userId={userId} />} />
-          <Route path="/edit-profile" element={<EditProfilePage userId={userId} />} />
-          <Route path="/create-group" element={<CreateGroupPage userId={userId} />} />
-          <Route path="/mygroup/:id" element={<MyGroupDetailPage userId={userId} />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/edit-profile" element={<EditProfilePage />} />
+          <Route path="/create-group" element={<CreateGroupPage />} />
+          <Route path="/mygroup/:id" element={<MyGroupDetailPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
@@ -61,7 +57,9 @@ function AppContent() {
 export default function App() {
   return (
     <Router>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }

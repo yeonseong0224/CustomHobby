@@ -1,33 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { loginUser } from "../api/userApi";
 import "../styles/StartPage.css";
 
-export default function StartPage({ setUserId }) {
+export default function StartPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();  // ✅ Context의 login 함수 사용
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // 🚀 1️⃣ 로그인 로직 (예시: 백엔드 API 호출)
     try {
-      // 실제 백엔드 요청 예시 (백엔드에 따라 변경 가능)
-      const response = await fetch("http://localhost:8080/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: loginId, password }),
-      });
+      // ✅ userApi.js의 loginUser 함수 사용
+      const user = await loginUser({ userId: loginId, password });
 
-      if (!response.ok) throw new Error("로그인 실패");
-
-      const user = await response.json();
-
-      // 🚀 2️⃣ 로그인 성공 시
-      localStorage.setItem("userId", user.userId);
-      setUserId(user.userId); // ✅ App.jsx의 상태도 즉시 갱신
-      alert(`${user.userId}님 환영합니다!`);
-      navigate("/main"); // 로그인 성공 시 메인으로 이동
+      // ✅ Context의 login 함수로 사용자 정보 저장
+      login(user);
+      
+      alert(`${user.nickname}님 환영합니다!`);
+      navigate("/main");  // 로그인 성공 시 메인으로 이동
     } catch (error) {
       console.error(error);
       alert("아이디 또는 비밀번호를 확인해주세요.");

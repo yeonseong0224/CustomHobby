@@ -1,17 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { getUserParticipatedHobbies } from "../api/hobbyApi";
+import { getUserCreatedGroups } from "../api/hobbyGroupApi";
 import "../styles/MyPage.css";
 
 export default function MyPage() {
   const navigate = useNavigate();
-
-  // 자기소개 관리 (localStorage 저장)
+  const { user } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
   const [intro, setIntro] = useState("");
+  const [participatedHobbies, setParticipatedHobbies] = useState([]);
+  const [createdGroups, setCreatedGroups] = useState([]);
 
   useEffect(() => {
     const savedIntro = localStorage.getItem("intro");
     if (savedIntro) setIntro(savedIntro);
-  }, []);
+
+    // ✅ Context에서 사용자 정보 확인
+    if (!user || !user.userId) {
+      console.warn("⚠️ 로그인이 필요합니다.");
+      navigate("/");
+      return;
+    }
+    
+    // 참여한 취미 조회
+    const fetchParticipatedHobbies = async () => {
+      try {
+        const data = await getUserParticipatedHobbies(user.userId);
+        setParticipatedHobbies(data);
+      } catch (error) {
+        console.error("참여한 취미 조회 실패:", error);
+      }
+    };
+
+    // 개설한 모임 조회
+    const fetchCreatedGroups = async () => {
+      try {
+        const data = await getUserCreatedGroups(user.userId);
+        setCreatedGroups(data);
+      } catch (error) {
+        console.error("개설한 모임 조회 실패:", error);
+      }
+    };
+
+    fetchParticipatedHobbies();
+    fetchCreatedGroups();
+  }, [user, navigate]);
 
   const handleIntroSave = () => {
     localStorage.setItem("intro", intro);
@@ -58,17 +92,52 @@ export default function MyPage() {
       <div className="hobby-section">
         <div className="hobby-box">
           <h2>참여한 취미</h2>
-          <div className="hobby-card">
-            <img src="/images/guitar.png" alt="기타 연주" className="hobby-img" />
-            <p className="hobby-title">🎵 기타 연주</p>
-          </div>
+          {participatedHobbies.length > 0 ? (
+            participatedHobbies.map((hobby) => (
+              <div 
+                key={hobby.id} 
+                className="hobby-card"
+                onClick={() => navigate(`/hobby-detail/${hobby.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <img 
+                  src={hobby.photo || "/images/art.png"} 
+                  alt={hobby.hobbyName} 
+                  className="hobby-img"
+                  onError={(e) => { 
+                    console.warn(`이미지 로드 실패: ${e.target.src}`);
+                    e.target.src = "/images/art.png"; 
+                  }}
+                />
+                <p className="hobby-title">{hobby.hobbyName}</p>
+              </div>
+            ))
+          ) : (
+            <div className="hobby-card empty-card">
+              <p>참여한 취미가 없습니다.</p>
+            </div>
+          )}
         </div>
 
         <div className="hobby-box">
           <h2>개설한 취미 모임</h2>
-          <div className="hobby-card empty-card">
-            <p>아직 개설한 취미가 없습니다.</p>
-          </div>
+          {createdGroups.length > 0 ? (
+            createdGroups.map((group) => (
+              <div 
+                key={group.id} 
+                className="hobby-card"
+                onClick={() => navigate(`/my-group-detail/${group.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <p className="hobby-title">{group.groupName}</p>
+                <p style={{ fontSize: "14px", color: "#666" }}>{group.groupDescription}</p>
+              </div>
+            ))
+          ) : (
+            <div className="hobby-card empty-card">
+              <p>아직 개설한 취미가 없습니다.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

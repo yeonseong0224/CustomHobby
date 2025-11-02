@@ -44,6 +44,12 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
+        // 🔍 디버깅: User 객체 확인
+        System.out.println("🔍 로그인 성공! User 정보:");
+        System.out.println("  - userId: " + user.getUserId());
+        System.out.println("  - nickname: " + user.getNickname());
+        System.out.println("  - email: " + user.getEmail());
+
         return user;
     }
 

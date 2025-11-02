@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../api/userApi";
 
-export default function LoginForm({ onLogin }) {
+export default function LoginForm() {
+  const navigate = useNavigate();
+  const { login } = useAuth();  // ✅ Context의 login 함수 사용
   const [form, setForm] = useState({ userId: "", password: "" });
 
   const handleChange = (e) => {
@@ -12,8 +16,12 @@ export default function LoginForm({ onLogin }) {
     e.preventDefault();
     try {
       const user = await loginUser(form);
+      
+      // ✅ Context의 login 함수로 사용자 정보 저장 (자동으로 localStorage도 저장됨)
+      login(user);
+      
       alert(`${user.nickname}님, 로그인 성공!`);
-      if (onLogin) onLogin(user.userId);
+      navigate("/main");  // ✅ 로그인 후 메인 페이지로 자동 이동
     } catch (err) {
       alert(err.response?.data || "로그인 실패");
     }

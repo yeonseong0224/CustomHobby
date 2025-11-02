@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class UserResponseDto {
-    private String userId;
+    private String userId;  // PRIMARY KEY
     private String email;
     private String nickname;
     private String region;

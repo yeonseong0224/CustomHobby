@@ -1,12 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Navbar.css";
 
-export default function Navbar({ userId, setUserId }) {
+export default function Navbar() {
+  const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useAuth();  // ✅ Context 사용
+
   const handleLogout = () => {
-    setUserId(null);
-    localStorage.removeItem("userId");
-    window.location.href = "/"; // 로그아웃 후 메인으로 이동
+    logout();  // ✅ Context의 logout 함수 사용
+    alert("로그아웃되었습니다.");
+    navigate("/");  // 로그아웃 후 시작 페이지로 이동
   };
 
   return (
@@ -25,8 +29,11 @@ export default function Navbar({ userId, setUserId }) {
 
       <div className="navbar-right">
         {/* ✅ 로그인된 경우 */}
-        {userId ? (
+        {isAuthenticated ? (
           <>
+            <span style={{ marginRight: "15px", color: "#666" }}>
+              {user.nickname}님
+            </span>
             <Link to="/mypage" className="mypage-link">
               마이페이지
             </Link>
@@ -36,9 +43,9 @@ export default function Navbar({ userId, setUserId }) {
           </>
         ) : (
           <>
-            {/* ✅ 로그인 안 된 경우에도 마이페이지 링크는 유지 */}
-            <Link to="/mypage" className="mypage-link">
-              마이페이지
+            {/* ✅ 로그인 안 된 경우 */}
+            <Link to="/" className="mypage-link">
+              로그인
             </Link>
           </>
         )}

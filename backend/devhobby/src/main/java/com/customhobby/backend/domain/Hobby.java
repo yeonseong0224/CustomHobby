@@ -1,4 +1,77 @@
 package com.customhobby.backend.domain;
 
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "hobbies")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Hobby {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 255)
+    private String hobbyName;
+
+    @Column(length = 100)
+    private String hobbyCategory; // 예술/공예, 야외활동, 음악/공연, 요리/음식
+
+    @Column(length = 1000)
+    private String description;
+
+    @Column(length = 200)
+    private String oneLineDescription;
+
+    @Column(nullable = false, length = 255)
+    private String meetingType; // online, offline, hybrid
+
+    @Column(length = 500)
+    private String locationLink;
+
+    @Column(nullable = false)
+    private LocalDate meetingDate;
+
+    @Column(nullable = false)
+    private Integer participationFee;
+
+    @Column(length = 500)
+    private String materials;
+
+    @Column(length = 200)
+    private String haveMaterial;
+
+    @Column(length = 2000)
+    private String reviewBoard;
+
+    @Column(length = 1000)
+    private String customTab;
+
+    @Lob
+    @Column(columnDefinition = "bytea")
+    private byte[] photo;
+
+    @Column(name = "creator_id", length = 30)
+    private String creatorId;  // ✅ User의 userId (String)를 참조
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { registerUser } from "../api/userApi";
 
 export default function RegisterForm() {
+  const navigate = useNavigate();
+  const { login } = useAuth();  // ✅ Context의 login 함수 사용
   const [form, setForm] = useState({
     userId: "",
     password: "",
@@ -20,11 +24,20 @@ export default function RegisterForm() {
     e.preventDefault();
     try {
       const result = await registerUser(form);
-      alert(`회원가입 성공! 환영합니다, ${result.nickname}`);
-      setForm({
-        userId: "", password: "", email: "", nickname: "", age: "", region: "", phonenum: ""
-      });
+      
+      console.log("✅ 회원가입 성공:", result);
+      
+      // ✅ 회원가입 후 자동으로 로그인 처리 (Context 사용)
+      login(result);
+      
+      alert(`회원가입 성공! 환영합니다, ${result.nickname}님`);
+      
+      // ✅ State 업데이트를 기다린 후 페이지 이동
+      setTimeout(() => {
+        navigate("/survey");
+      }, 100);
     } catch (err) {
+      console.error("❌ 회원가입 실패:", err);
       alert(err.response?.data || "회원가입 실패");
     }
   };

@@ -3,25 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getUserParticipatedHobbies } from "../api/hobbyApi";
 import { getUserCreatedGroups } from "../api/hobbyGroupApi";
+import { getUser, updateUserProfile } from "../api/userApi";
 import "../styles/MyPage.css";
 
 export default function MyPage() {
   const navigate = useNavigate();
   const { user } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
   const [intro, setIntro] = useState("");
+  const [profileImage, setProfileImage] = useState("/images/profile.png");
   const [participatedHobbies, setParticipatedHobbies] = useState([]);
   const [createdGroups, setCreatedGroups] = useState([]);
 
   useEffect(() => {
-    const savedIntro = localStorage.getItem("intro");
-    if (savedIntro) setIntro(savedIntro);
-
     // ✅ Context에서 사용자 정보 확인
     if (!user || !user.userId) {
       console.warn("⚠️ 로그인이 필요합니다.");
       navigate("/");
       return;
     }
+
+    // 사용자 정보 불러오기 (자기소개 포함)
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUser(user.userId);
+        if (userData.introduce) {
+          setIntro(userData.introduce);
+        }
+        if (userData.profile) {
+          setProfileImage(userData.profile);
+        }
+      } catch (error) {
+        console.error("사용자 정보 불러오기 실패:", error);
+      }
+    };
     
     // 참여한 취미 조회
     const fetchParticipatedHobbies = async () => {
@@ -43,13 +57,59 @@ export default function MyPage() {
       }
     };
 
+    fetchUserData();
     fetchParticipatedHobbies();
     fetchCreatedGroups();
   }, [user, navigate]);
 
-  const handleIntroSave = () => {
-    localStorage.setItem("intro", intro);
-    alert("자기소개가 저장되었습니다!");
+  // 자기소개 저장 (DB에 저장)
+  const handleIntroSave = async () => {
+    try {
+      await updateUserProfile(user.userId, {
+        introduce: intro
+      });
+      alert("자기소개가 저장되었습니다! ✅");
+    } catch (error) {
+      console.error("자기소개 저장 실패:", error);
+      alert("자기소개 저장에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  // 프로필 사진 업로드 (Base64로 변환하여 저장)
+  const handleProfileImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 파일 크기 체크 (5MB 이하)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("파일 크기는 5MB 이하여야 합니다.");
+      return;
+    }
+
+    // 이미지 파일인지 확인
+    if (!file.type.startsWith("image/")) {
+      alert("이미지 파일만 업로드 가능합니다.");
+      return;
+    }
+
+    // 파일을 Base64로 변환
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result;
+      setProfileImage(base64String);
+
+      // DB에 저장
+      try {
+        await updateUserProfile(user.userId, {
+          profile: base64String
+        });
+        alert("프로필 사진이 저장되었습니다! ✅");
+      } catch (error) {
+        console.error("프로필 사진 저장 실패:", error);
+        alert("프로필 사진 저장에 실패했습니다.");
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -57,7 +117,43 @@ export default function MyPage() {
       {/* 상단 영역 */}
       <div className="mypage-top">
         <div className="profile-section">
-          <img src="/images/profile.png" alt="프로필" className="profile-img" />
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <img 
+              src={profileImage} 
+              alt="프로필" 
+              className="profile-img"
+              onError={(e) => { 
+                console.warn("프로필 이미지 로드 실패");
+                e.target.src = "/images/profile.png"; 
+              }}
+            />
+            <input 
+              type="file" 
+              id="profileImageInput"
+              accept="image/*"
+              onChange={handleProfileImageChange}
+              style={{ display: "none" }}
+            />
+            <button
+              onClick={() => document.getElementById("profileImageInput").click()}
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                right: "10px",
+                backgroundColor: "#2196F3",
+                color: "white",
+                border: "none",
+                borderRadius: "50%",
+                width: "35px",
+                height: "35px",
+                cursor: "pointer",
+                fontSize: "18px"
+              }}
+              title="프로필 사진 변경"
+            >
+              📷
+            </button>
+          </div>
 
           <div className="intro-box">
             <h3>자기 소개</h3>

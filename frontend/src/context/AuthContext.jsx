@@ -22,17 +22,20 @@ export const AuthProvider = ({ children }) => {
     console.log("🔍 AuthContext 초기화 시작...");
     const storedUserId = localStorage.getItem("userId");
     const storedUserNickname = localStorage.getItem("userNickname");
+    const storedHasSurvey = localStorage.getItem("hasSurvey");
     
     console.log("📦 localStorage 내용:", {
       userId: storedUserId,
-      nickname: storedUserNickname
+      nickname: storedUserNickname,
+      hasSurvey: storedHasSurvey
     });
 
     if (storedUserId && storedUserNickname) {
       console.log("✅ localStorage에서 사용자 정보 복원 완료!");
       setUser({
         userId: storedUserId,
-        nickname: storedUserNickname
+        nickname: storedUserNickname,
+        hasSurvey: storedHasSurvey === "true" // 문자열을 boolean으로 변환
       });
     } else {
       console.log("⚠️ localStorage에 사용자 정보 없음");
@@ -44,7 +47,8 @@ export const AuthProvider = ({ children }) => {
   const login = (userData) => {
     const userInfo = {
       userId: userData.userId,
-      nickname: userData.nickname
+      nickname: userData.nickname,
+      hasSurvey: userData.hasSurvey || false // hasSurvey 정보 포함
     };
     
     setUser(userInfo);
@@ -52,6 +56,7 @@ export const AuthProvider = ({ children }) => {
     // localStorage에도 백업 저장 (새로고침 시 유지)
     localStorage.setItem("userId", userInfo.userId);
     localStorage.setItem("userNickname", userInfo.nickname);
+    localStorage.setItem("hasSurvey", userInfo.hasSurvey.toString()); // boolean을 문자열로 저장
     
     console.log("✅ 로그인 성공:", userInfo);
   };
@@ -61,6 +66,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("userId");
     localStorage.removeItem("userNickname");
+    localStorage.removeItem("hasSurvey");
     localStorage.removeItem("intro");
     console.log("✅ 로그아웃 완료");
   };
@@ -72,6 +78,7 @@ export const AuthProvider = ({ children }) => {
     // localStorage 동기화
     if (newData.userId) localStorage.setItem("userId", newData.userId);
     if (newData.nickname) localStorage.setItem("userNickname", newData.nickname);
+    if (newData.hasSurvey !== undefined) localStorage.setItem("hasSurvey", newData.hasSurvey.toString());
   };
 
   const value = {

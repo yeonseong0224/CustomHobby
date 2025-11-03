@@ -17,11 +17,15 @@ export default function StartPage() {
       // ✅ userApi.js의 loginUser 함수 사용
       const user = await loginUser({ userId: loginId, password });
 
+      console.log("✅ 로그인 성공:", user);
+
       // ✅ Context의 login 함수로 사용자 정보 저장
       login(user);
       
       alert(`${user.nickname}님 환영합니다!`);
-      navigate("/main");  // 로그인 성공 시 메인으로 이동
+      
+      // ✅ 로그인 후 무조건 메인 페이지로 이동
+      navigate("/main");
     } catch (error) {
       console.error(error);
       alert("아이디 또는 비밀번호를 확인해주세요.");

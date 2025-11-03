@@ -7,6 +7,7 @@ import com.customhobby.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,6 +24,14 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 사용자 ID입니다.");
         }
 
+        System.out.println("🔍 회원가입 요청 데이터:");
+        System.out.println("  - userId: " + request.getUserId());
+        System.out.println("  - email: " + request.getEmail());
+        System.out.println("  - nickname: " + request.getNickname());
+        System.out.println("  - phoneNum: " + request.getPhoneNum());
+        System.out.println("  - age: " + request.getAge());
+        System.out.println("  - region: " + request.getRegion());
+
         User user = User.builder()
                 .userId(request.getUserId())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -30,9 +39,13 @@ public class UserService {
                 .nickname(request.getNickname())
                 .age(request.getAge())
                 .region(request.getRegion())
+                .phoneNum(request.getPhoneNum())  // ✅ camelCase로 통일
                 .build();
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        System.out.println("✅ 저장된 전화번호: " + savedUser.getPhoneNum());
+
+        return savedUser;
     }
 
     // 로그인
@@ -56,5 +69,29 @@ public class UserService {
     // 유저 조회
     public Optional<User> findByUserId(String userId) {
         return userRepository.findByUserId(userId);
+    }
+
+    // 아이디 중복 체크
+    public boolean isUserIdAvailable(String userId) {
+        return userRepository.findByUserId(userId).isEmpty();
+    }
+
+    // 사용자 정보 업데이트 (자기소개, 프로필 사진, 전화번호 등)
+    @Transactional
+    public User updateUserProfile(String userId, String introduce, String profile, String phoneNum) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+
+        if (introduce != null && !introduce.isEmpty()) {
+            user.setIntroduce(introduce);
+        }
+        if (profile != null && !profile.isEmpty()) {
+            user.setProfile(profile);
+        }
+        if (phoneNum != null && !phoneNum.isEmpty()) {
+            user.setPhoneNum(phoneNum);
+        }
+
+        return userRepository.save(user);
     }
 }

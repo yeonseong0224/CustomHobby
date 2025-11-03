@@ -17,11 +17,15 @@ export default function LoginForm() {
     try {
       const user = await loginUser(form);
       
+      console.log("✅ 로그인 성공:", user);
+      
       // ✅ Context의 login 함수로 사용자 정보 저장 (자동으로 localStorage도 저장됨)
       login(user);
       
       alert(`${user.nickname}님, 로그인 성공!`);
-      navigate("/main");  // ✅ 로그인 후 메인 페이지로 자동 이동
+      
+      // ✅ 로그인 후 무조건 메인 페이지로 이동
+      navigate("/main");
     } catch (err) {
       alert(err.response?.data || "로그인 실패");
     }

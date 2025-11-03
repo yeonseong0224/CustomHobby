@@ -34,3 +34,25 @@ export const getUser = async (userId) => {
     throw error;
   }
 };
+
+// 🟢 아이디 중복 체크
+export const checkUserIdAvailable = async (userId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/check/${userId}`);
+    return response.data; // true: 사용 가능, false: 중복
+  } catch (error) {
+    console.error("❌ 아이디 중복 체크 실패:", error);
+    throw error;
+  }
+};
+
+// 🟢 사용자 프로필 업데이트 (자기소개, 프로필 사진, 전화번호)
+export const updateUserProfile = async (userId, profileData) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/${userId}/profile`, profileData);
+    return response.data;
+  } catch (error) {
+    console.error("❌ 프로필 업데이트 실패:", error);
+    throw error;
+  }
+};

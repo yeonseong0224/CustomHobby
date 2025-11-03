@@ -4,7 +4,6 @@ import com.customhobby.backend.domain.User;
 import com.customhobby.backend.dto.*;
 import com.customhobby.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,6 +34,26 @@ public class UserController {
     public UserResponseDto getUser(@PathVariable String userId) {
         User user = userService.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+        return new UserResponseDto(user);
+    }
+
+    // 아이디 중복 체크
+    @GetMapping("/check/{userId}")
+    public boolean checkUserIdAvailable(@PathVariable String userId) {
+        return userService.isUserIdAvailable(userId);
+    }
+
+    // 사용자 정보 업데이트 (자기소개, 프로필 사진, 전화번호)
+    @PutMapping("/{userId}/profile")
+    public UserResponseDto updateUserProfile(
+            @PathVariable String userId,
+            @RequestBody UserRequestDto request) {
+        User user = userService.updateUserProfile(
+                userId,
+                request.getIntroduce(),
+                request.getProfile(),
+                request.getPhoneNum()  // ✅ camelCase로 통일
+        );
         return new UserResponseDto(user);
     }
 }

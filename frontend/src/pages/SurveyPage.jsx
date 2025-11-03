@@ -80,6 +80,12 @@ export default function SurveyPage() {
       };
 
       await submitSurvey(surveyData);
+      
+      // ✅ 설문조사 완료 후 hasSurvey 상태 업데이트
+      updateUser({
+        hasSurvey: true
+      });
+      
       alert("설문이 제출되었습니다! 메인 페이지로 이동합니다.");
       navigate("/main");  // ✅ 바로 메인 페이지로 이동
     } catch (error) {

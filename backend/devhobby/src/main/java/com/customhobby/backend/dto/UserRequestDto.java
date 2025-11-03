@@ -12,5 +12,7 @@ public class UserRequestDto {
     private String nickname;
     private Integer age;
     private String region;
-    private String phonenum;
+    private String phoneNum;   // ✅ phonenum → phoneNum (camelCase 통일)
+    private String introduce;  // 자기소개
+    private String profile;    // 프로필 사진
 }

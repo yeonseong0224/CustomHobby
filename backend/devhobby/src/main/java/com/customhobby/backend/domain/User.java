@@ -36,10 +36,10 @@ public class User {
     @Column(name = "phone_num")
     private String phoneNum;
 
-    @Column(name = "profile")
+    @Column(name = "profile", columnDefinition = "TEXT")
     private String profile;
 
-    @Column(name = "introduce", length = 500)
+    @Column(name = "introduce", columnDefinition = "TEXT")
     private String introduce;
 
     // === 설문조사 응답 필드 ===

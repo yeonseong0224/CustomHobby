@@ -39,8 +39,9 @@ export default function CreateGroupPage() {
       
       console.log("📤 모임 개설 데이터:", groupData);
       const result = await createHobbyGroup(groupData);
+      console.log("✅ 모임 개설 성공:", result);
       alert("모임이 개설되었습니다!");
-      navigate(`/my-group-detail/${result.id}`);
+      navigate("/main");  // ✅ 메인 페이지로 이동
     } catch (error) {
       console.error("❌ 모임 개설 실패:", error);
       alert("모임 개설에 실패했습니다. 다시 시도해주세요.");

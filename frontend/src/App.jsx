@@ -46,7 +46,7 @@ function AppContent() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/edit-profile" element={<EditProfilePage />} />
           <Route path="/create-group" element={<CreateGroupPage />} />
-          <Route path="/mygroup/:id" element={<MyGroupDetailPage />} />
+          <Route path="/my-group-detail/:id" element={<MyGroupDetailPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

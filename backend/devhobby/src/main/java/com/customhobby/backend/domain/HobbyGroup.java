@@ -41,6 +41,9 @@ public class HobbyGroup {
     @Column(length = 1000)
     private String customTab;
 
+    @Column(length = 100)
+    private String category;
+
     @Column(name = "creator_id", length = 30)
     private String creatorId;  // ✅ User의 userId (String)를 참조
 

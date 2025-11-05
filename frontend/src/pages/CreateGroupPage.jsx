@@ -100,6 +100,13 @@ export default function CreateGroupPage() {
           onChange={handleChange}
           style={{ padding: "10px", fontSize: "16px" }}
         />
+        <input 
+          name="category" 
+          placeholder="카테고리" 
+          value={form.category} 
+          onChange={handleChange}
+          style={{ padding: "10px", fontSize: "16px" }}
+        />
         <button type="submit" style={{ padding: "12px", fontSize: "18px", cursor: "pointer" }}>
           등록
         </button>

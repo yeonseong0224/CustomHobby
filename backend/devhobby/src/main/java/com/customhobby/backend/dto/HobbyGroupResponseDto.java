@@ -18,8 +18,10 @@ public class HobbyGroupResponseDto {
     private String materials;
     private String reviewBoard;
     private String customTab;
+    private String category;
     private String creatorId;  // ✅ User의 userId (String)를 참조
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public HobbyGroupResponseDto(HobbyGroup group) {
         this.id = group.getId();
@@ -31,8 +33,10 @@ public class HobbyGroupResponseDto {
         this.materials = group.getMaterials();
         this.reviewBoard = group.getReviewBoard();
         this.customTab = group.getCustomTab();
+        this.category = group.getCategory();
         this.creatorId = group.getCreatorId();
         this.createdAt = group.getCreatedAt();
+        this.updatedAt = group.getUpdatedAt();
     }
 }
 

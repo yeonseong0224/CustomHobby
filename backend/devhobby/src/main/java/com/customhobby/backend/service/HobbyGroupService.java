@@ -30,6 +30,8 @@ public class HobbyGroupService {
                 .locationLink(request.getLocationLink())
                 .participationFee(request.getParticipationFee())
                 .materials(request.getMaterials())
+                .category(request.getCategory())
+                .meetingDate(request.getMeetingDate())
                 .creatorId(request.getCreatorId())
                 .build();
 

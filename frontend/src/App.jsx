@@ -11,6 +11,9 @@ import MainPage from "./pages/MainPage";
 import CategoryPage from "./pages/CategoryPage";
 import HobbyInfoPage from "./pages/HobbyInfoPage";
 import HobbyDetailPage from "./pages/HobbyDetailPage";
+import HobbyDescriptionPage from "./pages/HobbyDescriptionPage";
+import PersonalHobbyPage from "./pages/PersonalHobbyPage";
+import RecommendedHobbyPage from "./pages/RecommendedHobbyPage";
 import RecommendPage from "./pages/RecommendPage";
 import MyPage from "./pages/MyPage";
 import EditProfilePage from "./pages/EditProfilePage";
@@ -42,11 +45,16 @@ function AppContent() {
           <Route path="/category" element={<CategoryPage />} />
           <Route path="/hobby-info/:id" element={<HobbyInfoPage />} />
           <Route path="/hobby-detail/:id" element={<HobbyDetailPage />} />
+          <Route path="/hobby-description/:id" element={<HobbyDescriptionPage />} />
+          <Route path="/hobby/:id" element={<HobbyDescriptionPage />} />
+          <Route path="/personal-hobby" element={<PersonalHobbyPage />} />
+          <Route path="/recommended-hobby/:id" element={<RecommendedHobbyPage />} />
           <Route path="/recommend" element={<RecommendPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/edit-profile" element={<EditProfilePage />} />
           <Route path="/create-group" element={<CreateGroupPage />} />
           <Route path="/my-group-detail/:id" element={<MyGroupDetailPage />} />
+          <Route path="/mygroup/:id" element={<MyGroupDetailPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

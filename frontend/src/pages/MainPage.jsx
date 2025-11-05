@@ -65,7 +65,12 @@ export default function MainPage() {
   }, []);
 
   const handleHobbyClick = (hobbyId) => {
-    navigate(`/hobby-detail/${hobbyId}`);
+    navigate(`/hobby/${hobbyId}`); // ✅ /hobby/:id로 변경 (HobbyDescriptionPage로 이동)
+  };
+
+  // 개인 맞춤 취미 제목 클릭 핸들러
+  const handlePersonalizedTitleClick = () => {
+    navigate("/personal-hobby"); // ✅ PersonalHobbyPage로 이동
   };
 
   // 개인 맞춤 취미 박스 클릭 핸들러
@@ -87,7 +92,13 @@ export default function MainPage() {
     <div className="main-container">
       {/* 개인 맞춤 취미 */}
       <div className="main-wrapper">
-        <h2 className="main-title">개인 맞춤 취미</h2>
+        <h2 
+          className="main-title"
+          onClick={handlePersonalizedTitleClick}
+          style={{ cursor: "pointer" }}
+        >
+          개인 맞춤 취미
+        </h2>
         <div 
           className="main-card"
           onClick={handlePersonalizedBoxClick}

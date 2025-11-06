@@ -11,6 +11,9 @@ import MainPage from "./pages/MainPage";
 import CategoryPage from "./pages/CategoryPage";
 import HobbyInfoPage from "./pages/HobbyInfoPage";
 import HobbyDetailPage from "./pages/HobbyDetailPage";
+import HobbyDescriptionPage from "./pages/HobbyDescriptionPage"; // ✅ 추가
+import PersonalHobbyPage from "./pages/PersonalHobbyPage"; // ✅ 추가
+import RecommendedHobbyPage from "./pages/RecommendedHobbyPage"; // ✅ 추가
 import RecommendPage from "./pages/RecommendPage";
 import MyPage from "./pages/MyPage";
 import EditProfilePage from "./pages/EditProfilePage";
@@ -42,6 +45,9 @@ function AppContent() {
           <Route path="/category" element={<CategoryPage />} />
           <Route path="/hobby-info/:id" element={<HobbyInfoPage />} />
           <Route path="/hobby-detail/:id" element={<HobbyDetailPage />} />
+          <Route path="/hobby-description/:id" element={<HobbyDescriptionPage />} /> {/* ✅ 추가 */}
+          <Route path="/personal-hobby" element={<PersonalHobbyPage />} /> {/* ✅ 추가 */}
+          <Route path="/recommended-hobby/:id" element={<RecommendedHobbyPage />} /> {/* ✅ 추가 */}
           <Route path="/recommend" element={<RecommendPage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/edit-profile" element={<EditProfilePage />} />

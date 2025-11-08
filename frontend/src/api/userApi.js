@@ -49,7 +49,15 @@ export const checkUserIdAvailable = async (userId) => {
 // 🟢 사용자 프로필 업데이트 (자기소개, 프로필 사진, 전화번호)
 export const updateUserProfile = async (userId, profileData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/${userId}/profile`, profileData);
+    const response = await axios.put(
+      `${API_BASE_URL}/${userId}/profile`,
+      profileData,
+      {
+        headers: {
+          "Content-Type": "application/json", // ✅ 반드시 필요
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("❌ 프로필 업데이트 실패:", error);

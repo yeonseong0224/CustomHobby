@@ -48,12 +48,18 @@ public class UserController {
     public UserResponseDto updateUserProfile(
             @PathVariable String userId,
             @RequestBody UserRequestDto request) {
+
+        System.out.println("📸 [UPDATE PROFILE] userId=" + userId);
+        System.out.println("➡️  Base64 길이: " +
+                (request.getProfile() != null ? request.getProfile().length() : "NULL"));
+
         User user = userService.updateUserProfile(
                 userId,
                 request.getIntroduce(),
                 request.getProfile(),
-                request.getPhoneNum()  // ✅ camelCase로 통일
+                request.getPhoneNum()
         );
         return new UserResponseDto(user);
     }
+
 }

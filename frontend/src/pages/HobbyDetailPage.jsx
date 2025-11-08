@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getHobby, participateHobby } from "../api/hobbyApi";
+import "../styles/HobbyDetailPage.css";
 
 export default function HobbyDetailPage() {
   const { id } = useParams();
@@ -43,40 +44,118 @@ export default function HobbyDetailPage() {
     }
   };
 
-  if (loading) return <div className="page">로딩 중...</div>;
-  if (!hobby) return <div className="page">취미를 찾을 수 없습니다.</div>;
+  if (loading) return <p className="hdp-loading">로딩 중...</p>;
+  if (!hobby) 
+    return (
+      <div className="hdp-container">
+        <h2>❌ 해당 취미 정보를 찾을 수 없습니다.</h2>
+      </div>
+    );
 
   return (
-    <div className="page hobby-detail-page" style={{ padding: "40px" }}>
-      <h1>{hobby.hobbyName}</h1>
-      <p style={{ fontSize: "18px", color: "#666", marginBottom: "20px" }}>
-        {hobby.oneLineDescription}
-      </p>
-      
-      <div style={{ marginBottom: "30px" }}>
-        <h2>상세 설명</h2>
-        <p>{hobby.description || "상세 설명이 없습니다."}</p>
+    <div className="hdp-container">
+      {/* 상단 헤더 */}
+      <div className="hdp-header">
+        <h1 className="hdp-title">{hobby.hobbyName}</h1>
       </div>
 
-      <div style={{ marginBottom: "20px" }}>
-        <p><strong>카테고리:</strong> {hobby.hobbyCategory}</p>
-        <p><strong>모임 형태:</strong> {hobby.meetingType}</p>
-        <p><strong>참가비:</strong> {hobby.participationFee}원</p>
-        <p><strong>모임 날짜:</strong> {hobby.meetingDate}</p>
-        {hobby.materials && <p><strong>준비물:</strong> {hobby.materials}</p>}
-        {hobby.locationLink && <p><strong>장소:</strong> {hobby.locationLink}</p>}
-      </div>
+      <div className="hdp-content">
+        {/* 왼쪽 */}
+        <div className="hdp-left">
+          <div className="hdp-card">
+            <h2>모임 이름</h2>
+            <p>{hobby.oneLineDescription || "-"}</p>
+          </div>
 
-      <div className="actions" style={{ display: "flex", gap: "10px" }}>
-        <button onClick={handleParticipate} style={{ padding: "10px 20px" }}>
-          참여하기
-        </button>
-        <button onClick={() => navigate("/main")} style={{ padding: "10px 20px" }}>
-          메인으로
-        </button>
-        <button onClick={() => navigate("/create-group")} style={{ padding: "10px 20px" }}>
-          모임 개설
-        </button>
+          <div className="hdp-card">
+            <h3>취미 종류 / 설명</h3>
+            <p>{hobby.hobbyCategory}</p>
+            <p className="hdp-desc">{hobby.description}</p>
+          </div>
+
+          <div className="hdp-row">
+            <span>참가비:</span>{" "}
+            <strong>
+              {hobby.participationFee
+                ? `${hobby.participationFee.toLocaleString()}원`
+                : "무료"}
+            </strong>
+          </div>
+
+          <div className="hdp-row">
+            <span>진행 방식:</span> <strong>{hobby.meetingType}</strong>
+          </div>
+
+          <div className="hdp-row">
+            <span>장소 / 링크:</span> <strong>{hobby.locationLink}</strong>
+          </div>
+
+          <div className="hdp-card">
+            <h3>준비물</h3>
+            <p>{hobby.materials}</p>
+            <p className="hdp-sub">
+              <strong>대체 가능:</strong> {hobby.haveMaterial}
+            </p>
+          </div>
+
+          {/* 참여하기 버튼 */}
+          
+        </div>
+
+        {/* 오른쪽 */}
+        <div className="hdp-right">
+          <div className="hdp-calendar">
+            <h3>📅 일정</h3>
+            <p>모임 날짜: {hobby.meetingDate}</p>
+          </div>
+
+          <div className="hdp-notice">
+            <h3>📢 공지사항</h3>
+            <p>공지사항은 준비 중입니다.</p>
+          </div>
+
+          <div className="hdp-review">
+            <h3>💬 후기 게시판</h3>
+            <p>아직 후기가 없습니다.</p>
+          </div>
+
+          <div className="hdp-creator">
+            <h3>👤 개설자 정보</h3>
+            <p>개설자 ID: {hobby.creatorId}</p>
+          </div>
+          <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+            <button 
+              onClick={handleParticipate}
+              style={{
+                flex: 1,
+                padding: "12px 20px",
+                backgroundColor: "#4a90e2",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                fontWeight: "600",
+                cursor: "pointer"
+              }}
+            >
+              참여하기
+            </button>
+            <button 
+              onClick={() => navigate("/create-group")}
+              style={{
+                flex: 1,
+                padding: "12px 20px",
+                backgroundColor: "#ddd",
+                color: "#333",
+                border: "none",
+                borderRadius: "8px",
+                fontWeight: "600",
+                cursor: "pointer"
+              }}
+            >
+              모임 개설
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

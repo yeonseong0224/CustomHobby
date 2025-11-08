@@ -1,0 +1,136 @@
+.edit-group-page {
+  padding: 50px 20px;
+  max-width: 850px;
+  margin: 0 auto;
+  background: linear-gradient(to bottom right, #f9fbff, #f4f8ff);
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+}
+
+.success-banner {
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  padding: 12px 0;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  animation: fadeInOut 1.5s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.edit-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.edit-form label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.edit-form input,
+.edit-form textarea,
+.edit-form select {
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.edit-form input:focus,
+.edit-form textarea:focus,
+.edit-form select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* 🔵 저장 버튼 */
+.save-btn {
+  background: linear-gradient(135deg, #4a90e2, #3a7bd5);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 3px 10px rgba(74, 144, 226, 0.3);
+}
+
+.save-btn:hover {
+  background: linear-gradient(135deg, #3a7bd5, #1e88e5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+}
+
+/* 🟠 취소 버튼 */
+.cancel-btn {
+  background: linear-gradient(135deg, #f57c00, #ef6c00);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 3px 10px rgba(245, 124, 0, 0.3);
+}
+
+.cancel-btn:hover {
+  background: linear-gradient(135deg, #ef6c00, #e65100);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(245, 124, 0, 0.4);
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 16px;
+}

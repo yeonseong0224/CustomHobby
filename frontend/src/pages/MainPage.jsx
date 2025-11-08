@@ -1,142 +1,254 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { getAllHobbies } from "../api/hobbyApi";
-import { getUser } from "../api/userApi";
 import "../styles/MainPage.css";
+import { getHobbyRecommendations } from "../api/recommendApi";
+import { useAuth } from "../context/AuthContext";
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const { user, updateUser } = useAuth();
-  const [personalizedHobbies, setPersonalizedHobbies] = useState([]);
+  const { user, isAuthenticated } = useAuth();
+
+  const [recommendedHobbies, setRecommendedHobbies] = useState([]);
   const [newHobbies, setNewHobbies] = useState([]);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // 사용자 정보 업데이트 (설문조사 완료 여부 확인)
+  // ✅ 한글 취미명 → 이미지 파일명 매핑
+  const imageMap = {
+    // 🎨 예술/공예
+    "그림 그리기": "art",
+    "캘리그래피": "calligraphy",
+    "서예": "calligraphy2",
+    "드로잉": "drawing",
+    "디자인": "design",
+    "뜨개질": "knitting",
+    "보석십자수": "diamond",
+
+    // 🎵 음악/공연
+    "기타 연주": "guitar",
+    "피아노 연주": "piano",
+    "음악 감상": "music",
+    "악기 연주": "instrument",
+    "연주회 감상": "classic",
+    "콘서트 관람": "concert",
+
+    // 💪 운동/건강
+    "요가": "yoga",
+    "필라테스": "pilates",
+    "헬스": "health",
+    "러닝": "running",
+    "클라이밍": "climbing",
+    "골프": "golf",
+    "복싱": "boxing",
+    "홈트레이닝": "homefit",
+    "수영": "swimming",
+
+    // 🌳 야외활동
+    "하이킹": "hiking",
+    "등산": "mountain",
+    "캠핑": "camping",
+    "차박": "carcamp",
+    "자전거 타기": "bike",
+
+    // 🍳 요리/음식
+    "요리": "cooking",
+    "요리 클래스": "class",
+    "베이킹": "baking",
+    "커피 브루잉": "coffee",
+
+    // 📖 교육/자기계발
+    "언어 공부": "language",
+    "자기계발": "self",
+    "독서": "book",
+
+    // 🎮 엔터테인먼트
+    "게임": "game",
+    "퍼즐 맞추기": "puzzle",
+    "OTT 감상": "ott",
+    "영화 보기": "movie",
+
+    // 🎭 공연예술
+    "연극 관람": "theater",
+
+    // ⚾ 스포츠
+    "야구 관람": "baseball",
+    "축구 관람": "soccer",
+    "풋살": "futsal",
+    "배드민턴": "badminton",
+
+    // 🧳 라이프스타일
+    "여행": "travel",
+  };
+
+  // ✅ (1) 유저 정보 불러오기
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      if (user && user.userId) {
-        try {
-          const userData = await getUser(user.userId);
-          console.log("📋 최신 사용자 정보:", userData);
-          
-          // hasSurvey 정보가 다를 때만 업데이트 (무한 루프 방지)
-          if (user.hasSurvey !== userData.hasSurvey) {
-            updateUser({
-              hasSurvey: userData.hasSurvey
-            });
-          }
-        } catch (error) {
-          console.error("❌ 사용자 정보 불러오기 실패:", error);
-        }
-      }
-    };
+    if (!isAuthenticated || !user) {
+      console.warn("⚠️ 로그인 정보 없음 — 기본 취미 목록 표시");
+      setLoading(false);
+      return;
+    }
 
-    fetchUserInfo();
-  }, [user?.userId]); // userId가 변경될 때만 실행
-
-  useEffect(() => {
-    const fetchHobbies = async () => {
+    const fetchUserData = async () => {
       try {
-        const hobbies = await getAllHobbies();
-        console.log("📦 받은 취미 데이터:", hobbies);
-        
-        // 개인 맞춤 취미 (처음 3개)
-        setPersonalizedHobbies(hobbies.slice(0, 3));
-        
-        // 새로운 취미 (다음 3개)
-        setNewHobbies(hobbies.slice(3, 6));
+        const res = await fetch(`http://localhost:8080/api/users/${user.userId}`);
+        if (!res.ok) throw new Error("유저 정보 요청 실패");
+
+        const data = await res.json();
+        console.log("✅ 유저 정보:", data);
+
+        const formattedData = {
+          gender: data.gender || "",
+          age_group: data.ageGroup || "",
+          preferred_place: data.preferredPlace || "",
+          propensity: data.propensity || "",
+          budget: data.budget || "",
+          hobby_time: data.hobbyTime || "",
+          time_per_day: data.timePerDay || "",
+          frequency: data.frequency || "",
+          goal: data.goal || "",
+          sociality: data.sociality || "",
+        };
+
+        setUserData(formattedData);
       } catch (error) {
-        console.error("❌ 취미 목록 조회 실패:", error);
-        // 오류 발생 시 기본 데이터 사용
-        setPersonalizedHobbies([
-          { id: 1, hobbyName: "자전거 타기", photo: "/images/bike.png" },
-          { id: 2, hobbyName: "기타 연주", photo: "/images/guitar.png" },
-          { id: 3, hobbyName: "그림 그리기", photo: "/images/painting.png" }
-        ]);
-        setNewHobbies([
-          { id: 4, hobbyName: "요가", photo: "/images/yoga.png" },
-          { id: 5, hobbyName: "베이킹", photo: "/images/baking.png" },
-          { id: 6, hobbyName: "하이킹", photo: "/images/hiking.png" }
-        ]);
+        console.error("❌ 유저 데이터 불러오기 실패:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchHobbies();
+    fetchUserData();
+  }, [user, isAuthenticated]);
+
+  // ✅ (2) Flask 추천 API 호출
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!userData || Object.keys(userData).length === 0) return;
+      try {
+        const recs = await getHobbyRecommendations(userData);
+        console.log("🎯 Flask 추천 결과:", recs);
+        setRecommendedHobbies(recs.slice(0, 3));
+      } catch (error) {
+        console.error("❌ Flask 추천 취미 불러오기 실패:", error);
+      }
+    };
+    fetchRecommendations();
+  }, [userData]);
+
+  // ✅ (3) Spring Boot에서 새로운 취미 불러오기
+  useEffect(() => {
+    const fetchNewHobbies = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/hobbies");
+        if (!res.ok) throw new Error("취미 목록 요청 실패");
+
+        const data = await res.json();
+        console.log("🆕 새로운 취미 목록:", data);
+        setNewHobbies(data.slice(0, 3));
+      } catch (error) {
+        console.error("❌ 새로운 취미 불러오기 실패:", error);
+      }
+    };
+    fetchNewHobbies();
   }, []);
 
-  const handleHobbyClick = (hobbyId) => {
-    navigate(`/hobby-detail/${hobbyId}`);
-  };
-
-  // 개인 맞춤 취미 박스 클릭 핸들러
-  const handlePersonalizedBoxClick = () => {
-    console.log("🔍 현재 사용자 정보:", user);
-    console.log("🔍 hasSurvey 상태:", user?.hasSurvey);
-    
-    if (!user || !user.hasSurvey) {
-      alert("설문조사를 하십시오");
-      navigate("/survey");
-    } else {
-      // 나중에 AI 추천 기능 추가 예정
-      console.log("✅ 설문조사 완료 - AI 추천 기능 예정");
-      // 설문조사 완료된 경우 아무것도 하지 않음
-    }
-  };
+  if (loading) return <p style={{ textAlign: "center" }}>로딩 중입니다...</p>;
 
   return (
     <div className="main-container">
-      {/* 개인 맞춤 취미 */}
+      {/* 🎯 개인 맞춤 취미 */}
       <div className="main-wrapper">
-        <h2 className="main-title">개인 맞춤 취미</h2>
-        <div 
-          className="main-card"
-          onClick={handlePersonalizedBoxClick}
-          style={{ cursor: "pointer" }}
+        <h2
+          className="main-title"
+          onClick={() => navigate("/personal-hobby")}
+          style={{ cursor: "pointer", transition: "color 0.2s" }}
+          onMouseEnter={(e) => (e.target.style.color = "#1e3a8a")}
+          onMouseLeave={(e) => (e.target.style.color = "black")}
         >
+          개인 맞춤 취미
+        </h2>
+
+        <div className="main-card">
           <div className="main-list">
-            {personalizedHobbies.map((hobby) => (
-              <div 
-                key={hobby.id} 
-                className="main-item"
-              >
-                <img 
-                  src={hobby.photo || "/images/art.png"} 
-                  alt={hobby.hobbyName} 
-                  onError={(e) => { 
-                    console.warn(`이미지 로드 실패: ${e.target.src}`);
-                    e.target.src = "/images/art.png"; 
+            {recommendedHobbies.length > 0 ? (
+              recommendedHobbies.map((hobby, index) => (
+                <div
+                  key={index}
+                  className="main-item"
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      alert("로그인이 필요합니다 😅");
+                      navigate("/");
+                    } else {
+                      if (typeof hobby === "string") {
+                        navigate(`/hobby/${encodeURIComponent(hobby)}`);
+                      } else if (hobby.id) {
+                        navigate(`/hobby/${hobby.id}`);
+                      }
+                    }
                   }}
-                />
-                <p>{hobby.hobbyName}</p>
-              </div>
-            ))}
+                >
+                  <img
+                    src={
+                      typeof hobby === "string"
+                        ? process.env.PUBLIC_URL +
+                          `/images/${imageMap[hobby] || hobby || "default"}.png`
+                        : process.env.PUBLIC_URL +
+                          `/images/${imageMap[hobby.hobbyName] || hobby.hobbyName || "default"}.png`
+                    }
+                    alt={typeof hobby === "string" ? hobby : hobby.hobbyName}
+                    onError={(e) =>
+                      (e.target.src = process.env.PUBLIC_URL + "/images/default.png")
+                    }
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <p>{typeof hobby === "string" ? hobby : hobby.hobbyName}</p>
+                </div>
+              ))
+            ) : (
+              <p style={{ textAlign: "center" }}>추천 취미가 없습니다 😢</p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* 새로운 취미 */}
-      <div className="main-wrapper">
-        <h2 className="main-title">새로운 취미</h2>
-        <div className="main-card">
+      {/* 🆕 새로운 취미 */}
+<div className="main-wrapper">
+  <h2
+    className="main-title"
+    onClick={() => navigate("/new-hobbies")}
+    style={{ cursor: "pointer", transition: "color 0.2s" }}
+    onMouseEnter={(e) => (e.target.style.color = "#1e3a8a")}
+    onMouseLeave={(e) => (e.target.style.color = "black")}
+  >
+    새로운 취미 보기
+  </h2>
+
+  <div className="main-card">
+
           <div className="main-list">
-            {newHobbies.map((hobby) => (
-              <div 
-                key={hobby.id} 
-                className="main-item"
-                onClick={() => handleHobbyClick(hobby.id)}
-                style={{ cursor: "pointer" }}
-              >
-                <img 
-                  src={hobby.photo || "/images/art.png"} 
-                  alt={hobby.hobbyName}
-                  onError={(e) => { 
-                    console.warn(`이미지 로드 실패: ${e.target.src}`);
-                    e.target.src = "/images/art.png"; 
-                  }}
-                />
-                <p>{hobby.hobbyName}</p>
-              </div>
-            ))}
+            {newHobbies.length > 0 ? (
+              newHobbies.map((hobby) => (
+                <div
+                  key={hobby.id}
+                  className="main-item"
+                  onClick={() => navigate(`/hobby/${hobby.id}`)}
+                >
+                  <img
+                    src={hobby.photo || "/images/default.png"}
+                    alt={hobby.hobbyName}
+                    onError={(e) => (e.target.src = "/images/default.png")}
+                  />
+                  <p>{hobby.hobbyName}</p>
+                </div>
+              ))
+            ) : (
+              <p style={{ textAlign: "center" }}>새로운 취미가 없습니다 😢</p>
+            )}
           </div>
         </div>
       </div>

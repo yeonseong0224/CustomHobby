@@ -22,11 +22,13 @@
 /* ✅ 카드 정렬 그리드 */
 .hobbyinfo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
+  /* 👉 minmax(250px, 1fr)로 카드 폭을 안정적으로 고정 */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px; /* 카드 간격 확대 */
   justify-items: center;
-  align-items: center;
-  max-width: 1000px;
+  align-items: stretch; /* 높이 균일하게 */
+  width: 100%;
+  max-width: 1200px; /* ✅ 폭 늘림 */
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -36,13 +38,13 @@
   background-color: #f8f9ff;
   border: 2px solid #2563eb;
   border-radius: 15px;
-  padding: 30px 20px;
+  padding: 25px 20px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   width: 100%;
-  max-width: 250px;
-  min-height: 200px;
+  max-width: 260px;
+  min-height: 220px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
@@ -50,18 +52,17 @@
   align-items: center;
 }
 
-/* ✅ hover 효과 */
 .hobbyinfo-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* ✅ 이미지 */
 .hobbyinfo-image {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
 
 /* ✅ 취미 이름 */
@@ -69,4 +70,30 @@
   font-size: 18px;
   font-weight: 600;
   color: #1e3a8a;
+  margin-bottom: 8px;
+}
+
+/* ✅ 설명 문구 */
+.hobbyinfo-desc {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* ✅ 반응형 조정 */
+@media (max-width: 768px) {
+  .hobbyinfo-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+  .hobbyinfo-card {
+    max-width: 200px;
+    min-height: 180px;
+  }
+
+  .hobbyinfo-image {
+    width: 60px;
+    height: 60px;
+  }
 }

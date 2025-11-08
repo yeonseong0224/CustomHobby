@@ -78,14 +78,3 @@ export const getUserCreatedHobbies = async (userId) => {
     throw error;
   }
 };
-
-
-
-
-
-
-
-
-
-
-

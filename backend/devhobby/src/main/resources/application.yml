@@ -5,17 +5,23 @@ spring:
     username: postgres.oelmefqcgjtjcimlwyay
     password: 1234
 
-    hikari:  # ✅ Supabase용 커넥션 풀 설정 추가
-      maximum-pool-size: 5      # 동시에 사용할 최대 연결 수
-      minimum-idle: 1           # 최소 유지 연결 수
-      idle-timeout: 10000       # 10초 이상 유휴 상태면 연결 해제
-      connection-timeout: 30000 # 연결 대기 최대 30초
-      max-lifetime: 60000       # 연결 수명 60초로 제한 (오래된 연결 방지)
+    hikari:  # ✅ Supabase 커넥션 풀 설정
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 10000
+      connection-timeout: 30000
+      max-lifetime: 60000
+
+  sql:
+    init:
+      mode: always # ✅ data.sql 항상 실행
+      encoding: UTF-8
 
   jpa:
-    open-in-view: false          # ✅ 연결을 오래 점유하지 않게 설정
+    open-in-view: false
+    defer-datasource-initialization: true # ✅ JPA 테이블 생성 후 data.sql 실행
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # ⚠️ 초기화용: 기존 테이블 삭제 후 새로 생성
     show-sql: true
     properties:
       hibernate:

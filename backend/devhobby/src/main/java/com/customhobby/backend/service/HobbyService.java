@@ -20,7 +20,7 @@ public class HobbyService {
     private final HobbyRepository hobbyRepository;
     private final UserParticipatedHobbyRepository userParticipatedHobbyRepository;
 
-    // 취미 생성
+    // ✅ 취미 생성
     @Transactional
     public HobbyResponseDto createHobby(HobbyRequestDto request) {
         Hobby hobby = Hobby.builder()
@@ -41,7 +41,7 @@ public class HobbyService {
         return new HobbyResponseDto(saved);
     }
 
-    // 모든 취미 조회
+    // ✅ 모든 취미 조회
     @Transactional(readOnly = true)
     public List<HobbyResponseDto> getAllHobbies() {
         return hobbyRepository.findAll()
@@ -50,7 +50,7 @@ public class HobbyService {
                 .collect(Collectors.toList());
     }
 
-    // 카테고리별 취미 조회
+    // ✅ 카테고리별 취미 조회
     @Transactional(readOnly = true)
     public List<HobbyResponseDto> getHobbiesByCategory(String category) {
         return hobbyRepository.findByHobbyCategory(category)
@@ -59,7 +59,7 @@ public class HobbyService {
                 .collect(Collectors.toList());
     }
 
-    // 취미 상세 조회
+    // ✅ 취미 상세 조회 (ID 기반)
     @Transactional(readOnly = true)
     public HobbyResponseDto getHobby(Long id) {
         Hobby hobby = hobbyRepository.findById(id)
@@ -67,12 +67,33 @@ public class HobbyService {
         return new HobbyResponseDto(hobby);
     }
 
-    // 취미 참여
+    // ✅ 취미 이름 기반 조회 (결과 없을 때 예외 대신 빈 리스트 반환)
+    @Transactional(readOnly = true)
+    public List<Hobby> findByHobbyName(String hobbyName) {
+        if (hobbyName == null || hobbyName.isBlank()) {
+            throw new IllegalArgumentException("취미 이름이 비어 있습니다.");
+        }
+
+        List<Hobby> hobbies = hobbyRepository.findByHobbyName(hobbyName);
+
+        // ⚠️ 결과가 없더라도 예외를 던지지 않고 빈 리스트 반환
+        if (hobbies.isEmpty()) {
+            System.out.println("⚠️ 해당 이름의 취미를 찾을 수 없습니다: " + hobbyName);
+            return List.of();
+        }
+
+        return hobbies;
+    }
+
+    // ✅ 취미 참여
     @Transactional
-    public void participateHobby(String userId, Long hobbyId) {  // ✅ String userId
-        // 취미 존재 여부 확인
+    public void participateHobby(String userId, Long hobbyId) {
         if (!hobbyRepository.existsById(hobbyId)) {
             throw new IllegalArgumentException("존재하지 않는 취미입니다.");
+        }
+
+        if (userParticipatedHobbyRepository.existsByUserIdAndHobbyId(userId, hobbyId)) {
+            throw new IllegalStateException("이미 참여한 취미입니다.");
         }
 
         UserParticipatedHobby participation = UserParticipatedHobby.builder()
@@ -83,9 +104,9 @@ public class HobbyService {
         userParticipatedHobbyRepository.save(participation);
     }
 
-    // 사용자가 참여한 취미 목록 조회
+    // ✅ 사용자가 참여한 취미 목록 조회
     @Transactional(readOnly = true)
-    public List<HobbyResponseDto> getUserParticipatedHobbies(String userId) {  // ✅ String userId
+    public List<HobbyResponseDto> getUserParticipatedHobbies(String userId) {
         List<Long> hobbyIds = userParticipatedHobbyRepository.findByUserId(userId)
                 .stream()
                 .map(UserParticipatedHobby::getHobbyId)
@@ -97,14 +118,12 @@ public class HobbyService {
                 .collect(Collectors.toList());
     }
 
-    // 사용자가 개설한 취미 목록 조회
+    // ✅ 사용자가 개설한 취미 목록 조회
     @Transactional(readOnly = true)
-    public List<HobbyResponseDto> getUserCreatedHobbies(String creatorId) {  // ✅ String creatorId
+    public List<HobbyResponseDto> getUserCreatedHobbies(String creatorId) {
         return hobbyRepository.findByCreatorId(creatorId)
                 .stream()
                 .map(HobbyResponseDto::new)
                 .collect(Collectors.toList());
     }
 }
-
-

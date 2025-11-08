@@ -64,3 +64,15 @@ export const updateUserProfile = async (userId, profileData) => {
     throw error;
   }
 };
+// 🟢 사용자 기본 정보 수정 (닉네임, 지역, 나이 등)
+export const updateUserInfo = async (userId, updatedData) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/${userId}`, updatedData, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ 사용자 정보 수정 실패:", error);
+    throw error;
+  }
+};

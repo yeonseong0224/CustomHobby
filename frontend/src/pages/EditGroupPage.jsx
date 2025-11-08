@@ -14,9 +14,12 @@ export default function EditGroupPage() {
     locationLink: "",
     participationFee: 0,
     materials: "",
+    category: "",
+    meetingDate: "", // ✅ 모임일 추가
   });
+
   const [loading, setLoading] = useState(true);
-  const [showSuccess, setShowSuccess] = useState(false); // ✅ 성공 배너 상태
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // ✅ 기존 데이터 불러오기
   useEffect(() => {
@@ -30,6 +33,10 @@ export default function EditGroupPage() {
           locationLink: data.locationLink || "",
           participationFee: data.participationFee || 0,
           materials: data.materials || "",
+          category: data.category || "",
+          meetingDate: data.meetingDate
+            ? data.meetingDate.split("T")[0] // ✅ 날짜 형식 변환 (YYYY-MM-DD)
+            : "",
         });
       } catch (error) {
         alert("모임 정보를 불러오는 중 오류가 발생했습니다.");
@@ -71,11 +78,14 @@ export default function EditGroupPage() {
   return (
     <div className="edit-group-page">
       {/* ✅ 상단 성공 배너 */}
-      {showSuccess && <div className="success-banner">✅ 수정이 완료되었습니다!</div>}
+      {showSuccess && (
+        <div className="success-banner">✅ 수정이 완료되었습니다!</div>
+      )}
 
       <h1 className="edit-title">🛠️ 모임 정보 수정</h1>
 
       <div className="edit-form">
+        {/* ✅ 모임 이름 */}
         <label>모임 이름</label>
         <input
           type="text"
@@ -85,6 +95,7 @@ export default function EditGroupPage() {
           placeholder="모임 이름을 입력하세요"
         />
 
+        {/* ✅ 모임 설명 */}
         <label>모임 설명</label>
         <textarea
           name="groupDescription"
@@ -93,6 +104,25 @@ export default function EditGroupPage() {
           placeholder="모임에 대한 설명을 입력하세요"
         />
 
+        {/* ✅ 카테고리 */}
+        <label>카테고리</label>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+        >
+          <option value="">카테고리를 선택하세요</option>
+          <option value="운동/건강">운동/건강</option>
+          <option value="음악/공연">음악/공연</option>
+          <option value="예술/공예">예술/공예</option>
+          <option value="요리/음식">요리/음식</option>
+          <option value="야외활동">야외활동</option>
+          <option value="교육/자기계발">교육/자기계발</option>
+          <option value="엔터테인먼트">엔터테인먼트</option>
+          <option value="라이프스타일">라이프스타일</option>
+        </select>
+
+        {/* ✅ 모임 형태 */}
         <label>모임 형태</label>
         <select
           name="meetingType"
@@ -104,15 +134,17 @@ export default function EditGroupPage() {
           <option value="hybrid">혼합</option>
         </select>
 
+        {/* ✅ 장소 / 링크 */}
         <label>장소 / 링크</label>
         <input
           type="text"
           name="locationLink"
           value={formData.locationLink}
           onChange={handleChange}
-          placeholder="예: 부산 OO문화센터 / Zoom 링크 등"
+          placeholder="예: 장소 / Zoom 링크 등"
         />
 
+        {/* ✅ 참가비 */}
         <label>참가비 (원)</label>
         <input
           type="number"
@@ -122,6 +154,7 @@ export default function EditGroupPage() {
           min="0"
         />
 
+        {/* ✅ 준비물 */}
         <label>준비물</label>
         <input
           type="text"
@@ -131,6 +164,16 @@ export default function EditGroupPage() {
           placeholder="예: 붓펜, 노트, 기타 등"
         />
 
+        {/* ✅ 모임일 */}
+        <label>모임 날짜</label>
+        <input
+          type="date"
+          name="meetingDate"
+          value={formData.meetingDate}
+          onChange={handleChange}
+        />
+
+        {/* ✅ 버튼 */}
         <div className="button-wrapper">
           <button
             className="cancel-btn"

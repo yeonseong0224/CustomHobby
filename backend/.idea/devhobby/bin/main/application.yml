@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require
+    username: postgres.oelmefqcgjtjcimlwyay
+    password: 1234
+
+    hikari:  # ✅ Supabase용 커넥션 풀 설정 추가
+      maximum-pool-size: 5      # 동시에 사용할 최대 연결 수
+      minimum-idle: 1           # 최소 유지 연결 수
+      idle-timeout: 10000       # 10초 이상 유휴 상태면 연결 해제
+      connection-timeout: 30000 # 연결 대기 최대 30초
+      max-lifetime: 60000       # 연결 수명 60초로 제한 (오래된 연결 방지)
+
+  jpa:
+    open-in-view: false          # ✅ 연결을 오래 점유하지 않게 설정
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080

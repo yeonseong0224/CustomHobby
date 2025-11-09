@@ -14,6 +14,7 @@ export default function HobbyDescriptionPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const data = await getHobby(id);
         setHobby(data);
 
@@ -21,6 +22,7 @@ export default function HobbyDescriptionPage() {
         const allHobbies = await getAllHobbies();
         const sameHobbyMeetings = allHobbies.filter(
           (h) => h.hobbyName === data.hobbyName && h.id !== data.id
+
         );
 
         // ✅ 중복 제거
@@ -54,6 +56,9 @@ export default function HobbyDescriptionPage() {
             src={hobby.photo || "/images/default.png"}
             alt={hobby.hobbyName}
             className="hd-desc-image"
+
+            onError={(e) => { e.target.src = "/images/art.png"; }}
+
           />
         </div>
 
@@ -88,6 +93,8 @@ export default function HobbyDescriptionPage() {
                   src={meet.photo || "/images/default.png"}
                   alt={meet.hobbyName}
                   className="hd-related-img"
+
+
                 />
                 <h3>{meet.oneLineDescription}</h3>
                 <p>{meet.locationLink}</p>

@@ -2,6 +2,7 @@ package com.customhobby.backend.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,11 +24,17 @@ public class HobbyGroup {
     @Column(length = 1000)
     private String groupDescription;
 
+    @Column(length = 100)
+    private String category; // 카테고리 (음악, 운동, 예술, 요리, 독서, 기타 등)
+
     @Column(nullable = false, length = 255)
     private String meetingType; // online, offline, hybrid
 
     @Column(length = 500)
     private String locationLink;
+
+    @Column
+    private LocalDate meetingDate; // 모임 날짜
 
     @Column(nullable = false)
     private Integer participationFee;

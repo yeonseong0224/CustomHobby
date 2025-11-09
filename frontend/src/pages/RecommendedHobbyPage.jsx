@@ -7,34 +7,28 @@ export default function RecommendedHobbyPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [hobbies, setHobbies] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // ✅ 백엔드에서 해당 카테고리의 취미 가져오기
+
   useEffect(() => {
-    const fetchHobbies = async () => {
+    const fetchRecommendedHobbies = async () => {
       try {
+        // 실제로는 추천 알고리즘 적용 필요
+        // 현재는 전체 취미 목록을 가져와서 일부만 표시
         const allHobbies = await getAllHobbies();
-        // id를 hobbyCategory와 매칭하여 필터링
-        const filtered = allHobbies.filter((h) => 
-          h.hobbyCategory && h.hobbyCategory.includes(id)
-        );
-        setHobbies(filtered);
+        setHobbies(allHobbies.slice(0, 6)); // 상위 6개만 표시
       } catch (error) {
-        console.error("❌ 추천 취미 불러오기 실패:", error);
-      } finally {
-        setLoading(false);
+        console.error("❌ 추천 취미 조회 실패:", error);
       }
     };
 
-    fetchHobbies();
+    fetchRecommendedHobbies();
   }, [id]);
-
-  if (loading) return <p style={{ textAlign: "center" }}>로딩 중...</p>;
 
   return (
     <div className="rec-container">
-      <h1 className="rec-title">추천 취미 - {id}</h1>
-      <p className="rec-subtitle">당신의 관심과 취향에 맞춘 취미 클래스입니다.</p>
+      <h1 className="rec-title">추천 취미</h1>
+      <p className="rec-subtitle">당신의 관심과 취향에 맞춘 취미입니다.</p>
+
 
       <div className="rec-grid">
         {hobbies.length > 0 ? (
@@ -45,9 +39,12 @@ export default function RecommendedHobbyPage() {
               onClick={() => navigate(`/hobby-description/${hobby.id}`)}
             >
               <img 
-                src={hobby.photo || "/images/default.png"} 
+
+                src={hobby.photo || "/images/art.png"} 
                 alt={hobby.hobbyName} 
-                className="rec-img" 
+                className="rec-img"
+                onError={(e) => { e.target.src = "/images/art.png"; }}
+
               />
               <div className="rec-info">
                 <h3>{hobby.hobbyName}</h3>

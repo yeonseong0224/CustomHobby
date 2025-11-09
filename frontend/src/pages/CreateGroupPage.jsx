@@ -8,6 +8,7 @@ import "../styles/CreateGroupPage.css";
 
 export default function CreateGroupPage() {
   const navigate = useNavigate();
+
   const { user } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
   const [form, setForm] = useState({
     title: "",
@@ -23,18 +24,26 @@ export default function CreateGroupPage() {
   const [isOnline, setIsOnline] = useState(true);
   const [date, setDate] = useState(new Date());
 
+
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleDateChange = (selectedDate) => {
+    setDate(selectedDate);
+    // YYYY-MM-DD 형식으로 변환
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+    setForm({ ...form, meetingDate: formattedDate });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // ✅ Context에서 사용자 정보 확인
     if (!user || !user.userId) {
       alert("로그인이 필요합니다.");
       navigate("/");
       return;
     }
+
 
     const payload = {
       groupName: form.title,
@@ -53,6 +62,7 @@ export default function CreateGroupPage() {
     try {
       const result = await createHobbyGroup(payload);
       console.log("✅ 등록 성공:", result);
+
       alert("모임이 성공적으로 개설되었습니다!");
       navigate("/main");
     } catch (error) {
@@ -70,9 +80,28 @@ export default function CreateGroupPage() {
       <div className="create-group-layout">
         {/* 왼쪽 입력 */}
         <form className="create-group-left" onSubmit={handleSubmit}>
-          <input name="title" placeholder="모임 이름" value={form.title} onChange={handleChange} required />
-          <textarea name="desc" placeholder="모임 설명" value={form.desc} onChange={handleChange} />
-          <input name="fee" placeholder="참가비" value={form.fee} onChange={handleChange} />
+
+          <input 
+            name="groupName" 
+            placeholder="모임 이름" 
+            value={form.groupName} 
+            onChange={handleChange} 
+            required 
+          />
+          <textarea 
+            name="groupDescription" 
+            placeholder="모임 설명" 
+            value={form.groupDescription} 
+            onChange={handleChange} 
+          />
+          <input 
+            name="participationFee" 
+            type="number"
+            placeholder="참가비" 
+            value={form.participationFee} 
+            onChange={handleChange} 
+          />
+
 
           <div className="create-group-location-row">
             <button
@@ -82,14 +111,31 @@ export default function CreateGroupPage() {
             >
               {isOnline ? "온라인" : "오프라인"}
             </button>
-            <input name="location" placeholder="장소" value={form.location} onChange={handleChange} />
+
+            <input 
+              name="locationLink" 
+              placeholder="장소" 
+              value={form.locationLink} 
+              onChange={handleChange} 
+            />
           </div>
 
-          <input name="link" placeholder="영상 링크" value={form.link} onChange={handleChange} />
-          <input name="items" placeholder="준비물" value={form.items} onChange={handleChange} />
+          <input 
+            name="materials" 
+            placeholder="준비물" 
+            value={form.materials} 
+            onChange={handleChange} 
+          />
 
           {/* ✅ 카테고리 */}
-          <select name="category" value={form.category} onChange={handleChange} className="create-group-category">
+          <select 
+            name="category" 
+            value={form.category} 
+            onChange={handleChange} 
+            className="create-group-category"
+            required
+          >
+
             <option value="">-- 카테고리 선택 --</option>
             <option value="음악">🎵 음악</option>
             <option value="운동">🏃 운동</option>
@@ -110,13 +156,28 @@ export default function CreateGroupPage() {
         <div className="create-group-right">
           <div className="create-group-calendar">
             <h4>📅 캘린더</h4>
-            <Calendar onChange={setDate} value={date} locale="ko-KR" />
-            <p className="selected-date">선택한 날짜: {date.toLocaleDateString("ko-KR")}</p>
+
+            <Calendar 
+              onChange={handleDateChange} 
+              value={date} 
+              locale="ko-KR" 
+            />
+            <p className="selected-date">
+              선택한 날짜: {date.toLocaleDateString("ko-KR")}
+            </p>
+
           </div>
 
           <div className="create-group-notice">
             <h4>공지사항</h4>
-            <input name="notice" placeholder="공지사항 입력" value={form.notice} onChange={handleChange} />
+
+            <input 
+              name="notice" 
+              placeholder="공지사항 입력" 
+              value={form.notice} 
+              onChange={handleChange} 
+            />
+
           </div>
         </div>
       </div>

@@ -73,8 +73,8 @@ export default function MainPage() {
     navigate("/personal-hobby"); // ✅ PersonalHobbyPage로 이동
   };
 
-  // 개인 맞춤 취미 박스 클릭 핸들러
-  const handlePersonalizedBoxClick = () => {
+  // 개인 맞춤 취미 제목 클릭 핸들러 (PersonalHobbyPage로 이동)
+  const handlePersonalizedTitleClick = () => {
     console.log("🔍 현재 사용자 정보:", user);
     console.log("🔍 hasSurvey 상태:", user?.hasSurvey);
     
@@ -82,10 +82,21 @@ export default function MainPage() {
       alert("설문조사를 하십시오");
       navigate("/survey");
     } else {
-      // 나중에 AI 추천 기능 추가 예정
-      console.log("✅ 설문조사 완료 - AI 추천 기능 예정");
-      // 설문조사 완료된 경우 아무것도 하지 않음
+      // PersonalHobbyPage로 이동
+      navigate("/personal-hobby");
     }
+  };
+
+  // 개인 맞춤 취미 카드 클릭 핸들러 (설문조사 체크)
+  const handlePersonalizedCardClick = () => {
+    console.log("🔍 main-card 클릭 - 현재 사용자 정보:", user);
+    console.log("🔍 hasSurvey 상태:", user?.hasSurvey);
+    
+    if (!user || !user.hasSurvey) {
+      alert("설문조사를 완료해주세요!");
+      navigate("/survey");
+    }
+    // 설문조사 완료된 경우 아무 일도 일어나지 않음 (AI 알고리즘 대기)
   };
 
   return (
@@ -101,7 +112,7 @@ export default function MainPage() {
         </h2>
         <div 
           className="main-card"
-          onClick={handlePersonalizedBoxClick}
+          onClick={handlePersonalizedCardClick}
           style={{ cursor: "pointer" }}
         >
           <div className="main-list">

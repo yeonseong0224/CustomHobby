@@ -8,6 +8,7 @@ export default function RecommendedHobbyPage() {
   const navigate = useNavigate();
   const [hobbies, setHobbies] = useState([]);
 
+
   useEffect(() => {
     const fetchRecommendedHobbies = async () => {
       try {
@@ -28,6 +29,7 @@ export default function RecommendedHobbyPage() {
       <h1 className="rec-title">추천 취미</h1>
       <p className="rec-subtitle">당신의 관심과 취향에 맞춘 취미입니다.</p>
 
+
       <div className="rec-grid">
         {hobbies.length > 0 ? (
           hobbies.map((hobby) => (
@@ -37,10 +39,12 @@ export default function RecommendedHobbyPage() {
               onClick={() => navigate(`/hobby-description/${hobby.id}`)}
             >
               <img 
+
                 src={hobby.photo || "/images/art.png"} 
                 alt={hobby.hobbyName} 
                 className="rec-img"
                 onError={(e) => { e.target.src = "/images/art.png"; }}
+
               />
               <div className="rec-info">
                 <h3>{hobby.hobbyName}</h3>

@@ -36,7 +36,9 @@ export default function PersonalHobbyPage() {
   );
 
   const goToHobby = (id) => {
-    navigate(`/hobby-description/${id}`);
+
+    navigate(`/hobby/${id}`);
+
   };
 
   if (loading) return <p style={{ textAlign: "center" }}>로딩 중입니다...</p>;
@@ -69,7 +71,9 @@ export default function PersonalHobbyPage() {
                 src={hobby.photo || "/images/default.png"}
                 alt={hobby.hobbyName}
                 className="ph-img"
+
                 onError={(e) => { e.target.src = "/images/art.png"; }}
+
               />
               <div className="ph-info">
                 <h3>{hobby.hobbyName}</h3>

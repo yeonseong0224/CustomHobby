@@ -8,25 +8,25 @@ import "../styles/CreateGroupPage.css";
 
 export default function CreateGroupPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [form, setForm] = useState({
-    groupName: "",
-    groupDescription: "",
-    category: "",
-    meetingType: "offline",
-    locationLink: "",
-    meetingDate: null,
-    participationFee: 0,
-    materials: "",
-    notice: ""
-  });
-  const [date, setDate] = useState(new Date());
-  const [isOnline, setIsOnline] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+  const { user } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
+  const [form, setForm] = useState({
+    title: "",
+    desc: "",
+    fee: "",
+    location: "",
+    link: "",
+    items: "",
+    notice: "",
+    review: "",
+    category: "",
+  });
+  const [isOnline, setIsOnline] = useState(true);
+  const [date, setDate] = useState(new Date());
+
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleDateChange = (selectedDate) => {
     setDate(selectedDate);
@@ -44,37 +44,30 @@ export default function CreateGroupPage() {
       return;
     }
 
-    if (!form.category) {
-      alert("카테고리를 선택해주세요!");
-      return;
-    }
 
-    if (!form.meetingDate) {
-      alert("모임 날짜를 선택해주세요!");
-      return;
-    }
+    const payload = {
+      groupName: form.title,
+      groupDescription: form.desc,
+      meetingType: isOnline ? "online" : "offline",
+      locationLink: form.location,
+      participationFee: parseInt(form.fee, 10) || 0,
+      materials: form.items,
+      reviewBoard: form.review,
+      customTab: form.notice,
+      creatorId: user.userId,  // ✅ Context에서 가져온 userId
+      category: form.category,
+      meetingDate: date.toLocaleDateString("ko-KR")
+    };
 
     try {
-      const groupData = {
-        groupName: form.groupName,
-        groupDescription: form.groupDescription,
-        category: form.category,
-        meetingType: isOnline ? "online" : "offline",
-        locationLink: form.locationLink,
-        meetingDate: form.meetingDate,
-        participationFee: Number(form.participationFee) || 0,
-        materials: form.materials,
-        creatorId: user.userId
-      };
-      
-      console.log("📤 모임 개설 데이터:", groupData);
-      const result = await createHobbyGroup(groupData);
-      console.log("✅ 모임 개설 성공:", result);
+      const result = await createHobbyGroup(payload);
+      console.log("✅ 등록 성공:", result);
+
       alert("모임이 성공적으로 개설되었습니다!");
       navigate("/main");
     } catch (error) {
-      console.error("❌ 모임 개설 실패:", error);
-      alert("모임 개설에 실패했습니다. 다시 시도해주세요.");
+      console.error("❌ 등록 실패:", error);
+      alert("서버 전송 실패. 다시 시도해주세요.");
     }
   };
 
@@ -87,6 +80,7 @@ export default function CreateGroupPage() {
       <div className="create-group-layout">
         {/* 왼쪽 입력 */}
         <form className="create-group-left" onSubmit={handleSubmit}>
+
           <input 
             name="groupName" 
             placeholder="모임 이름" 
@@ -108,6 +102,7 @@ export default function CreateGroupPage() {
             onChange={handleChange} 
           />
 
+
           <div className="create-group-location-row">
             <button
               type="button"
@@ -116,6 +111,7 @@ export default function CreateGroupPage() {
             >
               {isOnline ? "온라인" : "오프라인"}
             </button>
+
             <input 
               name="locationLink" 
               placeholder="장소" 
@@ -139,6 +135,7 @@ export default function CreateGroupPage() {
             className="create-group-category"
             required
           >
+
             <option value="">-- 카테고리 선택 --</option>
             <option value="음악">🎵 음악</option>
             <option value="운동">🏃 운동</option>
@@ -159,6 +156,7 @@ export default function CreateGroupPage() {
         <div className="create-group-right">
           <div className="create-group-calendar">
             <h4>📅 캘린더</h4>
+
             <Calendar 
               onChange={handleDateChange} 
               value={date} 
@@ -167,16 +165,19 @@ export default function CreateGroupPage() {
             <p className="selected-date">
               선택한 날짜: {date.toLocaleDateString("ko-KR")}
             </p>
+
           </div>
 
           <div className="create-group-notice">
             <h4>공지사항</h4>
+
             <input 
               name="notice" 
               placeholder="공지사항 입력" 
               value={form.notice} 
               onChange={handleChange} 
             />
+
           </div>
         </div>
       </div>

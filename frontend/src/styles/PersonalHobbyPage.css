@@ -80,6 +80,8 @@
   text-align: center;
   color: #999;
   font-size: 16px;
-  padding: 40px;
+
+  grid-column: 1 / -1;
+
 }
 

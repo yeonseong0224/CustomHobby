@@ -14,16 +14,15 @@ export default function HobbyDescriptionPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 현재 취미 정보 가져오기
-        const hobbyData = await getHobby(id);
-        setHobby(hobbyData);
 
-        // 모든 취미 가져오기
-        const allHobbies = await getAllHobbies();
-        
+        const data = await getHobby(id);
+        setHobby(data);
+
         // ✅ 동일한 취미 이름(hobbyName)을 가진 다른 모임만 필터링
+        const allHobbies = await getAllHobbies();
         const sameHobbyMeetings = allHobbies.filter(
-          (h) => h.hobbyName === hobbyData.hobbyName && h.id !== hobbyData.id
+          (h) => h.hobbyName === data.hobbyName && h.id !== data.id
+
         );
 
         // ✅ 중복 제거
@@ -57,7 +56,9 @@ export default function HobbyDescriptionPage() {
             src={hobby.photo || "/images/default.png"}
             alt={hobby.hobbyName}
             className="hd-desc-image"
+
             onError={(e) => { e.target.src = "/images/art.png"; }}
+
           />
         </div>
 
@@ -92,7 +93,8 @@ export default function HobbyDescriptionPage() {
                   src={meet.photo || "/images/default.png"}
                   alt={meet.hobbyName}
                   className="hd-related-img"
-                  onError={(e) => { e.target.src = "/images/art.png"; }}
+
+
                 />
                 <h3>{meet.oneLineDescription}</h3>
                 <p>{meet.locationLink}</p>

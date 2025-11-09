@@ -65,7 +65,12 @@ export default function MainPage() {
   }, []);
 
   const handleHobbyClick = (hobbyId) => {
-    navigate(`/hobby-detail/${hobbyId}`);
+    navigate(`/hobby/${hobbyId}`); // ✅ /hobby/:id로 변경 (HobbyDescriptionPage로 이동)
+  };
+
+  // 개인 맞춤 취미 제목 클릭 핸들러
+  const handlePersonalizedTitleClick = () => {
+    navigate("/personal-hobby"); // ✅ PersonalHobbyPage로 이동
   };
 
   // 개인 맞춤 취미 제목 클릭 핸들러 (PersonalHobbyPage로 이동)

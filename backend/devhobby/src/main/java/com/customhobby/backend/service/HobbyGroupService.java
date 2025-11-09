@@ -32,6 +32,8 @@ public class HobbyGroupService {
                 .meetingDate(request.getMeetingDate())
                 .participationFee(request.getParticipationFee())
                 .materials(request.getMaterials())
+                .category(request.getCategory())
+                .meetingDate(request.getMeetingDate())
                 .creatorId(request.getCreatorId())
                 .build();
 

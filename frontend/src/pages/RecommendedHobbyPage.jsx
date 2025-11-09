@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getAllHobbies } from "../api/hobbyApi";
+import { getAllHobbies } from "../api/hobbyApi"; // ✅ 올바른 import
 import "../styles/RecommendedHobbyPage.css";
 
 export default function RecommendedHobbyPage() {
@@ -9,14 +9,14 @@ export default function RecommendedHobbyPage() {
   const [hobbies, setHobbies] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ 백엔드에서 해당 카테고리의 취미 가져오기
+  // ✅ 카테고리별 취미 불러오기
   useEffect(() => {
     const fetchHobbies = async () => {
       try {
         const allHobbies = await getAllHobbies();
-        // id를 hobbyCategory와 매칭하여 필터링
-        const filtered = allHobbies.filter((h) => 
-          h.hobbyCategory && h.hobbyCategory.includes(id)
+        // id와 hobbyCategory를 비교하여 필터링
+        const filtered = allHobbies.filter(
+          (h) => h.hobbyCategory && h.hobbyCategory.includes(id)
         );
         setHobbies(filtered);
       } catch (error) {
@@ -44,15 +44,16 @@ export default function RecommendedHobbyPage() {
               className="rec-card"
               onClick={() => navigate(`/hobby-description/${hobby.id}`)}
             >
-              <img 
-                src={hobby.photo || "/images/default.png"} 
-                alt={hobby.hobbyName} 
-                className="rec-img" 
+              <img
+                src={hobby.photo || "/images/default.png"}
+                alt={hobby.hobbyName}
+                className="rec-img"
+                onError={(e) => (e.target.src = "/images/default.png")}
               />
               <div className="rec-info">
                 <h3>{hobby.hobbyName}</h3>
                 <p className="rec-category">{hobby.hobbyCategory}</p>
-                <p className="rec-type">{hobby.meetingType}</p>
+                <p className="rec-type">{hobby.meetingType || "정보 없음"}</p>
               </div>
             </div>
           ))
@@ -63,4 +64,3 @@ export default function RecommendedHobbyPage() {
     </div>
   );
 }
-

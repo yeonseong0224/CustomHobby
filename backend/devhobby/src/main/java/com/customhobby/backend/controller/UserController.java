@@ -56,4 +56,18 @@ public class UserController {
         );
         return new UserResponseDto(user);
     }
+    // 사용자 기본정보 수정 (닉네임, 지역, 나이 등)
+    @PutMapping("/{userId}")
+    public UserResponseDto updateUserInfo(
+            @PathVariable String userId,
+            @RequestBody UserRequestDto request) {
+        User user = userService.updateUserInfo(
+                userId,
+                request.getNickname(),
+                request.getAge(),
+                request.getRegion(),
+                request.getPhoneNum()
+        );
+        return new UserResponseDto(user);
+    }
 }

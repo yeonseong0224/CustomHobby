@@ -1,107 +1,123 @@
+// 📁 src/pages/HobbyDescriptionPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getHobby, getAllHobbies } from "../api/hobbyApi";
+import axios from "axios";
 import "../styles/HobbyDescriptionPage.css";
 
 export default function HobbyDescriptionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [hobby, setHobby] = useState(null);
-  const [meetings, setMeetings] = useState([]);
+  const [mainHobby, setMainHobby] = useState(null);
+  const [relatedGroups, setRelatedGroups] = useState([]);
   const [error, setError] = useState(null);
 
-  // ✅ 현재 취미 데이터 + 같은 이름의 모임 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getHobby(id);
-        setHobby(data);
+        let hobbyData;
 
-        // ✅ 동일한 취미 이름(hobbyName)을 가진 다른 모임만 필터링
-        const allHobbies = await getAllHobbies();
-        const sameHobbyMeetings = allHobbies.filter(
-          (h) => h.hobbyName === data.hobbyName && h.id !== data.id
-        );
+        // ✅ 숫자 ID or 문자열(한글 이름) 판별
+        if (/^\d+$/.test(id)) {
+          hobbyData = await getHobby(id);
+        } else {
+          const res = await axios.get(
+            `http://localhost:8080/api/hobbies/name?hobbyName=${encodeURIComponent(id)}`
+          );
+          hobbyData = Array.isArray(res.data) ? res.data[0] : res.data;
+        }
 
-        // ✅ 중복 제거
-        const uniqueMeetings = sameHobbyMeetings.filter(
-          (h, i, arr) =>
-            arr.findIndex((o) => o.locationLink === h.locationLink) === i
-        );
+        if (!hobbyData) throw new Error("해당 취미를 찾을 수 없습니다.");
+        setMainHobby(hobbyData);
 
-        setMeetings(uniqueMeetings);
+        // ✅ 같은 이름의 모임 불러오기
+        const all = await getAllHobbies();
+        const sameHobbyGroups = all
+          .filter((h) => h.hobbyName === hobbyData.hobbyName)
+          .filter(
+            (h, i, arr) =>
+              arr.findIndex((x) => x.oneLineDescription === h.oneLineDescription) === i
+          );
+
+        setRelatedGroups(sameHobbyGroups);
       } catch (err) {
-        console.error("❌ 취미 정보 불러오기 실패:", err);
-        setError("취미 정보를 불러오는 중 오류가 발생했습니다.");
+        console.error("❌ 데이터 불러오기 실패:", err);
+        setError("데이터를 불러오는 중 오류가 발생했습니다.");
       }
     };
 
     fetchData();
   }, [id]);
 
-  // ✅ 로딩 / 에러 처리
-  if (error) return <p className="hd-loading">❌ {error}</p>;
-  if (!hobby) return <p className="hd-loading">로딩 중입니다...</p>;
+  if (error) return <p className="hdp-loading">❌ {error}</p>;
+  if (!mainHobby) return <p className="hdp-loading">로딩 중...</p>;
+
+  // ✅ 이미지 경로 안전 처리 함수
+  const getImageSrc = (path) => {
+    if (!path || path.trim() === "") return "/images/default.png";
+    return path.startsWith("http")
+      ? path
+      : `${window.location.origin}${path.startsWith("/") ? path : "/" + path}`;
+  };
 
   return (
-    <div className="hd-desc-container">
-      {/* ✅ 왼쪽 영역 */}
-      <div className="hd-desc-left">
-        <h1 className="hd-main-title">{hobby.hobbyName}</h1>
+    <div className="hdp-container">
+      {/* 왼쪽: 대표 취미 설명 */}
+      <div className="hdp-left">
+        <h1 className="hdp-title">{mainHobby.hobbyName}</h1>
 
-        <div className="hd-desc-image-box">
+        <div className="hdp-image-box">
           <img
-            src={hobby.photo || "/images/default.png"}
-            alt={hobby.hobbyName}
-            className="hd-desc-image"
+            src={getImageSrc(mainHobby.photo)}
+            alt={mainHobby.hobbyName}
+            className="hdp-image"
           />
         </div>
 
-        <div className="hd-desc-card">
+        <div className="hdp-info">
           <h2>취미 설명</h2>
-          <p>{hobby.description}</p>
-        </div>
+          <p>{mainHobby.description || "설명이 없습니다."}</p>
 
-        <div className="hd-desc-card">
-          <h2>준비물 / 대체 준비물</h2>
-          <p>
-            <strong>필요 준비물:</strong> {hobby.materials || "정보 없음"}
-            <br />
-            <strong>대체 가능:</strong> {hobby.haveMaterial || "정보 없음"}
-          </p>
-        </div>  
+          <h3>💼 준비물</h3>
+          <p>{mainHobby.materials || "정보 없음"}</p>
+
+          <h3>🎯 대체 활동</h3>
+          <p>{mainHobby.haveMaterial || "정보 없음"}</p>
+        </div>
       </div>
 
-      {/* ✅ 오른쪽 영역 */}
-      <div className="hd-desc-right">
-        <h2 className="hd-related-title">취미 모임</h2>
+      {/* 오른쪽: 관련 모임 목록 */}
+      <div className="hdp-right">
+        <h2 className="hdp-subtitle">이 취미의 모임 목록</h2>
 
-        {meetings.length > 0 ? (
-          <div className="hd-related-grid">
-            {meetings.map((meet) => (
+        <div className="hdp-meeting-grid">
+          {relatedGroups.length > 0 ? (
+            relatedGroups.map((group) => (
               <div
-                key={meet.id}
-                className="hd-related-card"
-                onClick={() => navigate(`/hobby-detail/${meet.id}`)}
+                key={group.id}
+                className="hdp-meeting-card"
+                onClick={() => navigate(`/hobby-detail/${group.id}`)}
               >
                 <img
-                  src={meet.photo || "/images/default.png"}
-                  alt={meet.hobbyName}
-                  className="hd-related-img"
+                  src={getImageSrc(group.photo)}
+                  alt={group.hobbyName}
+                  className="hdp-meeting-img"
                 />
-                <h3>{meet.oneLineDescription}</h3>
-                <p>{meet.locationLink}</p>
-                <p className="hd-related-sub">
-                  💸 참가비 {meet.participationFee}원 · 📅 {meet.meetingDate}
-                </p>
+                <div className="hdp-meeting-info">
+                  <h3>{group.oneLineDescription}</h3>
+                  <p>{group.locationLink}</p>
+                  <p className="hdp-meeting-sub">
+                    💸 {group.participationFee?.toLocaleString() ?? 0}원 · 📅{" "}
+                    {group.meetingDate || "미정"}
+                  </p>
+                </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="hd-empty-text">현재 등록된 취미 모임이 없습니다.</p>
-        )}
+            ))
+          ) : (
+            <p className="hdp-empty">현재 등록된 모임이 없습니다.</p>
+          )}
+        </div>
       </div>
     </div>
   );
 }
-

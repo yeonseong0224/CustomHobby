@@ -10,11 +10,26 @@
 /* 상단 헤더 */
 .hdp-header {
   display: flex;
-  align-items: center;
-  gap: 20px;
+  flex-direction: column;  /* ✅ 세로 정렬 */
+  align-items: flex-start; /* ✅ 왼쪽 정렬 (가운데 정렬 원하면 center) */
+  text-align: left;
+  gap: 6px; /* 두 줄 간격 */
   margin-bottom: 30px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 15px;
 }
 
+/* 🎨 취미 제목 */
+.hdp-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+
+
+/* 버튼 */
 .hdp-home-btn {
   background-color: #000;
   color: white;
@@ -23,12 +38,6 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-}
-
-.hdp-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #333;
 }
 
 /* 본문 레이아웃 */
@@ -53,7 +62,8 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.hdp-card h2, .hdp-card h3 {
+.hdp-card h2,
+.hdp-card h3 {
   margin-top: 0;
   color: #222;
 }
@@ -113,4 +123,3 @@
     grid-template-columns: 1fr;
   }
 }
-

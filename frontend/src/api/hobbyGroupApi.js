@@ -66,6 +66,27 @@ export const getUserCreatedGroups = async (userId) => {
     console.error("❌ 개설한 모임 조회 실패:", error);
     throw error;
   }
+}
+
+  // 🟢 7. 모임 수정하기 (EditGroupPage용)
+export const updateHobbyGroup = async (groupId, groupData) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/${groupId}`, groupData);
+    return response.data;
+  } catch (error) {
+    console.error("❌ 모임 수정 실패:", error);
+    throw error;
+  }
+};
+// 🗑️ 모임 삭제
+export const deleteHobbyGroup = async (id) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ 모임 삭제 실패:", error);
+    throw error;
+  }
 };
 
 

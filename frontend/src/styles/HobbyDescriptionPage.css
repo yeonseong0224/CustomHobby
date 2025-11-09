@@ -1,147 +1,94 @@
-/* ✅ 전체 레이아웃 */
-.hd-desc-container {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+.hdp-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 60px;
-  padding: 40px 80px;
-  min-height: 100vh;
-  font-family: "Pretendard", sans-serif;
-  background-color: #f8f8f8;
-  box-sizing: border-box;
+  padding: 50px 80px;
+  background-color: #fafafa;
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }
 
-/* ✅ 페이지 제목 */
-.hd-main-title {
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 15px;
-  color: #222;
+
+/* 왼쪽 설명 */
+.hdp-left {
+  flex: 1.2;
 }
 
-/* ✅ 왼쪽 */
-.hd-desc-left {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.hd-desc-image-box {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  text-align: center;
-}
-
-.hd-desc-image {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  object-fit: cover;
-}
-
-/* ✅ 카드 */
-.hd-desc-card {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 20px 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.hd-desc-card h2 {
-  margin-bottom: 10px;
-  color: #222;
-  font-size: 18px;
-}
-
-/* ✅ 오른쪽 */
-.hd-desc-right {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.hd-related-title {
-  font-size: 22px;
+.hdp-title {
+  font-size: 32px;
   font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hdp-image-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.hdp-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.hdp-info {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.hdp-info h2,
+.hdp-info h3 {
+  margin-top: 15px;
   color: #333;
 }
 
-/* ✅ 목록으로 돌아가기 버튼 */
-.hd-back-btn {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #d3d3d3;
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
+/* 오른쪽 모임 목록 */
+.hdp-right {
+  flex: 1;
 }
 
-.hd-back-btn:hover {
-  background-color: #bdbdbd;
+.hdp-subtitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 15px;
 }
 
-/* ✅ 로딩 / 빈 상태 */
-.hd-loading {
-  text-align: center;
-  font-size: 18px;
-  color: #666;
-  margin-top: 100px;
+.hdp-meeting-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.hd-empty-text {
-  color: #888;
-  font-size: 15px;
-  text-align: center;
-}
-
-/* ✅ 반응형 */
-@media (max-width: 1024px) {
-  .hd-desc-container {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 30px 40px;
-  }
-
-  .hd-desc-right {
-    order: -1;
-  }
-}
-/* ✅ 관련 취미 카드 레이아웃 */
-.hd-related-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.hd-related-card {
-  background-color: #fff;
-  border-radius: 10px;
+.hdp-meeting-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #fff;
+  border-radius: 12px;
   padding: 15px;
-  text-align: center;
-  cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.hd-related-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.hdp-meeting-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #fafafa;
 }
 
-.hd-related-img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 8px;
+.hdp-meeting-info h3 {
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.hd-related-sub {
-  color: #888;
+.hdp-meeting-sub {
   font-size: 14px;
+  color: #666;
 }
-

@@ -57,6 +57,10 @@ public class Hobby {
     @Column(name = "creator_id", length = 30)
     private String creatorId;  // User의 userId (String)를 참조
 
+    // ✅ 새로 추가해야 하는 부분
+    @Column(columnDefinition = "TEXT")
+    private String photo;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

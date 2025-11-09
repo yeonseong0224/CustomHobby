@@ -50,6 +50,20 @@ public class HobbyGroupController {
     public List<HobbyGroupResponseDto> getUserCreatedGroups(@PathVariable String userId) {  // ✅ String userId
         return hobbyGroupService.getUserCreatedGroups(userId);
     }
+    // 모임 수정
+    @PutMapping("/{id}")
+    public HobbyGroupResponseDto updateGroup(
+            @PathVariable Long id,
+            @RequestBody HobbyGroupRequestDto request) {
+        return hobbyGroupService.updateGroup(id, request);
+    }
+
+
+    // 🗑️ 모임 삭제
+    @DeleteMapping("/{id}")
+    public void deleteGroup(@PathVariable Long id) {
+        hobbyGroupService.deleteGroup(id);
+    }
 }
 
 

@@ -94,4 +94,25 @@ public class UserService {
 
         return userRepository.save(user);
     }
+    // 사용자 기본정보 수정 (닉네임, 나이, 지역, 전화번호)
+    @Transactional
+    public User updateUserInfo(String userId, String nickname, Integer age, String region, String phoneNum) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 ID입니다."));
+
+        if (nickname != null && !nickname.isEmpty()) {
+            user.setNickname(nickname);
+        }
+        if (age != null) {
+            user.setAge(age);
+        }
+        if (region != null && !region.isEmpty()) {
+            user.setRegion(region);
+        }
+        if (phoneNum != null && !phoneNum.isEmpty()) {
+            user.setPhoneNum(phoneNum);
+        }
+
+        return userRepository.save(user);
+    }
 }

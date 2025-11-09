@@ -1,94 +1,112 @@
-import React, { useState, useEffect } from "react";
+// 📁 src/pages/HobbyInfoPage.jsx
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getHobbiesByCategory } from "../api/hobbyApi";
 import "../styles/HobbyInfoPage.css";
 
 export default function HobbyInfoPage() {
-  const { id } = useParams();
+  const { id } = useParams(); // 예: /hobbyinfo/art
   const navigate = useNavigate();
-  const [hobbies, setHobbies] = useState([]);
 
+  const [hobbies, setHobbies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ✅ 카테고리 이름 매핑
   const categoryNames = {
     art: "예술/공예",
     outdoor: "야외활동",
     music: "음악/공연",
     food: "요리/음식",
+    sport: "운동/건강",
+    indoor: "실내활동",
+    culture: "문화/여가",
   };
 
-  // 기본 이미지 매핑
-  const defaultImages = {
-    art: "/images/art.png",
-    outdoor: "/images/outdoor.png",
-    music: "/images/music.png",
-    food: "/images/food.png",
+  // ✅ 취미별 이미지 매핑
+  const hobbyImages = {
+    "그림 그리기": "/images/painting.png",
+    "캘리그래피": "/images/calligraphy.png",
+    "사진 촬영": "/images/photo.png",
+    "기타 연주": "/images/guitar.png",
+    "피아노 연주": "/images/piano.png",
+    "자전거 타기": "/images/bike.png",
+    "요가": "/images/yoga.png",
+    "하이킹": "/images/hiking.png",
+    "베이킹": "/images/baking.png",
+    "커피 브루잉": "/images/coffee.png",
+    "캠핑": "/images/camping.png",
+    "도예": "/images/pottery.png",
+    "드럼 연주": "/images/drum.png",
+    "파스타 만들기": "/images/pasta.png",
   };
 
+  // ✅ API 호출
   useEffect(() => {
     const fetchHobbies = async () => {
       try {
+        const response = await fetch("http://localhost:8080/api/hobbies");
+        const data = await response.json();
+
         const categoryName = categoryNames[id];
-        if (categoryName) {
-          const data = await getHobbiesByCategory(categoryName);
-          console.log(`📦 카테고리 [${categoryName}] 취미 데이터:`, data);
-          setHobbies(data);
+        if (!categoryName) {
+          setHobbies([]);
+          setLoading(false);
+          return;
         }
-      } catch (error) {
-        console.error("❌ 카테고리별 취미 조회 실패:", error);
-        // 오류 발생 시 기본 데이터 사용
-        const hobbyData = {
-          art: [
-            { id: 1, hobbyName: "수채화 그리기", photo: "/images/watercolor.png" },
-            { id: 2, hobbyName: "도자기 공예", photo: "/images/pottery.png" },
-            { id: 3, hobbyName: "캘리그래피", photo: "/images/calligraphy.png" },
-          ],
-          outdoor: [
-            { id: 4, hobbyName: "하이킹", photo: "/images/hiking.png" },
-            { id: 5, hobbyName: "캠핑", photo: "/images/camping.png" },
-            { id: 6, hobbyName: "러닝", photo: "/images/running.png" },
-          ],
-          music: [
-            { id: 7, hobbyName: "기타 연주", photo: "/images/guitar.png" },
-            { id: 8, hobbyName: "피아노", photo: "/images/piano.png" },
-            { id: 9, hobbyName: "드럼", photo: "/images/drum.png" },
-          ],
-          food: [
-            { id: 10, hobbyName: "베이킹", photo: "/images/baking.png" },
-            { id: 11, hobbyName: "이탈리안 요리", photo: "/images/pasta.png" },
-            { id: 12, hobbyName: "커피 브루잉", photo: "/images/coffee.png" },
-          ],
-        };
-        setHobbies(hobbyData[id] || []);
+
+        // ✅ 카테고리별 필터링 + 중복 제거
+        const filtered = data
+          .filter((hobby) => hobby.hobbyCategory === categoryName)
+          .filter(
+            (h, i, arr) =>
+              arr.findIndex((o) => o.hobbyName === h.hobbyName) === i
+          );
+
+        setHobbies(filtered);
+      } catch (err) {
+        console.error("❌ 취미 데이터 불러오기 실패:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchHobbies();
   }, [id]);
 
+  if (loading) return <p style={{ textAlign: "center" }}>로딩 중입니다...</p>;
+
   return (
     <div className="hobbyinfo-page">
-      <h1 className="hobbyinfo-title">카테고리: {categoryNames[id] || id}</h1>
-      <p className="hobbyinfo-subtext">관련 취미 활동을 선택해보세요.</p>
+      <h1 className="hobbyinfo-title">카테고리: {categoryNames[id] || "기타"}</h1>
+      <p className="hobbyinfo-subtext">관심 있는 취미를 선택해보세요 🎨</p>
 
-      <div className="hobbyinfo-grid">
-        {hobbies.map((hobby) => (
-          <div
-            key={hobby.id}
-            className="hobbyinfo-card"
-            onClick={() => navigate(`/hobby-detail/${hobby.id}`)}
-          >
-            <img 
-              src={hobby.photo || defaultImages[id] || "/images/art.png"} 
-              alt={hobby.hobbyName} 
-              className="hobbyinfo-image"
-              onError={(e) => { 
-                console.warn(`이미지 로드 실패: ${e.target.src}`);
-                e.target.src = defaultImages[id] || "/images/art.png"; 
-              }}
-            />
-            <h3 className="hobbyinfo-name">{hobby.hobbyName}</h3>
-          </div>
-        ))}
-      </div>
+      {hobbies.length > 0 ? (
+        <div className="hobbyinfo-grid">
+          {hobbies.map((hobby) => (
+            <div
+              key={hobby.id}
+              className="hobbyinfo-card"
+              onClick={() => navigate(`/hobby-detail/${hobby.id}`)}
+            >
+              <img
+                src={
+                  hobby.photo && hobby.photo.trim() !== ""
+                    ? hobby.photo
+                    : hobbyImages[hobby.hobbyName] || "/images/default.png"
+                }
+                alt={hobby.hobbyName}
+                className="hobbyinfo-image"
+                onError={(e) => (e.target.src = "/images/default.png")}
+              />
+              <h3 className="hobbyinfo-name">{hobby.hobbyName}</h3>
+              {hobby.oneLineDescription && (
+                <p className="hobbyinfo-desc">{hobby.oneLineDescription}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="hobbyinfo-empty">해당 카테고리에 등록된 취미가 없습니다.</p>
+      )}
     </div>
   );
 }

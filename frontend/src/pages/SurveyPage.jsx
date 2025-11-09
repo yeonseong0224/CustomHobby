@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { submitSurvey } from "../api/surveyApi";
+import { getPersonalizedRecommendations } from "../api/recommendApi";  // ✅ 추가
 import "../styles/SurveyPage.css";
 
 export default function SurveyPage() {
   const navigate = useNavigate();
-  const { user, updateUser } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
+  const { user, updateUser } = useAuth();
   const [answers, setAnswers] = useState({
     gender: "",
     ageGroup: "",
     preferredPlace: "",
     propensity: "",
     budget: "",
-    currentHobbies: "없음",  // ✅ 기본값 설정 (필수 필드이므로)
+    currentHobbies: "없음",
     hobbyTime: "",
     timePerDay: "",
     frequency: "",
@@ -21,12 +22,10 @@ export default function SurveyPage() {
     sociality: ""
   });
 
-  // ✅ 페이지 로드 시 user 체크 및 localStorage에서 복구
   useEffect(() => {
     console.log("📍 SurveyPage 로드됨");
     console.log("👤 현재 user 상태:", user);
     
-    // user가 없으면 localStorage에서 복구 시도
     if (!user || !user.userId) {
       const storedUserId = localStorage.getItem("userId");
       const storedUserNickname = localStorage.getItem("userNickname");
@@ -56,48 +55,88 @@ export default function SurveyPage() {
     console.log("🧠 설문 결과:", answers);
 
     try {
-      // ✅ Context에서 사용자 정보 가져오기 (localStorage 불필요)
+      // ✅ 사용자 정보 확인
       if (!user || !user.userId) {
         alert("로그인이 필요합니다!");
         console.error("❌ 사용자 정보가 없습니다!");
         navigate("/");
         return;
       }
-
       console.log("✅ 사용자 정보:", user);
 
-      // 모든 필드가 채워졌는지 확인
+      // ✅ 모든 필드 확인
       const emptyFields = Object.entries(answers).filter(([key, value]) => !value);
       if (emptyFields.length > 0) {
         alert("모든 질문에 답변해주세요!");
         return;
       }
 
-      // 설문조사 데이터 전송
+      // ✅ 1단계: DB에 설문조사 저장
       const surveyData = {
-        userId: user.userId,  // ✅ Context에서 가져온 userId
+        userId: user.userId,
         ...answers
       };
-
       await submitSurvey(surveyData);
+      console.log("✅ 설문조사 DB 저장 완료");
+
+      // ✅ 2단계: AI 추천 받기 (camelCase → snake_case 변환)
+      const aiRequestData = {
+        gender: answers.gender,
+        age_group: answers.ageGroup,  // ✅ 변환
+        preferred_place: answers.preferredPlace,  // ✅ 변환
+        propensity: answers.propensity,
+        budget: answers.budget,
+        hobby_time: answers.hobbyTime,  // ✅ 변환
+        time_per_day: answers.timePerDay,  // ✅ 변환
+        frequency: answers.frequency,
+        goal: answers.goal,
+        sociality: answers.sociality
+      };
+
+      console.log("🤖 AI 추천 요청 중...", aiRequestData);
+      const recommendations = await getPersonalizedRecommendations(aiRequestData);
       
-      // ✅ 설문조사 완료 후 hasSurvey 상태 업데이트
+      console.log("🎯 추천된 취미 IDs:", recommendations.recommended_ids);
+      console.log("🎯 추천된 취미 이름:", recommendations.recommended_hobbies);
+
+      // ✅ 3단계: 설문조사 완료 상태 업데이트
       updateUser({
         hasSurvey: true
       });
+
+      // ✅ 4단계: 추천 결과를 localStorage에 저장 (다른 페이지에서 사용 가능)
+      if (recommendations.recommended_ids && recommendations.recommended_ids.length > 0) {
+        localStorage.setItem("recommendedHobbyIds", JSON.stringify(recommendations.recommended_ids));
+        localStorage.setItem("recommendedHobbyNames", JSON.stringify(recommendations.recommended_hobbies));
+      }
+
+      alert("설문이 제출되었습니다! 추천 결과를 확인하세요.");
       
-      alert("설문이 제출되었습니다! 메인 페이지로 이동합니다.");
-      navigate("/main");  // ✅ 바로 메인 페이지로 이동
+      // ✅ 5단계: 추천 페이지 또는 메인 페이지로 이동
+      // 옵션 1: 추천 페이지가 있다면
+      // navigate("/recommended-hobby");
+      
+      // 옵션 2: 메인 페이지로 이동
+      navigate("/main");
+
     } catch (error) {
-      console.error("설문 제출 실패:", error);
-      alert("설문 제출에 실패했습니다. 다시 시도해주세요.");
+      console.error("❌ 설문 제출 또는 AI 추천 실패:", error);
+      
+      // AI 추천 실패해도 설문은 저장되었으므로 메인으로 이동할지 묻기
+      const goToMain = window.confirm(
+        "설문은 저장되었지만 AI 추천에 실패했습니다. 메인 페이지로 이동하시겠습니까?"
+      );
+      
+      if (goToMain) {
+        updateUser({ hasSurvey: true });
+        navigate("/main");
+      }
     }
   };
 
   return (
     <div className="survey-container">
       <h1>🎯 취미 성향 설문조사</h1>
-
       <form onSubmit={handleSubmit}>
         {/* 1. 성별 */}
         <div className="question">
@@ -166,10 +205,10 @@ export default function SurveyPage() {
         {/* 8. 예산 */}
         <div className="question">
           <h3>8. 취미 활동에 사용할 수 있는 월 예산은 어느 정도인가요?(*)</h3>
-          <label><input type="radio" name="budget" value="무예산" onChange={(e)=>handleChange("budget", e.target.value)} required /> 무예산 (0원)</label>
-          <label><input type="radio" name="budget" value="저예산" onChange={(e)=>handleChange("budget", e.target.value)} /> 저예산 (~5만원)</label>
-          <label><input type="radio" name="budget" value="중간" onChange={(e)=>handleChange("budget", e.target.value)} /> 중간 (5~15만원)</label>
-          <label><input type="radio" name="budget" value="고예산" onChange={(e)=>handleChange("budget", e.target.value)} /> 고예산 (15만원~)</label>
+          <label><input type="radio" name="budget" value="무예산 (0원)" onChange={(e)=>handleChange("budget", e.target.value)} required /> 무예산 (0원)</label>
+          <label><input type="radio" name="budget" value="저예산 (~5만원)" onChange={(e)=>handleChange("budget", e.target.value)} /> 저예산 (~5만원)</label>
+          <label><input type="radio" name="budget" value="중간 (5~15만원)" onChange={(e)=>handleChange("budget", e.target.value)} /> 중간 (5~15만원)</label>
+          <label><input type="radio" name="budget" value="고예산 (15만원~)" onChange={(e)=>handleChange("budget", e.target.value)} /> 고예산 (15만원~)</label>
           <label><input type="radio" name="budget" value="상관없음" onChange={(e)=>handleChange("budget", e.target.value)} /> 상관없음</label>
         </div>
 

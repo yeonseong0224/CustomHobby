@@ -1,0 +1,179 @@
+/* ===============================
+   🎨 새로운 취미 목록 페이지
+   =============================== */
+
+.newhobbies-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+/* 제목 */
+.newhobbies-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+/* 설명 문구 */
+.newhobbies-desc {
+  font-size: 1.05rem;
+  color: #6b7280;
+  margin-bottom: 35px;
+}
+
+/* ===============================
+   🔍 검색창 스타일
+   =============================== */
+.search-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0 50px 0;
+}
+
+.search-input {
+  width: 80%;
+  max-width: 700px;
+  padding: 15px 22px;
+  font-size: 17px;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  background-color: #fafafa;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+}
+
+.search-input:focus {
+  border-color: #1e3a8a;
+  background-color: #ffffff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(30, 58, 138, 0.25);
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+/* ===============================
+   🖼️ 취미 카드 디자인
+   =============================== */
+.newhobbies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 28px;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 1000px;         /* ✅ 한 개일 때도 카드 폭이 너무 커지지 않게 */
+  margin: 0 auto;            /* ✅ 중앙 정렬 */
+}
+
+/* 카드 박스 */
+.newhobby-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  max-width: 320px;          /* ✅ 한 개일 때 폭 제한 */
+  margin: 0 auto;            /* ✅ 가운데 정렬 */
+}
+
+.newhobby-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* 카드 이미지 (비율 조정) */
+.newhobby-img {
+  width: 100%;
+  height: 170px;
+  object-fit: contain;
+  background-color: #f9fafb;
+  padding: 10px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.newhobby-card:hover .newhobby-img {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+/* 카드 내용 */
+.newhobby-info {
+  padding: 16px 20px;
+}
+
+.newhobby-info h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.newhobby-info p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 3px 0;
+}
+
+.newhobby-meta {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-top: 6px;
+}
+
+/* ===============================
+   ⚠️ 빈 결과 표시
+   =============================== */
+.newhobbies-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 1.1rem;
+  padding: 40px 0;
+}
+
+/* ===============================
+   📱 반응형 디자인
+   =============================== */
+@media (max-width: 1024px) {
+  .search-input {
+    width: 85%;
+    max-width: 600px;
+  }
+
+  .newhobby-img {
+    height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .newhobbies-container {
+    padding: 40px 16px;
+  }
+
+  .newhobbies-title {
+    font-size: 1.8rem;
+  }
+
+  .search-input {
+    width: 90%;
+    padding: 12px 18px;
+    font-size: 16px;
+  }
+
+  .newhobby-card {
+    max-width: 90%;
+  }
+
+  .newhobby-img {
+    height: 150px;
+  }
+}

@@ -91,41 +91,42 @@ export default function HobbyDescriptionPage() {
         <h2 className="hdp-subtitle">이 취미의 모임 목록</h2>
 
         <div className="hdp-meeting-grid">
-          {groupHobbies.length > 0 ? (
-            groupHobbies.map((meet) => (
-              <div
-                key={meet.id}
-                className="hdp-meeting-card"
-                onClick={() => navigate(`/hobby-detail/${meet.id}`)}
-              >
-                <img
-                  src={
-                    meet.photo && meet.photo.trim() !== ""
-                      ? `${window.location.origin}${
-                          meet.photo.startsWith("/")
-                            ? meet.photo
-                            : "/" + meet.photo
-                        }`
-                      : `${window.location.origin}/images/default.png`
-                  }
-                  alt={meet.hobbyName}
-                  className="hdp-meeting-img"
-                />
+  {groupHobbies.length > 0 ? (
+    groupHobbies.map((meet) => (
+      <div
+        key={meet.id}
+        className="hdp-meeting-card"
+        onClick={() => navigate(`/hobby-detail/${meet.id}`)}
+      >
+        <img
+          src={
+            mainHobby.photo && mainHobby.photo.trim() !== ""
+              ? `${window.location.origin}${
+                  mainHobby.photo.startsWith("/")
+                    ? mainHobby.photo
+                    : "/" + mainHobby.photo
+                }`
+              : `${window.location.origin}/images/default.png`
+          }
+          alt={meet.hobbyName}
+          className="hdp-meeting-img"
+        />
 
-                <div className="hdp-meeting-info">
-                  <h3>{meet.oneLineDescription}</h3>
-                  <p>{meet.locationLink}</p>
-                  <p className="hdp-meeting-sub">
-                    💸 {meet.participationFee?.toLocaleString() ?? 0}원 · 📅{" "}
-                    {meet.meetingDate || "미정"}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="hdp-empty">현재 등록된 모임이 없습니다.</p>
-          )}
+        <div className="hdp-meeting-info">
+          <h3>{meet.oneLineDescription}</h3>
+          <p>{meet.locationLink}</p>
+          <p className="hdp-meeting-sub">
+            💸 {meet.participationFee?.toLocaleString() ?? 0}원 · 📅{" "}
+            {meet.meetingDate || "미정"}
+          </p>
         </div>
+      </div>
+    ))
+  ) : (
+    <p className="hdp-empty">현재 등록된 모임이 없습니다.</p>
+  )}
+</div>
+
       </div>
     </div>
   );

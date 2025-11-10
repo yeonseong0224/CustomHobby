@@ -64,7 +64,10 @@ useEffect(() => {
   const searchedHobbies = filteredHobbies.filter((h) =>
     h.hobbyName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  console.log('============');
+  console.log(JSON.stringify(searchedHobbies));
+  
+  console.log('============');
   return (
     <div className="newhobbies-container">
       <h1 className="newhobbies-title">새로운 취미 목록</h1>

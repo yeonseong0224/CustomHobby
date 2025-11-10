@@ -1,10 +1,12 @@
 # ============================================================
-# 📘 recommend_app.py (완성형)
+# 📘 recommend_app.py (최종 완성형)
 # Flask + KNN 기반 취미 추천 API
 # - React 설문 자동 정규화
 # - Hobby ID 매핑
 # - CORS 허용
-# - 예외 처리 강화 및 로깅 일원화
+# - 입력 검증(설문 미완시 빈 결과 반환)
+# - 예외 처리 및 로깅 강화
+# - ✅ 추천 결과 자동 정제 ('.', '', 공백 제거)
 # ============================================================
 
 from flask import Flask, request, jsonify
@@ -20,7 +22,7 @@ from sklearn.neighbors import NearestNeighbors
 # 1️⃣ Flask 설정
 # ------------------------------------------------------------
 app = Flask(__name__)
-CORS(app)  # ✅ React / Spring 연동용 CORS 허용
+CORS(app)
 
 # ------------------------------------------------------------
 # 2️⃣ 데이터 불러오기 및 컬럼명 변경
@@ -68,6 +70,8 @@ def normalize_hobby(hobby):
         "독서": ["책읽기", "독서"],
         "요리": ["베이킹", "요리"],
         "게임": ["게임", "pc게임"],
+        "축구 관람": ["축구보기", "축구 관람"],  # ✅ 추가
+        "야구 관람": ["야구보기", "야구 관람"],  # ✅ 추가
     }
     for key, synonyms in mapping.items():
         if hobby in synonyms:
@@ -238,29 +242,33 @@ def recommend():
         user_data = request.get_json()
         print("✅ 받은 사용자 응답:", user_data)
 
+        if not user_data or all(v == "" or v is None for v in user_data.values()):
+            print("⚠️ 설문 데이터 없음 — 빈 추천 반환")
+            return jsonify({"recommended_ids": [], "recommended_hobbies": []}), 200
+
         normalized_data = {k: normalize_input_value(k, v) for k, v in user_data.items()}
         print("🔄 정규화된 응답:", normalized_data)
 
         recs = recommend_hobbies_knn(normalized_data, df_ml, df, model_knn, scaler, top_n=5)
         result_names = [h for h, _ in recs]
 
-        # 이름 → ID 매핑
+        # ✅ 불필요한 값 제거 (. / 공백 / 빈 문자열)
+        result_names = [h for h in result_names if h and h.strip() not in ["", ".", " "]]
+
         name_to_id = {v: k for k, v in hobby_id_map.items()}
         result_ids = [name_to_id.get(name) for name in result_names if name in name_to_id]
 
         print(f"🎯 최종 추천 결과: {result_names} → IDs: {result_ids}")
 
-        return jsonify({
-            "recommended_ids": result_ids,
-            "recommended_hobbies": result_names
-        })
+        return jsonify({"recommended_ids": result_ids, "recommended_hobbies": result_names})
+
     except Exception as e:
         print("❌ 오류 발생:", e)
         return jsonify({"error": str(e)}), 500
 
 # ------------------------------------------------------------
-# 🔟 서버 실행
+# 🚀 서버 실행
 # ------------------------------------------------------------
 if __name__ == "__main__":
-    print("🚀 Flask Hobby Recommendation Server Started! (정규화 + ID 매핑 + CORS Enabled)")
+    print("🚀 Flask Hobby Recommendation Server Started! (입력검증 + 정규화 + CORS + 결과 정제)")
     app.run(host="0.0.0.0", port=5000)

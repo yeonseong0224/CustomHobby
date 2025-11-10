@@ -45,7 +45,8 @@ public class HobbyResponseDto {
         this.createdAt = hobby.getCreatedAt();
         
         // ✅ 이미지 처리: DB에 이미지가 없으면 카테고리별 기본 이미지 사용
-        this.photo = getDefaultPhotoByCategory(hobby.getHobbyCategory());
+//        this.photo = getDefaultPhotoByCategory(hobby.getHobbyCategory());
+        this.photo = hobby.getPhoto();//
     }
     
     // 카테고리별 기본 이미지 매핑

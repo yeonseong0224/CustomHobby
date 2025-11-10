@@ -10,7 +10,13 @@ export default function CategoryList({ categories = [], onSelect }) {
           className="category-card"
           onClick={() => onSelect && onSelect(c)}
         >
-          <img src={c.icon} alt={c.name} className="category-icon" />
+          <img
+            src={`${window.location.origin}${
+              c.icon.startsWith("/") ? c.icon : "/" + c.icon
+            }`}
+            alt={c.name}
+            className="category-icon"
+          />
           <h3 className="category-name">{c.name}</h3>
         </div>
       ))}

@@ -9,6 +9,7 @@ export default function PersonalHobbyPage() {
   const { user, isAuthenticated } = useAuth();
 
   const [recommendedHobbies, setRecommendedHobbies] = useState([]);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // ✅ 한글 취미명 → 이미지 파일명 매핑
@@ -57,31 +58,50 @@ export default function PersonalHobbyPage() {
     "풋살": "futsal",
     "배드민턴": "badminton",
     "여행": "travel",
+    "볼링": "bowling",
   };
 
-  // ✅ Flask 추천 API로 추천 취미 가져오기
+  // ✅ (1) Spring Boot에서 최신 유저 정보 가져오기
   useEffect(() => {
-    const fetchRecommendations = async () => {
+    const fetchUserData = async () => {
       if (!isAuthenticated || !user) {
-        alert("로그인이 필요합니다.");
+        alert("로그인이 필요합니다 😅");
         navigate("/");
         return;
       }
 
       try {
-        const userData = {
-          gender: user.gender || "",
-          age_group: user.ageGroup || "",
-          preferred_place: user.preferredPlace || "",
-          propensity: user.propensity || "",
-          budget: user.budget || "",
-          hobby_time: user.hobbyTime || "",
-          time_per_day: user.timePerDay || "",
-          frequency: user.frequency || "",
-          goal: user.goal || "",
-          sociality: user.sociality || "",
-        };
+        const res = await fetch(`http://localhost:8080/api/users/${user.userId}`);
+        if (!res.ok) throw new Error("유저 정보 요청 실패");
 
+        const data = await res.json();
+        console.log("✅ [개인취미] 유저 정보:", data);
+
+        setUserData({
+          gender: data.gender || "",
+          age_group: data.ageGroup || "",
+          preferred_place: data.preferredPlace || "",
+          propensity: data.propensity || "",
+          budget: data.budget || "",
+          hobby_time: data.hobbyTime || "",
+          time_per_day: data.timePerDay || "",
+          frequency: data.frequency || "",
+          goal: data.goal || "",
+          sociality: data.sociality || "",
+        });
+      } catch (error) {
+        console.error("❌ 유저 데이터 불러오기 실패:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [user, isAuthenticated, navigate]);
+
+  // ✅ (2) Flask 추천 API 호출
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!userData) return;
+      try {
         const recs = await getHobbyRecommendations(userData);
         console.log("🎯 Flask 추천 결과:", recs);
         setRecommendedHobbies(recs.slice(0, 5));
@@ -91,9 +111,8 @@ export default function PersonalHobbyPage() {
         setLoading(false);
       }
     };
-
     fetchRecommendations();
-  }, [user, isAuthenticated, navigate]);
+  }, [userData]);
 
   if (loading) return <p style={{ textAlign: "center" }}>로딩 중입니다...</p>;
 

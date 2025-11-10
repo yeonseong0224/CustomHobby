@@ -3,6 +3,7 @@ package com.customhobby.backend.service;
 import com.customhobby.backend.domain.User;
 import com.customhobby.backend.dto.UserRequestDto;
 import com.customhobby.backend.dto.LoginRequestDto;
+import com.customhobby.backend.dto.SurveyRequestDto;
 import com.customhobby.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -103,5 +104,43 @@ public class UserService {
         if (phoneNum != null && !phoneNum.isEmpty()) user.setPhoneNum(phoneNum);
 
         return userRepository.save(user);
+    }
+
+    // ✅ 설문 응답 기반으로 User 테이블 업데이트 (Flask 추천용)
+    @Transactional
+    public void updateUserSurvey(SurveyRequestDto request) {
+        Optional<User> optionalUser = userRepository.findByUserId(request.getUserId());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            System.out.println("📊 [UPDATE USER SURVEY DATA]");
+            System.out.println("  gender=" + request.getGender());
+            System.out.println("  ageGroup=" + request.getAgeGroup());
+            System.out.println("  preferredPlace=" + request.getPreferredPlace());
+            System.out.println("  propensity=" + request.getPropensity());
+            System.out.println("  budget=" + request.getBudget());
+            System.out.println("  hobbyTime=" + request.getHobbyTime());
+            System.out.println("  timePerDay=" + request.getTimePerDay());
+            System.out.println("  frequency=" + request.getFrequency());
+            System.out.println("  goal=" + request.getGoal());
+            System.out.println("  sociality=" + request.getSociality());
+
+            // 필드별 업데이트
+            user.setGender(request.getGender());
+            user.setAgeGroup(request.getAgeGroup());
+            user.setPreferredPlace(request.getPreferredPlace());
+            user.setPropensity(request.getPropensity());
+            user.setBudget(request.getBudget());
+            user.setHobbyTime(request.getHobbyTime());
+            user.setTimePerDay(request.getTimePerDay());
+            user.setFrequency(request.getFrequency());
+            user.setGoal(request.getGoal());
+            user.setSociality(request.getSociality());
+
+            userRepository.save(user);
+            System.out.println("✅ 설문 정보가 User 테이블에 반영됨: userId=" + user.getUserId());
+        } else {
+            System.out.println("⚠️ 해당 userId를 찾을 수 없음: " + request.getUserId());
+        }
     }
 }

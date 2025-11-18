@@ -88,40 +88,38 @@ useEffect(() => {
 
       {/* 📋 결과 목록 */}
       <div className="newhobbies-grid">
-        {searchedHobbies.length > 0 ? (
-          searchedHobbies.map((hobby) => (
-            <div
-              key={hobby.id}
-              className="newhobby-card"
-              onClick={() => navigate(`/hobby/${hobby.id}`)}
-            >
-              <img
-                src={
-                  hobby.photo && hobby.photo.trim() !== ""
-                    ? `${window.location.origin}${
-                        hobby.photo.startsWith("/")
-                          ? hobby.photo
-                          : "/" + hobby.photo
-                      }`
-                    : `${window.location.origin}/images/default.png`
-                }
-                alt={hobby.hobbyName}
-                className="newhobby-img"
-              />
-              <div className="newhobby-info">
-                <h3>{hobby.hobbyName}</h3>
-                <p>{hobby.oneLineDescription}</p>
-                <p className="newhobby-meta">
-                  💸 {hobby.participationFee?.toLocaleString() ?? 0}원 · 📅{" "}
-                  {hobby.meetingDate || "미정"}
-                </p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="newhobbies-empty">검색 결과가 없습니다 😢</p>
-        )}
+  {searchedHobbies.length > 0 ? (
+    searchedHobbies.map((hobby) => (
+      <div
+        key={hobby.id}
+        className="newhobby-card"
+        onClick={() => navigate(`/hobby/${hobby.id}`)}
+      >
+        <img
+          src={
+            hobby.photo && hobby.photo.trim() !== ""
+              ? `${window.location.origin}${
+                  hobby.photo.startsWith("/")
+                    ? hobby.photo
+                    : "/" + hobby.photo
+                }`
+              : `${window.location.origin}/images/default.png`
+          }
+          alt={hobby.hobbyName}
+          className="newhobby-img"
+        />
+
+        {/* 🔥 여기만 취미 이름만 나타나도록 수정 */}
+        <div className="newhobby-info">
+          <h3>{hobby.hobbyName}</h3>
+        </div>
       </div>
+    ))
+  ) : (
+    <p className="newhobbies-empty">검색 결과가 없습니다 😢</p>
+  )}
+</div>
+
     </div>
   );
 }

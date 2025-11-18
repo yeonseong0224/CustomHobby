@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class HobbyGroupResponseDto {
+
     private Long id;
     private String groupName;
     private String groupDescription;
@@ -19,8 +20,11 @@ public class HobbyGroupResponseDto {
     private String reviewBoard;
     private String customTab;
     private String category;
-    private String meetingDate;  // 모임 날짜
-    private String creatorId;  // ✅ User의 userId (String)를 참조
+    private String meetingDate;
+    private String creatorId;
+    private String hobbyName;   // ⭐ Long → String
+
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -37,6 +41,7 @@ public class HobbyGroupResponseDto {
         this.category = group.getCategory();
         this.meetingDate = group.getMeetingDate();
         this.creatorId = group.getCreatorId();
+        this.hobbyName = group.getHobbyName(); // ⭐ 추가
         this.createdAt = group.getCreatedAt();
         this.updatedAt = group.getUpdatedAt();
     }

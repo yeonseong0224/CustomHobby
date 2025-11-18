@@ -1,43 +1,23 @@
-/* 공통 */
+/* 전체 컨테이너 */
 .hdp-container {
   font-family: "Pretendard", sans-serif;
-  background-color: #f8f8f8;
-  padding: 40px 80px;
+  background-color: #f8f9fb;
+  padding: 50px 80px;
   min-height: 100vh;
-  box-sizing: border-box;
 }
 
-/* 상단 헤더 */
+/* 상단 제목 영역 */
 .hdp-header {
-  display: flex;
-  flex-direction: column;  /* ✅ 세로 정렬 */
-  align-items: flex-start; /* ✅ 왼쪽 정렬 (가운데 정렬 원하면 center) */
-  text-align: left;
-  gap: 6px; /* 두 줄 간격 */
-  margin-bottom: 30px;
-  border-bottom: 2px solid #eee;
+  margin-bottom: 35px;
   padding-bottom: 15px;
+  border-bottom: 2px solid #e6e6e6;
 }
 
-/* 🎨 취미 제목 */
 .hdp-title {
-  font-size: 20px;
+  font-size: 34px;
   font-weight: 700;
-  color: #111;
+  color: #222;
   margin: 0;
-}
-
-
-
-/* 버튼 */
-.hdp-home-btn {
-  background-color: #000;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 /* 본문 레이아웃 */
@@ -45,81 +25,67 @@
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 60px;
-  margin-top: 20px;
 }
 
-/* 왼쪽 */
+/* 왼쪽 영역 */
 .hdp-left {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
 }
 
 .hdp-card {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 20px 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  padding: 24px 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .hdp-card h2,
 .hdp-card h3 {
   margin-top: 0;
-  color: #222;
-}
-
-.hdp-desc {
-  color: #555;
-  line-height: 1.6;
 }
 
 .hdp-row {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 12px 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background: white;
+  padding: 16px 22px;
+  border-radius: 10px;
   font-size: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.04);
 }
 
-.hdp-sub {
-  color: #888;
-  font-size: 14px;
-  margin-top: 8px;
+.hdp-desc {
+  color: #444;
+  line-height: 1.6;
 }
 
 /* 오른쪽 */
 .hdp-right {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .hdp-calendar,
 .hdp-notice,
 .hdp-review,
 .hdp-creator {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 20px 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  padding: 24px 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
-.hdp-notice ul {
-  list-style-type: disc;
-  padding-left: 20px;
-  color: #444;
-}
-
-.hdp-loading {
-  text-align: center;
-  font-size: 18px;
-  color: #666;
-  margin-top: 100px;
-}
-
-/* 반응형 */
-@media (max-width: 1024px) {
-  .hdp-content {
-    grid-template-columns: 1fr;
-  }
+/* 참여 버튼 */
+.hdp-join-btn {
+  margin-top: 20px;
+  padding: 14px 20px;
+  width: 100%;
+  background-color: #4a6cf7;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
 }

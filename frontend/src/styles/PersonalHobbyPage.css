@@ -1,85 +1,82 @@
 .ph-container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 40px 20px;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   background-color: #fafafa;
 }
 
-.ph-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.ph-home-btn {
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 16px;
-  cursor: pointer;
-}
-
-.ph-search {
-  flex: 0.6;
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  outline: none;
-}
-
 .ph-title {
-  font-size: 1.5rem;
+  font-size: 1.9rem;
+  font-weight: bold;
+  margin-bottom: 30px;
   color: #1e3a8a;
-  margin-bottom: 20px;
 }
 
+/* ⭐ 4열 고정 */
 .ph-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
 }
 
+/* 취미 카드 */
 .ph-card {
-  background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  transition: transform 0.2s ease;
   cursor: pointer;
+  transition: transform 0.15s ease;
 }
 
 .ph-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
 }
 
 .ph-img {
   width: 100%;
-  height: 180px;
+  height: 200px;
   object-fit: cover;
 }
 
 .ph-info {
-  padding: 16px;
+  padding: 18px;
+}
+
+.ph-info h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
 }
 
 .ph-desc {
-  color: #475569;
+  color: #555;
   font-size: 0.9rem;
 }
 
-.ph-items {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin-top: 6px;
+/* ⭐ 빈칸 2개 (공간만 유지) */
+.ph-empty-box {
+  visibility: hidden;
 }
 
-.ph-empty {
+/* ⭐ 마지막 칸 버튼 - 높이 고정(카드와 동일) */
+.ph-go-main {
+  height: 100px; /* 일반 카드 높이에 맞춰 조정 */
+  background-color: #4f6df5;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  color: #999;
-  font-size: 16px;
-  grid-column: 1 / -1;
+  cursor: pointer;
+  transition: 0.2s ease;
+  padding: 20px;
+}
+
+.ph-go-main:hover {
+  background-color: #3d56d6;
 }
 

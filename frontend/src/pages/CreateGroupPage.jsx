@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { createHobbyGroup } from "../api/hobbyGroupApi";
 import Calendar from "react-calendar";
@@ -8,18 +8,22 @@ import "../styles/CreateGroupPage.css";
 
 export default function CreateGroupPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
+  const { user } = useAuth();
+  const { hobbyName: paramHobbyName } = useParams();
+
+  const [selectedHobby, setSelectedHobby] = useState(paramHobbyName || "");
+
   const [form, setForm] = useState({
     title: "",
     desc: "",
     fee: "",
     location: "",
-    link: "",
     items: "",
     notice: "",
     review: "",
     category: "",
   });
+
   const [isOnline, setIsOnline] = useState(true);
   const [date, setDate] = useState(new Date());
 
@@ -28,11 +32,15 @@ export default function CreateGroupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // ✅ Context에서 사용자 정보 확인
+
     if (!user || !user.userId) {
       alert("로그인이 필요합니다.");
       navigate("/");
+      return;
+    }
+
+    if (!selectedHobby) {
+      alert("어떤 취미의 모임인지 선택해주세요!");
       return;
     }
 
@@ -45,16 +53,16 @@ export default function CreateGroupPage() {
       materials: form.items,
       reviewBoard: form.review,
       customTab: form.notice,
-      creatorId: user.userId,  // ✅ Context에서 가져온 userId
+      creatorId: user.userId,
       category: form.category,
-      meetingDate: date.toLocaleDateString("ko-KR")
+      meetingDate: date.toLocaleDateString("ko-KR"),
+      hobbyName: selectedHobby, // ⭐ 핵심: 취미 이름 저장
     };
 
     try {
-      const result = await createHobbyGroup(payload);
-      console.log("✅ 등록 성공:", result);
+      await createHobbyGroup(payload);
       alert("모임이 성공적으로 개설되었습니다!");
-      navigate("/main");
+      navigate(`/hobby/${encodeURIComponent(selectedHobby)}`);
     } catch (error) {
       console.error("❌ 등록 실패:", error);
       alert("서버 전송 실패. 다시 시도해주세요.");
@@ -64,14 +72,34 @@ export default function CreateGroupPage() {
   return (
     <div className="create-group-page">
       <div className="create-group-header">
-        <h2>모임 개설 페이지</h2>
+        <h2>모임 개설하기</h2>
       </div>
 
       <div className="create-group-layout">
-        {/* 왼쪽 입력 */}
         <form className="create-group-left" onSubmit={handleSubmit}>
+          {/* ⭐ 취미 선택 */}
+          <select
+            value={selectedHobby}
+            onChange={(e) => setSelectedHobby(e.target.value)}
+            disabled={!!paramHobbyName}
+            className="create-group-category"
+          >
+            <option value="">-- 취미 선택 --</option>
+            <option value="헬스">헬스</option>
+            <option value="여행">여행</option>
+            <option value="수영">수영</option>
+            <option value="캠핑">캠핑</option>
+            <option value="베이킹">베이킹</option>
+            <option value="러닝">러닝</option>
+            <option value="볼링">볼링</option>
+            <option value="요리">요리</option>
+            <option value="독서">독서</option>
+            <option value="자전거">자전거</option>
+          </select>
+
           <input name="title" placeholder="모임 이름" value={form.title} onChange={handleChange} required />
           <textarea name="desc" placeholder="모임 설명" value={form.desc} onChange={handleChange} />
+
           <input name="fee" placeholder="참가비" value={form.fee} onChange={handleChange} />
 
           <div className="create-group-location-row">
@@ -85,19 +113,7 @@ export default function CreateGroupPage() {
             <input name="location" placeholder="장소" value={form.location} onChange={handleChange} />
           </div>
 
-          <input name="link" placeholder="영상 링크" value={form.link} onChange={handleChange} />
           <input name="items" placeholder="준비물" value={form.items} onChange={handleChange} />
-
-          {/* ✅ 카테고리 */}
-          <select name="category" value={form.category} onChange={handleChange} className="create-group-category">
-            <option value="">-- 카테고리 선택 --</option>
-            <option value="음악">🎵 음악</option>
-            <option value="운동">🏃 운동</option>
-            <option value="예술">🎨 예술</option>
-            <option value="요리">🍳 요리</option>
-            <option value="독서">📚 독서</option>
-            <option value="기타">✨ 기타</option>
-          </select>
 
           <div className="create-group-btn-row">
             <button type="submit" className="create-group-submit-btn">
@@ -106,12 +122,11 @@ export default function CreateGroupPage() {
           </div>
         </form>
 
-        {/* 오른쪽: 캘린더 & 공지 */}
         <div className="create-group-right">
           <div className="create-group-calendar">
             <h4>📅 캘린더</h4>
             <Calendar onChange={setDate} value={date} locale="ko-KR" />
-            <p className="selected-date">선택한 날짜: {date.toLocaleDateString("ko-KR")}</p>
+            <p>선택한 날짜: {date.toLocaleDateString("ko-KR")}</p>
           </div>
 
           <div className="create-group-notice">

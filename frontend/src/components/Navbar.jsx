@@ -5,30 +5,35 @@ import "../styles/Navbar.css";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { user, logout, isAuthenticated } = useAuth();  // ✅ Context 사용
+  const { user, logout, isAuthenticated } = useAuth();
 
   const handleLogout = () => {
-    logout();  // ✅ Context의 logout 함수 사용
+    logout();
     alert("로그아웃되었습니다.");
-    navigate("/");  // 로그아웃 후 시작 페이지로 이동
+    navigate("/");
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        {/* 로고 */}
-        <Link to="/main" className="logo">
-          CustomHobby
-        </Link>
 
-        {/* 메뉴 링크 */}
+        {/* ✅ 로고 이미지를 사용 */}
+        <Link to="/main" className="logo">
+  <img 
+    src="/images/logo.png" 
+    alt="CustomHobby Logo" 
+    className="navbar-logo"
+  />
+</Link>
+
+
+        {/* 메뉴 */}
         <div className="nav-links">
           <Link to="/category">카테고리</Link>
         </div>
       </div>
 
       <div className="navbar-right">
-        {/* ✅ 로그인된 경우 */}
         {isAuthenticated ? (
           <>
             <span style={{ marginRight: "15px", color: "#666" }}>
@@ -42,12 +47,9 @@ export default function Navbar() {
             </button>
           </>
         ) : (
-          <>
-            {/* ✅ 로그인 안 된 경우 */}
-            <Link to="/" className="mypage-link">
-              로그인
-            </Link>
-          </>
+          <Link to="/" className="mypage-link">
+            로그인
+          </Link>
         )}
       </div>
     </nav>

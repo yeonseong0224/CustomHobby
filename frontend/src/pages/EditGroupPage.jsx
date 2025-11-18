@@ -15,17 +15,19 @@ export default function EditGroupPage() {
     participationFee: 0,
     materials: "",
     category: "",
-    meetingDate: "", // ✅ 모임일 추가
+    meetingDate: "",
+    hobbyName: "", // ⭐ 취미 이름 추가
   });
 
   const [loading, setLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // ✅ 기존 데이터 불러오기
+  // ⭐ 데이터 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getHobbyGroup(id);
+
         setFormData({
           groupName: data.groupName || "",
           groupDescription: data.groupDescription || "",
@@ -35,8 +37,9 @@ export default function EditGroupPage() {
           materials: data.materials || "",
           category: data.category || "",
           meetingDate: data.meetingDate
-            ? data.meetingDate.split("T")[0] // ✅ 날짜 형식 변환 (YYYY-MM-DD)
+            ? data.meetingDate.split("T")[0]
             : "",
+          hobbyName: data.hobbyName || "", // ⭐ 취미 이름 세팅
         });
       } catch (error) {
         alert("모임 정보를 불러오는 중 오류가 발생했습니다.");
@@ -48,7 +51,7 @@ export default function EditGroupPage() {
     fetchData();
   }, [id]);
 
-  // ✅ 입력 변경
+  // ⭐ 입력 변경
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -57,11 +60,12 @@ export default function EditGroupPage() {
     }));
   };
 
-  // ✅ 저장
+  // ⭐ 저장
   const handleSave = async () => {
     try {
-      await updateHobbyGroup(id, formData);
+      await updateHobbyGroup(id, formData); // hobbyName 포함한 모든 정보 전송됨
       setShowSuccess(true);
+
       setTimeout(() => {
         setShowSuccess(false);
         navigate(`/my-group-detail/${id}`);
@@ -77,7 +81,6 @@ export default function EditGroupPage() {
 
   return (
     <div className="edit-group-page">
-      {/* ✅ 상단 성공 배너 */}
       {showSuccess && (
         <div className="success-banner">✅ 수정이 완료되었습니다!</div>
       )}
@@ -85,26 +88,34 @@ export default function EditGroupPage() {
       <h1 className="edit-title">🛠️ 모임 정보 수정</h1>
 
       <div className="edit-form">
-        {/* ✅ 모임 이름 */}
+
+        {/* ⭐ 취미 이름 표시 */}
+        <label>취미 이름</label>
+        <input
+          type="text"
+          name="hobbyName"
+          value={formData.hobbyName}
+          onChange={handleChange}
+          placeholder="예: 헬스, 여행, 수영 등"
+        />
+        {/* 만약 수정 불가로 하고 싶으면 disabled */}
+        {/* disabled */}
+
         <label>모임 이름</label>
         <input
           type="text"
           name="groupName"
           value={formData.groupName}
           onChange={handleChange}
-          placeholder="모임 이름을 입력하세요"
         />
 
-        {/* ✅ 모임 설명 */}
         <label>모임 설명</label>
         <textarea
           name="groupDescription"
           value={formData.groupDescription}
           onChange={handleChange}
-          placeholder="모임에 대한 설명을 입력하세요"
         />
 
-        {/* ✅ 카테고리 */}
         <label>카테고리</label>
         <select
           name="category"
@@ -122,7 +133,6 @@ export default function EditGroupPage() {
           <option value="라이프스타일">라이프스타일</option>
         </select>
 
-        {/* ✅ 모임 형태 */}
         <label>모임 형태</label>
         <select
           name="meetingType"
@@ -134,17 +144,14 @@ export default function EditGroupPage() {
           <option value="hybrid">혼합</option>
         </select>
 
-        {/* ✅ 장소 / 링크 */}
         <label>장소 / 링크</label>
         <input
           type="text"
           name="locationLink"
           value={formData.locationLink}
           onChange={handleChange}
-          placeholder="예: 장소 / Zoom 링크 등"
         />
 
-        {/* ✅ 참가비 */}
         <label>참가비 (원)</label>
         <input
           type="number"
@@ -154,17 +161,14 @@ export default function EditGroupPage() {
           min="0"
         />
 
-        {/* ✅ 준비물 */}
         <label>준비물</label>
         <input
           type="text"
           name="materials"
           value={formData.materials}
           onChange={handleChange}
-          placeholder="예: 붓펜, 노트, 기타 등"
         />
 
-        {/* ✅ 모임일 */}
         <label>모임 날짜</label>
         <input
           type="date"
@@ -173,7 +177,6 @@ export default function EditGroupPage() {
           onChange={handleChange}
         />
 
-        {/* ✅ 버튼 */}
         <div className="button-wrapper">
           <button
             className="cancel-btn"
@@ -181,6 +184,7 @@ export default function EditGroupPage() {
           >
             취소
           </button>
+
           <button className="save-btn" onClick={handleSave}>
             저장하기 💾
           </button>

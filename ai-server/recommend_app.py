@@ -1,12 +1,10 @@
 # ============================================================
-# 📘 recommend_app.py (최종 완성형)
-# Flask + KNN 기반 취미 추천 API
-# - React 설문 자동 정규화
-# - Hobby ID 매핑
-# - CORS 허용
-# - 입력 검증(설문 미완시 빈 결과 반환)
-# - 예외 처리 및 로깅 강화
-# - ✅ 추천 결과 자동 정제 ('.', '', 공백 제거)
+# 📘 recommend_app.py (LightGBM 기반 최종 완성형)
+# Flask + LightGBM Multi-label 취미 추천 API
+# - KNN 완전 제거
+# - 45개 취미 MultiLabel 확률 기반 추천
+# - React 설문 정규화 매핑 유지
+# - 입력 검증 및 예외 처리 강화
 # ============================================================
 
 from flask import Flask, request, jsonify
@@ -14,9 +12,9 @@ from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import re
-from collections import Counter
-from sklearn.preprocessing import MultiLabelBinarizer, StandardScaler
-from sklearn.neighbors import NearestNeighbors
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.model_selection import train_test_split
+import lightgbm as lgb
 
 # ------------------------------------------------------------
 # 1️⃣ Flask 설정
@@ -25,7 +23,7 @@ app = Flask(__name__)
 CORS(app)
 
 # ------------------------------------------------------------
-# 2️⃣ 데이터 불러오기 및 컬럼명 변경
+# 2️⃣ 데이터 불러오기
 # ------------------------------------------------------------
 EXCEL_PATH = "취미 설문조사.xlsx"
 print(f"📂 데이터 로드 중... ({EXCEL_PATH})")
@@ -70,51 +68,58 @@ def normalize_hobby(hobby):
         "독서": ["책읽기", "독서"],
         "요리": ["베이킹", "요리"],
         "게임": ["게임", "pc게임"],
-        "축구 관람": ["축구보기", "축구 관람"],  # ✅ 추가
-        "야구 관람": ["야구보기", "야구 관람"],  # ✅ 추가
+        "축구 관람": ["축구보기", "축구 관람"],
+        "야구 관람": ["야구보기", "야구 관람","야구 직관"],
+        "음악 감상": ["음악 감상 및 찾기"]
+
     }
     for key, synonyms in mapping.items():
         if hobby in synonyms:
             return key
     return hobby
 
-def clean_hobby_list(hobby_list):
-    return [normalize_hobby(h) for h in hobby_list if h.strip()]
+df["interest_hobbies_list"] = (
+    df["interest_hobbies"]
+    .apply(split_multi)
+    .apply(lambda lst: [normalize_hobby(h) for h in lst])
+)
 
 # ------------------------------------------------------------
-# 4️⃣ 데이터 전처리
+# 4️⃣ MultiLabelBinarizer로 취미 멀티라벨 변환
 # ------------------------------------------------------------
-df["interest_hobbies_list"] = df["interest_hobbies"].apply(split_multi).apply(clean_hobby_list)
+mlb = MultiLabelBinarizer()
+y_multi = mlb.fit_transform(df["interest_hobbies_list"])
+
+HOBBY_LABELS = list(mlb.classes_)
 
 # ------------------------------------------------------------
-# 5️⃣ 범주형 인코딩
+# 5️⃣ 범주형 특징 인코딩
 # ------------------------------------------------------------
-multi_cols = ['propensity', 'goal']
-single_cols = [c for c in FEATURE_COLUMNS if c not in multi_cols]
-fitted_mlbs = {}
-df_multi_encoded_list = []
-
-for col in multi_cols:
-    col_data = df[col].apply(lambda x: split_multi(x) if pd.notna(x) else [])
-    mlb = MultiLabelBinarizer()
-    df_encoded = pd.DataFrame(mlb.fit_transform(col_data),
-                              columns=[f'{col}_{c}' for c in mlb.classes_], index=df.index)
-    df_multi_encoded_list.append(df_encoded)
-    fitted_mlbs[col] = mlb
-
-df_multi_encoded_final = pd.concat(df_multi_encoded_list, axis=1)
-df_single_encoded = pd.get_dummies(df[single_cols], dummy_na=False, prefix=single_cols)
-df_ml = pd.concat([df_single_encoded, df_multi_encoded_final], axis=1).fillna(0)
+df_encoded = pd.get_dummies(df[FEATURE_COLUMNS], dummy_na=False)
+X = df_encoded.values
 
 # ------------------------------------------------------------
-# 6️⃣ KNN 모델 학습
+# 6️⃣ LightGBM 멀티라벨 모델 학습
 # ------------------------------------------------------------
-X = df_ml.values
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-model_knn = NearestNeighbors(n_neighbors=10, metric='cosine')
-model_knn.fit(X_scaled)
-print("✅ KNN 모델 학습 완료")
+print("🚀 LightGBM 모델 학습 중... (45개 취미 확률 예측)")
+
+lgb_models = {}
+params = {
+    "objective": "binary",
+    "learning_rate": 0.06,
+    "metric": "binary_logloss",
+    "num_leaves": 31,
+    "verbose": -1
+}
+
+for idx, hobby in enumerate(HOBBY_LABELS):
+    y_label = y_multi[:, idx]
+    train_data = lgb.Dataset(X, label=y_label)
+
+    model = lgb.train(params, train_data, num_boost_round=150)
+    lgb_models[hobby] = model
+
+print("✅ LightGBM Multi-label 모델 학습 완료!")
 
 # ------------------------------------------------------------
 # 7️⃣ React 설문 → 정규화 매핑
@@ -122,11 +127,8 @@ print("✅ KNN 모델 학습 완료")
 def normalize_input_value(key, value):
     mapping = {
         "age_group": {
-            "10대": "10대",
-            "20대 초·중반": "20대",
-            "20대 후반": "20대",
-            "30대": "30대",
-            "40·50대 이상": "40대 이상",
+            "10대": "10대", "20대 초·중반": "20대", "20대 후반": "20대",
+            "30대": "30대", "40·50대 이상": "40대 이상",
         },
         "preferred_place": {
             "실내": "실내에서 조용히 하는 걸 좋아해요",
@@ -140,24 +142,17 @@ def normalize_input_value(key, value):
             "사교적인": "상황에 따라 달라요",
         },
         "time_per_day": {
-            "30분": "30분 이하",
-            "1시간": "1시간 이하",
-            "2시간": "1~2시간",
-            "3시간 이상": "2시간 이상",
+            "30분": "30분 이하", "1시간": "1시간 이하",
+            "2시간": "1~2시간", "3시간 이상": "2시간 이상",
             "상관없음": "1시간 이하",
         },
         "frequency": {
-            "매일": "매일",
-            "주 2~3회": "주 3회 이하",
-            "주 1회": "주 3회 이하",
-            "월 2~3회": "불규칙하게 하고 싶어요",
+            "매일": "매일", "주 2~3회": "주 3회 이하",
+            "주 1회": "주 3회 이하", "월 2~3회": "불규칙하게 하고 싶어요",
             "가끔": "불규칙하게 하고 싶어요",
         },
         "hobby_time": {
-            "새벽": "오전",
-            "오전": "오전",
-            "오후": "오후",
-            "저녁": "저녁",
+            "새벽": "오전", "오전": "오전", "오후": "오후", "저녁": "저녁",
             "상관없음": "주말 중심",
         },
         "budget": {
@@ -195,80 +190,65 @@ hobby_id_map = {
     41: "홈트레이닝", 42: "자기계발", 43: "드로잉", 44: "서예", 45: "연주회 감상"
 }
 
-# ------------------------------------------------------------
-# 9️⃣ 추천 함수
-# ------------------------------------------------------------
-def recommend_hobbies_knn(user_answers, df_ml_train, df_raw, model_knn, scaler, top_n=5):
-    def preprocess_user_for_knn(user_answers):
-        new_user_single = pd.DataFrame([user_answers])[single_cols]
-        new_user_single_encoded = pd.get_dummies(new_user_single).reindex(columns=df_single_encoded.columns, fill_value=0)
-
-        new_user_multi_encoded = []
-        for col in multi_cols:
-            mlb = fitted_mlbs[col]
-            input_value = user_answers.get(col, "")
-            if pd.isna(input_value):
-                input_value = ""
-            encoded_array = mlb.transform([split_multi(input_value)])
-            df_encoded = pd.DataFrame(encoded_array, columns=[f"{col}_{c}" for c in mlb.classes_])
-            new_user_multi_encoded.append(df_encoded)
-
-        new_user_multi_encoded_final = pd.concat(new_user_multi_encoded, axis=1)
-        X_new_encoded = pd.concat(
-            [new_user_single_encoded.reset_index(drop=True),
-             new_user_multi_encoded_final.reset_index(drop=True)], axis=1)
-        return X_new_encoded[df_ml_train.columns].values
-
-    X_new = preprocess_user_for_knn(user_answers)
-    X_new_scaled = scaler.transform(X_new)
-    distances, indices = model_knn.kneighbors(X_new_scaled)
-    neighbor_indices = indices.flatten()
-
-    neighbor_hobbies = df_raw.iloc[neighbor_indices]["interest_hobbies_list"].tolist()
-    all_hobbies = [h for sublist in neighbor_hobbies for h in sublist]
-    hobby_counts = Counter(all_hobbies)
-    return hobby_counts.most_common(top_n)
+name_to_id = {v: k for k, v in hobby_id_map.items()}
 
 # ------------------------------------------------------------
-# 🔟 Flask API
+# 🔥 9️⃣ LightGBM 추천 함수
+# ------------------------------------------------------------
+def recommend_hobbies_lgbm(user_answers, top_n=5):
+    # 1) 입력값 인코딩
+    user_df = pd.DataFrame([user_answers])
+    user_encoded = pd.get_dummies(user_df).reindex(columns=df_encoded.columns, fill_value=0)
+    X_new = user_encoded.values
+
+    # 2) 취미별 확률 계산
+    hobby_probs = {}
+    for hobby in HOBBY_LABELS:
+        prob = lgb_models[hobby].predict(X_new)[0]
+        hobby_probs[hobby] = round(float(prob), 4)
+
+    # 3) 확률 상위 N개 추출
+    sorted_hobbies = sorted(hobby_probs.items(), key=lambda x: x[1], reverse=True)
+    top_hobbies = sorted_hobbies[:top_n]
+
+    return top_hobbies
+
+# ------------------------------------------------------------
+# 🔟 API Routing
 # ------------------------------------------------------------
 @app.route("/")
 def home():
-    return "🎯 Flask Hobby Recommendation API is running!"
+    return "🎯 LightGBM 기반 취미 추천 API 작동 중!"
 
 @app.route("/recommend", methods=["POST"])
 def recommend():
     try:
         user_data = request.get_json()
-        print("✅ 받은 사용자 응답:", user_data)
+        print("📥 입력값:", user_data)
 
-        if not user_data or all(v == "" or v is None for v in user_data.values()):
-            print("⚠️ 설문 데이터 없음 — 빈 추천 반환")
-            return jsonify({"recommended_ids": [], "recommended_hobbies": []}), 200
+        if not user_data:
+            return jsonify({"recommended_ids": [], "recommended_hobbies": []})
 
-        normalized_data = {k: normalize_input_value(k, v) for k, v in user_data.items()}
-        print("🔄 정규화된 응답:", normalized_data)
+        normalized = {k: normalize_input_value(k, v) for k, v in user_data.items()}
+        recs = recommend_hobbies_lgbm(normalized, top_n=5)
 
-        recs = recommend_hobbies_knn(normalized_data, df_ml, df, model_knn, scaler, top_n=5)
-        result_names = [h for h, _ in recs]
+        hobby_names = [h[0] for h in recs]
+        hobby_ids = [name_to_id.get(h) for h in hobby_names]
 
-        # ✅ 불필요한 값 제거 (. / 공백 / 빈 문자열)
-        result_names = [h for h in result_names if h and h.strip() not in ["", ".", " "]]
+        print("🎯 최종 추천:", hobby_names)
 
-        name_to_id = {v: k for k, v in hobby_id_map.items()}
-        result_ids = [name_to_id.get(name) for name in result_names if name in name_to_id]
-
-        print(f"🎯 최종 추천 결과: {result_names} → IDs: {result_ids}")
-
-        return jsonify({"recommended_ids": result_ids, "recommended_hobbies": result_names})
+        return jsonify({
+            "recommended_ids": hobby_ids,
+            "recommended_hobbies": hobby_names
+        })
 
     except Exception as e:
-        print("❌ 오류 발생:", e)
+        print("❌ 오류:", e)
         return jsonify({"error": str(e)}), 500
 
 # ------------------------------------------------------------
 # 🚀 서버 실행
 # ------------------------------------------------------------
 if __name__ == "__main__":
-    print("🚀 Flask Hobby Recommendation Server Started! (입력검증 + 정규화 + CORS + 결과 정제)")
+    print("🚀 Flask + LightGBM 취미 추천 서버 시작!")
     app.run(host="0.0.0.0", port=5000)

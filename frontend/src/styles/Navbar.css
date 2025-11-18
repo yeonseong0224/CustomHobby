@@ -18,12 +18,13 @@
   gap: 28px; /* 36 → 28 */
 }
 
-.logo {
-  font-size: 1.25rem; /* 1.5rem → 1.25rem */
-  font-weight: 800;
-  color: #111;
-  text-decoration: none;
+.navbar-logo {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
 }
+
+
 
 /* ✅ 네비게이션 메뉴 링크 */
 .nav-links a {

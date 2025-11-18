@@ -9,13 +9,14 @@ import lombok.*;
 public class HobbyGroupRequestDto {
     private String groupName;
     private String groupDescription;
-    private String meetingType; // online, offline, hybrid
+    private String meetingType;
     private String locationLink;
     private Integer participationFee;
     private String materials;
     private String reviewBoard;
     private String customTab;
-    private String creatorId;  // ✅ User의 userId (String)를 참조
+    private String creatorId;
     private String category;
-    private String meetingDate;  // 모임 날짜
+    private String meetingDate;
+    private String hobbyName;
 }

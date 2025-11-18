@@ -12,7 +12,6 @@ export default function PersonalHobbyPage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ 한글 취미명 → 이미지 파일명 매핑
   const imageMap = {
     "그림 그리기": "art",
     "캘리그래피": "calligraphy",
@@ -61,7 +60,7 @@ export default function PersonalHobbyPage() {
     "볼링": "bowling",
   };
 
-  // ✅ (1) Spring Boot에서 최신 유저 정보 가져오기
+  // (1) 유저 정보 불러오기
   useEffect(() => {
     const fetchUserData = async () => {
       if (!isAuthenticated || !user) {
@@ -75,8 +74,6 @@ export default function PersonalHobbyPage() {
         if (!res.ok) throw new Error("유저 정보 요청 실패");
 
         const data = await res.json();
-        console.log("✅ [개인취미] 유저 정보:", data);
-
         setUserData({
           gender: data.gender || "",
           age_group: data.ageGroup || "",
@@ -90,27 +87,28 @@ export default function PersonalHobbyPage() {
           sociality: data.sociality || "",
         });
       } catch (error) {
-        console.error("❌ 유저 데이터 불러오기 실패:", error);
+        console.error("유저 데이터 불러오기 실패:", error);
       }
     };
 
     fetchUserData();
   }, [user, isAuthenticated, navigate]);
 
-  // ✅ (2) Flask 추천 API 호출
+  // (2) Flask 추천 API
   useEffect(() => {
     const fetchRecommendations = async () => {
       if (!userData) return;
+
       try {
         const recs = await getHobbyRecommendations(userData);
-        console.log("🎯 Flask 추천 결과:", recs);
-        setRecommendedHobbies(recs.slice(0, 5));
+        setRecommendedHobbies(recs.slice(0, 5)); // 상위 5개
       } catch (error) {
-        console.error("❌ 추천 취미 불러오기 실패:", error);
+        console.error("추천 취미 불러오기 실패:", error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchRecommendations();
   }, [userData]);
 
@@ -121,50 +119,47 @@ export default function PersonalHobbyPage() {
       <h2 className="ph-title">🎯 당신을 위한 추천 취미 5가지</h2>
 
       <div className="ph-grid">
-        {recommendedHobbies.length > 0 ? (
-          recommendedHobbies.map((hobby, index) => (
-            <div
-              key={index}
-              className="ph-card"
-              onClick={() => {
-                if (typeof hobby === "string") {
-                  navigate(`/hobby/${encodeURIComponent(hobby)}`);
-                } else if (hobby.id) {
-                  navigate(`/hobby/${hobby.id}`);
-                }
-              }}
-            >
-              <img
-                src={
-                  typeof hobby === "string"
-                    ? `/images/${imageMap[hobby] || "default"}.png`
-                    : `/images/${
-                        imageMap[hobby.hobbyName] || hobby.hobbyName || "default"
-                      }.png`
-                }
-                alt={typeof hobby === "string" ? hobby : hobby.hobbyName}
-                className="ph-img"
-                onError={(e) => (e.target.src = "/images/default.png")}
-              />
-              <div className="ph-info">
-                <h3>{typeof hobby === "string" ? hobby : hobby.hobbyName}</h3>
-                <p className="ph-desc">
-                  {typeof hobby === "string"
-                    ? "추천된 인기 취미입니다."
-                    : hobby.description || "설명 없음"}
-                </p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="ph-empty">추천된 취미가 없습니다 😢</p>
-        )}
-      </div>
+        {/* 추천 취미 5개 카드 출력 */}
+        {recommendedHobbies.map((hobby, index) => (
+          <div
+            key={index}
+            className="ph-card"
+            onClick={() =>
+              typeof hobby === "string"
+                ? navigate(`/hobby/${encodeURIComponent(hobby)}`)
+                : navigate(`/hobby/${hobby.id}`)
+            }
+          >
+            <img
+              src={`/images/${
+                typeof hobby === "string"
+                  ? imageMap[hobby] || "default"
+                  : imageMap[hobby.hobbyName] || "default"
+              }.png`}
+              alt={typeof hobby === "string" ? hobby : hobby.hobbyName}
+              className="ph-img"
+              onError={(e) => (e.target.src = "/images/default.png")}
+            />
 
-      <div style={{ textAlign: "center", marginTop: "40px" }}>
-        <button className="ph-btn" onClick={() => navigate("/main")}>
+            <div className="ph-info">
+              <h3>{typeof hobby === "string" ? hobby : hobby.hobbyName}</h3>
+              <p className="ph-desc">
+                {typeof hobby === "string"
+                  ? "추천된 인기 취미입니다."
+                  : hobby.description || "설명 없음"}
+              </p>
+            </div>
+          </div>
+        ))}
+
+        {/* 빈칸 2개 */}
+        <div className="ph-empty-box"></div>
+        <div className="ph-empty-box"></div>
+
+        {/* 마지막 칸 버튼 */}
+        <div className="ph-go-main" onClick={() => navigate("/main")}>
           ← 메인 페이지로 돌아가기
-        </button>
+        </div>
       </div>
     </div>
   );

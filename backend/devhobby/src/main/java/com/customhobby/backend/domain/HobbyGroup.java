@@ -24,7 +24,7 @@ public class HobbyGroup {
     private String groupDescription;
 
     @Column(nullable = false, length = 255)
-    private String meetingType; // online, offline, hybrid
+    private String meetingType;
 
     @Column(length = 500)
     private String locationLink;
@@ -45,10 +45,13 @@ public class HobbyGroup {
     private String category;
 
     @Column(length = 100)
-    private String meetingDate;  // 모임 날짜
+    private String meetingDate;
 
     @Column(name = "creator_id", length = 30)
-    private String creatorId;  // ✅ User의 userId (String)를 참조
+    private String creatorId;
+
+    @Column(name = "hobby_name", length = 100)
+    private String hobbyName;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

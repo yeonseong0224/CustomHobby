@@ -227,10 +227,21 @@ def recommend():
         user_data = request.get_json()
         print("📥 입력값:", user_data)
 
-        if not user_data:
-            return jsonify({"recommended_ids": [], "recommended_hobbies": []})
 
-        normalized = {k: normalize_input_value(k, v) for k, v in user_data.items()}
+# --------------------------------------
+# 모든 필수 설문 항목이 비어있는지 확인
+# --------------------------------------
+        required_fields = ["gender", "age_group", "preferred_place", "propensity",
+                   "budget", "hobby_time", "time_per_day", "frequency",
+                   "goal", "sociality"]
+        
+        if not user_data or all(
+            user_data.get(field,"") in["", None] for field in required_fields
+        ):
+            print("⚠️ 설문 데이터 없음 또는 미완료 - 빈 추천 반환")
+            return jsonify({"recommended_ids":[], "recommended_hobbies":[]}),200
+        
+        normalized = {k:normalize_input_value(k,v) for k, v in user_data.items()}
         recs = recommend_hobbies_lgbm(normalized, top_n=5)
 
         hobby_names = [h[0] for h in recs]

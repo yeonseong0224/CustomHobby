@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Flask
+instance/
+.webassets-cache
+
+# 환경 변수
+.env
+.env.local
+
+# 데이터 파일 (선택사항)
+# *.xlsx
+# *.csv
+
+# 모델 파일 (용량 큰 파일)
+*.pkl
+*.h5
+*.model
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb

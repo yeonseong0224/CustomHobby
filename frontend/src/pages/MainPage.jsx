@@ -76,6 +76,14 @@ export default function MainPage() {
 
         const data = await res.json();
 
+        // hasSurvey 확인 - 설문 완료 여부 체크
+        if (!data.hasSurvey){
+          console.log("설문조사 미완료 - 추천 API 호출 안함");
+          setUserData(null); // userData를 null 로 설정하여 추천 API 호출 방지
+          setLoading(flase);
+          return;
+        }
+
         const formattedData = {
           gender: data.gender || "",
           age_group: data.ageGroup || "",

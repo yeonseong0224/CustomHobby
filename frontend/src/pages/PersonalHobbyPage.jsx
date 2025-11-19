@@ -64,7 +64,7 @@ export default function PersonalHobbyPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!isAuthenticated || !user) {
-        alert("로그인이 필요합니다 😅");
+        alert("로그인이 필요합니다.");
         navigate("/");
         return;
       }
@@ -74,6 +74,13 @@ export default function PersonalHobbyPage() {
         if (!res.ok) throw new Error("유저 정보 요청 실패");
 
         const data = await res.json();
+
+        if (!data.hasSurvey) {
+          alert("설문조사를 먼저 완료해주세요!");
+          navigate("/survey")
+          return;
+        }
+        
         setUserData({
           gender: data.gender || "",
           age_group: data.ageGroup || "",

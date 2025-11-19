@@ -270,3 +270,31 @@
   box-shadow: 0 0 4px rgba(166, 177, 255, 0.4);
 }
 
+.image-upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.image-upload-section label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.image-upload-btn {
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+  width: fit-content;
+}
+
+.image-upload-btn:hover {
+  background-color: #357abd;
+}

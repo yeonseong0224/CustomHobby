@@ -217,10 +217,16 @@ export default function MyPage() {
                   navigate(`/hobby-detail/${group.hobbyId}?groupId=${group.id}`)
                 }
               >
+                <img
+                  src={group.groupImage || "/images/art.png"}
+                  alt={group.groupName}
+                  className="small-hobby-img"
+                />
                 <p className="small-hobby-title">{group.groupName}</p>
                 <p className="small-hobby-desc">{group.groupDescription}</p>
               </div>
             ))}
+
 
             {/* 빈 상태 */}
             {participatedHobbies.length === 0 &&
@@ -242,9 +248,15 @@ export default function MyPage() {
                   className="small-hobby-card"
                   onClick={() => navigate(`/my-group-detail/${group.id}`)}
                 >
+                  <img
+                    src={group.groupImage || "/images/art.png"}  
+                    alt={group.groupName}
+                    className="small-hobby-img"
+                  />
                   <p className="small-hobby-title">{group.groupName}</p>
                   <p className="small-hobby-desc">{group.groupDescription}</p>
                 </div>
+
               ))
             ) : (
               <p className="empty-text">아직 개설한 취미가 없습니다.</p>

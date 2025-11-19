@@ -19,4 +19,5 @@ public class HobbyGroupRequestDto {
     private String category;
     private String meetingDate;
     private String hobbyName;
+    private String groupImage;
 }

@@ -35,18 +35,19 @@ public class HobbyGroupService {
                 .category(request.getCategory())
                 .meetingDate(request.getMeetingDate())
                 .creatorId(request.getCreatorId())
-                .hobbyName(request.getHobbyName())   // ⭐ 추가됨
+                .hobbyName(request.getHobbyName())
+                .groupImage(request.getGroupImage())
                 .build();
 
         HobbyGroup saved = hobbyGroupRepository.save(group);
 
-        // 개설자 자동 참여
-        UserParticipatedGroup participation = UserParticipatedGroup.builder()
-                .userId(request.getCreatorId())
-                .groupId(saved.getId())
-                .build();
-
-        userParticipatedGroupRepository.save(participation);
+//        // 개설자 자동 참여
+//        UserParticipatedGroup participation = UserParticipatedGroup.builder()
+//                .userId(request.getCreatorId())
+//                .groupId(saved.getId())
+//                .build();
+//
+//        userParticipatedGroupRepository.save(participation);
 
         return new HobbyGroupResponseDto(saved);
     }
@@ -84,7 +85,8 @@ public class HobbyGroupService {
         group.setCustomTab(request.getCustomTab());
         group.setCategory(request.getCategory());
         group.setMeetingDate(request.getMeetingDate());
-        group.setHobbyName(request.getHobbyName());  // ⭐ 추가
+        group.setHobbyName(request.getHobbyName());
+        group.setGroupImage(request.getGroupImage());
 
         return new HobbyGroupResponseDto(hobbyGroupRepository.save(group));
     }

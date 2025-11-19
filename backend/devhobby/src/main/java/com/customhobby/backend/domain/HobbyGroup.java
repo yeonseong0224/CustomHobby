@@ -53,6 +53,9 @@ public class HobbyGroup {
     @Column(name = "hobby_name", length = 100)
     private String hobbyName;
 
+    @Column(columnDefinition = "TEXT")
+    private String groupImage;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

@@ -50,7 +50,7 @@ export default function HobbyDescriptionPage() {
             locationLink: g.locationLink,
             participationFee: g.participationFee,
             meetingDate: g.meetingDate,
-            photo: hobbyData.photo,
+            photo: g.groupImage,
             source: "user",
           }));
 
@@ -126,12 +126,15 @@ export default function HobbyDescriptionPage() {
               <img
                 src={
                   g.photo
-                    ? `${window.location.origin}/${g.photo}`
+                    ? g.photo.startsWith("data:image")
+                      ? g.photo
+                      : `${window.location.origin}/${g.photo}`
                     : `${window.location.origin}/images/default.png`
                 }
                 alt={g.groupName}
                 className="hdp-meeting-img"
               />
+
 
               <div>
                 <h3>{g.groupName}</h3>

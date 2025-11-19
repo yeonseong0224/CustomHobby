@@ -23,7 +23,7 @@ public class HobbyGroupResponseDto {
     private String meetingDate;
     private String creatorId;
     private String hobbyName;   // ⭐ Long → String
-
+    private String groupImage;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -42,6 +42,7 @@ public class HobbyGroupResponseDto {
         this.meetingDate = group.getMeetingDate();
         this.creatorId = group.getCreatorId();
         this.hobbyName = group.getHobbyName(); // ⭐ 추가
+        this.groupImage = group.getGroupImage();
         this.createdAt = group.getCreatedAt();
         this.updatedAt = group.getUpdatedAt();
     }

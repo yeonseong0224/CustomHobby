@@ -26,9 +26,31 @@ export default function CreateGroupPage() {
 
   const [isOnline, setIsOnline] = useState(true);
   const [date, setDate] = useState(new Date());
+  const [groupImage, setGroupImage] = useState("");
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("파일 크기는 5MB 이하여야 합니다.");
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      alert("이미지 파일만 업로드 가능합니다");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setGroupImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +79,7 @@ export default function CreateGroupPage() {
       category: form.category,
       meetingDate: date.toLocaleDateString("ko-KR"),
       hobbyName: selectedHobby, // ⭐ 핵심: 취미 이름 저장
+      groupImage: groupImage,
     };
 
     try {
@@ -96,6 +119,33 @@ export default function CreateGroupPage() {
             <option value="독서">독서</option>
             <option value="자전거">자전거</option>
           </select>
+
+                    {/* 모임 이미지 업로드 */}
+          <div className="image-upload-section">
+            <label htmlFor="groupImageInput">모임 대표 사진</label>
+            <input
+              type="file"
+              id="groupImageInput"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+            <button
+              type="button"
+              onClick={() => document.getElementById("groupImageInput").click()}
+              className="image-upload-btn"
+            >
+              {groupImage ? "사진 변경" : "사진 선택"}
+            </button>
+            {groupImage && (
+              <img
+                src={groupImage}
+                alt="미리보기"
+                style={{ width: "100px", height: "100px", objectFit: "cover", marginTop: "10px" }}
+              />
+            )}
+          </div>
+
 
           <input name="title" placeholder="모임 이름" value={form.title} onChange={handleChange} required />
           <textarea name="desc" placeholder="모임 설명" value={form.desc} onChange={handleChange} />

@@ -1,5 +1,6 @@
 package com.customhobby.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class User {
     @Column(name = "user_id", nullable = false, unique = true, length = 30)
     private String userId;  // 사용자가 직접 입력한 ID (PK)
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 

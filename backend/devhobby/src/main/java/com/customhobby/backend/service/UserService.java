@@ -1,7 +1,7 @@
 package com.customhobby.backend.service;
 
+import com.customhobby.backend.dto.UserRegisterDto;
 import com.customhobby.backend.entity.User;
-import com.customhobby.backend.dto.UserRequestDto;
 import com.customhobby.backend.dto.LoginRequestDto;
 import com.customhobby.backend.dto.SurveyRequestDto;
 import com.customhobby.backend.repository.UserRepository;
@@ -20,7 +20,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // 회원가입
-    public User register(UserRequestDto request) {
+    public User register(UserRegisterDto request) {  // UserRegisterDto로 변경
         if (userRepository.findByUserId(request.getUserId()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 사용자 ID입니다.");
         }

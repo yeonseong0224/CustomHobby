@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require
-    username: postgres.oelmefqcgjtjcimlwyay
-    password: 1234
+    url: ${DB_URL:jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require}
+    username: ${DB_USERNAME:postgres.oelmefqcgjtjcimlwyay}
+    password: ${DB_PASSWORD:1234} # docker 배포 시 환경변수로 주입 필요!! render에서 비번을 넣을듯
 
     hikari:
       maximum-pool-size: 5

@@ -14,7 +14,7 @@ export default function RegisterPage() {
     nickname: "",
     age: "",
     region: "",
-    phoneNum: "",  // phonenum → phoneNum (camelCase 통일)
+    phoneNum: "",  
   });
   const [idCheckStatus, setIdCheckStatus] = useState(null);
 

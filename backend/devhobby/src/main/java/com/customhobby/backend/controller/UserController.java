@@ -3,9 +3,9 @@ package com.customhobby.backend.controller;
 import com.customhobby.backend.entity.User;
 import com.customhobby.backend.dto.*;
 import com.customhobby.backend.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -13,16 +13,16 @@ public class UserController {
 
     private final UserService userService;
 
-    // 회원가입
+    // 회원가입 - UserRegisterDto
     @PostMapping("/register")
-    public UserResponseDto register(@RequestBody UserRequestDto request) {
+    public UserResponseDto register(@Valid @RequestBody UserRegisterDto request) {
         User user = userService.register(request);
         return new UserResponseDto(user);
     }
 
-    // 로그인
+    // 로그인 - LoginRequestDto
     @PostMapping("/login")
-    public UserResponseDto login(@RequestBody LoginRequestDto request) {
+    public UserResponseDto login(@Valid @RequestBody LoginRequestDto request) {
         User user = userService.login(request);
         return new UserResponseDto(user);
     }
@@ -41,11 +41,11 @@ public class UserController {
         return userService.isUserIdAvailable(userId);
     }
 
-    // 사용자 프로필 업데이트 (자기소개, 프로필 사진, 전화번호)
+    // 사용자 프로필 업데이트 - UserProfileUpdateDto
     @PutMapping("/{userId}/profile")
     public UserResponseDto updateUserProfile(
             @PathVariable String userId,
-            @RequestBody UserRequestDto request) {
+            @Valid @RequestBody UserProfileUpdateDto request) {
 
         System.out.println("[UPDATE PROFILE] userId=" + userId);
         System.out.println(" Base64 길이: " +
@@ -60,11 +60,11 @@ public class UserController {
         return new UserResponseDto(user);
     }
 
-    // 사용자 기본 정보 수정 (닉네임, 지역, 나이, 전화번호)
+    // 사용자 기본 정보 수정 - UserUpdateDto
     @PutMapping("/{userId}")
     public UserResponseDto updateUserInfo(
             @PathVariable String userId,
-            @RequestBody UserRequestDto request) {
+            @Valid @RequestBody UserUpdateDto request) {
 
         System.out.println("[UPDATE USER INFO] userId=" + userId);
         System.out.println("nickname=" + request.getNickname() +

@@ -1,6 +1,6 @@
 package com.customhobby.backend.controller;
 
-import com.customhobby.backend.domain.Hobby;
+import com.customhobby.backend.entity.Hobby;
 import com.customhobby.backend.dto.HobbyRequestDto;
 import com.customhobby.backend.dto.HobbyResponseDto;
 import com.customhobby.backend.service.HobbyService;

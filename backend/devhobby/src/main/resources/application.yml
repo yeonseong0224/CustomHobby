@@ -14,12 +14,12 @@ spring:
 
   sql:
     init:
-      mode: never        # ⛔ data.sql 자동 실행 금지
+      mode: never        # data.sql 자동 실행 금지 -> 지금은 필요없을지도,,,?
       encoding: UTF-8
 
   jpa:
     open-in-view: false
-    defer-datasource-initialization: false  # ❌ data.sql 안 쓰면 false로
+    defer-datasource-initialization: false  # data.sql 안 쓰면 false로
     hibernate:
       ddl-auto: update   # ✔ 테이블 유지하며 변경사항만 업데이트
     show-sql: true

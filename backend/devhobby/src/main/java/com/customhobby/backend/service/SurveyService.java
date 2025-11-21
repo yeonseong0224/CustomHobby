@@ -1,6 +1,6 @@
 package com.customhobby.backend.service;
 
-import com.customhobby.backend.domain.User;
+import com.customhobby.backend.entity.User;
 import com.customhobby.backend.dto.SurveyRequestDto;
 import com.customhobby.backend.dto.SurveyResponseDto;
 import com.customhobby.backend.repository.UserRepository;
@@ -24,8 +24,8 @@ public class SurveyService {
         User user = userRepository.findByUserId(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다: " + request.getUserId()));
         
-        System.out.println("🔍 설문 제출 시작 - userId: " + user.getUserId());
-        System.out.println("📝 설문 데이터: gender=" + request.getGender() + ", ageGroup=" + request.getAgeGroup());
+        System.out.println("설문 제출 시작 - userId: " + user.getUserId());
+        System.out.println("설문 데이터: gender=" + request.getGender() + ", ageGroup=" + request.getAgeGroup());
         
         // 설문 응답을 user 엔티티에 직접 저장
         user.setGender(request.getGender());
@@ -43,8 +43,8 @@ public class SurveyService {
         // 저장 (더티 체킹으로 자동 업데이트)
         User savedUser = userRepository.save(user);
         
-        System.out.println("✅ 설문 저장 완료!");
-        System.out.println("✅ 저장된 데이터 확인: gender=" + savedUser.getGender() + ", ageGroup=" + savedUser.getAgeGroup());
+        System.out.println("설문 저장 완료!");
+        System.out.println("저장된 데이터 확인: gender=" + savedUser.getGender() + ", ageGroup=" + savedUser.getAgeGroup());
 
         // 응답 DTO 반환
         Map<String, String> answers = new HashMap<>();

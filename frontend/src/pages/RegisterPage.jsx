@@ -14,7 +14,7 @@ export default function RegisterPage() {
     nickname: "",
     age: "",
     region: "",
-    phoneNum: "",  // ✅ phonenum → phoneNum (camelCase 통일)
+    phoneNum: "",  // phonenum → phoneNum (camelCase 통일)
   });
   const [idCheckStatus, setIdCheckStatus] = useState(null);
 
@@ -35,10 +35,10 @@ export default function RegisterPage() {
       const isAvailable = await checkUserIdAvailable(form.userId);
       if (isAvailable) {
         setIdCheckStatus(true);
-        alert("✅ 사용 가능한 아이디입니다!");
+        alert("사용 가능한 아이디입니다!");
       } else {
         setIdCheckStatus(false);
-        alert("❌ 이미 사용 중인 아이디입니다.");
+        alert("이미 사용 중인 아이디입니다.");
       }
     } catch (error) {
       console.error("아이디 중복 체크 실패:", error);
@@ -64,14 +64,14 @@ export default function RegisterPage() {
     try {
       const result = await registerUser(form);
       
-      console.log("✅ 회원가입 성공:", result);
+      console.log("회원가입 성공:", result);
       
       login(result);
       
       alert(`${form.nickname}님, 회원가입이 완료되었습니다!`);
       navigate("/main");
     } catch (error) {
-      console.error("❌ 회원가입 실패:", error);
+      console.error("회원가입 실패:", error);
       alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
@@ -94,28 +94,24 @@ export default function RegisterPage() {
             style={{
               padding: "2px 8px",
               fontSize: "11px",
-              backgroundColor: idCheckStatus === true ? "#4CAF50" : "#2196F3",
+              backgroundColor: idCheckStatus === true ? "#61c263ff" : "#4c95d1ff",
               color: "white",
               border: "none",
               borderRadius: "3px",
               cursor: "pointer",
-              marginTop: "3px",
-              marginBottom: "5px",
+              marginTop: "-5px",
+              marginBottom: "8px",
               width: "fit-content"
             }}
           >
-            {idCheckStatus === true ? "✅ 완료" : "중복체크"}
+            {idCheckStatus === true ? "사용 가능" : "중복 체크"}
           </button>
           {idCheckStatus === false && (
             <p style={{ color: "red", fontSize: "12px", margin: "5px 0" }}>
-              ❌ 이미 사용 중인 아이디입니다.
+              이미 사용 중인 아이디입니다.
             </p>
           )}
-          {idCheckStatus === true && (
-            <p style={{ color: "green", fontSize: "12px", margin: "5px 0" }}>
-              ✅ 사용 가능한 아이디입니다.
-            </p>
-          )}
+          
           <input type="password" name="password" placeholder="비밀번호" value={form.password} onChange={handleChange} required />
           <input type="email" name="email" placeholder="이메일" value={form.email} onChange={handleChange} required />
           <input name="nickname" placeholder="닉네임" value={form.nickname} onChange={handleChange} required />

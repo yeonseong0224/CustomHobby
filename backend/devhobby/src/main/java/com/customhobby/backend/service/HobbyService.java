@@ -1,7 +1,7 @@
 package com.customhobby.backend.service;
 
-import com.customhobby.backend.domain.Hobby;
-import com.customhobby.backend.domain.UserParticipatedHobby;
+import com.customhobby.backend.entity.Hobby;
+import com.customhobby.backend.entity.UserParticipatedHobby;
 import com.customhobby.backend.dto.HobbyRequestDto;
 import com.customhobby.backend.dto.HobbyResponseDto;
 import com.customhobby.backend.repository.HobbyRepository;
@@ -20,7 +20,7 @@ public class HobbyService {
     private final HobbyRepository hobbyRepository;
     private final UserParticipatedHobbyRepository userParticipatedHobbyRepository;
 
-    // ✅ 취미 생성
+    // 취미 생성
     @Transactional
     public HobbyResponseDto createHobby(HobbyRequestDto request) {
         Hobby hobby = Hobby.builder()
@@ -41,7 +41,7 @@ public class HobbyService {
         return new HobbyResponseDto(saved);
     }
 
-    // ✅ 모든 취미 조회
+    // 모든 취미 조회
     @Transactional(readOnly = true)
     public List<HobbyResponseDto> getAllHobbies() {
         return hobbyRepository.findAll()

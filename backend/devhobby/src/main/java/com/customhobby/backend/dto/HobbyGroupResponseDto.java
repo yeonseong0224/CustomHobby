@@ -1,6 +1,6 @@
 package com.customhobby.backend.dto;
 
-import com.customhobby.backend.domain.HobbyGroup;
+import com.customhobby.backend.entity.HobbyGroup;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -22,7 +22,7 @@ public class HobbyGroupResponseDto {
     private String category;
     private String meetingDate;
     private String creatorId;
-    private String hobbyName;   // ⭐ Long → String
+    private String hobbyName;
     private String groupImage;
 
     private LocalDateTime createdAt;
@@ -41,7 +41,7 @@ public class HobbyGroupResponseDto {
         this.category = group.getCategory();
         this.meetingDate = group.getMeetingDate();
         this.creatorId = group.getCreatorId();
-        this.hobbyName = group.getHobbyName(); // ⭐ 추가
+        this.hobbyName = group.getHobbyName();
         this.groupImage = group.getGroupImage();
         this.createdAt = group.getCreatedAt();
         this.updatedAt = group.getUpdatedAt();

@@ -1,6 +1,6 @@
 package com.customhobby.backend.dto;
 
-import com.customhobby.backend.domain.Hobby;
+import com.customhobby.backend.entity.Hobby;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,8 +23,8 @@ public class HobbyResponseDto {
     private String haveMaterial;
     private String reviewBoard;
     private String customTab;
-    private String photo;  // ✅ 이미지 URL 또는 파일명 추가
-    private String creatorId;  // ✅ User의 userId (String)를 참조
+    private String photo;  // 이미지 URL 또는 파일명 추가
+    private String creatorId;  // User의 userId (String)를 참조
     private LocalDateTime createdAt;
 
     public HobbyResponseDto(Hobby hobby) {
@@ -44,7 +44,7 @@ public class HobbyResponseDto {
         this.creatorId = hobby.getCreatorId();
         this.createdAt = hobby.getCreatedAt();
         
-        // ✅ 이미지 처리: DB에 이미지가 없으면 카테고리별 기본 이미지 사용
+        // 이미지 처리: DB에 이미지가 없으면 카테고리별 기본 이미지 사용
 //        this.photo = getDefaultPhotoByCategory(hobby.getHobbyCategory());
         this.photo = hobby.getPhoto();//
     }

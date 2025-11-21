@@ -1,6 +1,6 @@
 package com.customhobby.backend.dto;
 
-import com.customhobby.backend.domain.User;
+import com.customhobby.backend.entity.User;
 import lombok.Getter;
 
 @Getter
@@ -14,9 +14,9 @@ public class UserResponseDto {
     private String profile;     // 프로필 사진 (Base64 또는 URL)
     private String phoneNum;    // 전화번호
 
-    private boolean hasSurvey;  // ✅ 설문조사 완료 여부
+    private boolean hasSurvey;  // 설문조사 완료 여부
 
-    // ✅ 설문조사 응답 필드 추가
+    // 설문조사 응답 필드 추가
     private String gender;
     private String ageGroup;
     private String preferredPlace;

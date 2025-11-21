@@ -1,7 +1,7 @@
 package com.customhobby.backend.service;
 
-import com.customhobby.backend.domain.HobbyGroup;
-import com.customhobby.backend.domain.UserParticipatedGroup;
+import com.customhobby.backend.entity.HobbyGroup;
+import com.customhobby.backend.entity.UserParticipatedGroup;
 import com.customhobby.backend.dto.HobbyGroupRequestDto;
 import com.customhobby.backend.dto.HobbyGroupResponseDto;
 import com.customhobby.backend.repository.HobbyGroupRepository;

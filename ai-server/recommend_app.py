@@ -1,5 +1,5 @@
 # ============================================================
-# 📘 recommend_app.py (LightGBM 기반 최종 완성형)
+# recommend_app.py (LightGBM 기반 최종 완성형)
 # Flask + LightGBM Multi-label 취미 추천 API
 # - KNN 완전 제거
 # - 45개 취미 MultiLabel 확률 기반 추천
@@ -17,16 +17,16 @@ from sklearn.model_selection import train_test_split
 import lightgbm as lgb
 
 # ------------------------------------------------------------
-# 1️⃣ Flask 설정
+# 1️. Flask 설정
 # ------------------------------------------------------------
 app = Flask(__name__)
 CORS(app)
 
 # ------------------------------------------------------------
-# 2️⃣ 데이터 불러오기
+# 2️. 데이터 불러오기
 # ------------------------------------------------------------
 EXCEL_PATH = "취미 설문조사.xlsx"
-print(f"📂 데이터 로드 중... ({EXCEL_PATH})")
+print(f"데이터 로드 중... ({EXCEL_PATH})")
 df = pd.read_excel(EXCEL_PATH)
 
 df = df.rename(columns={
@@ -50,7 +50,7 @@ FEATURE_COLUMNS = [
 ]
 
 # ------------------------------------------------------------
-# 3️⃣ 전처리 함수
+# 3️. 전처리 함수
 # ------------------------------------------------------------
 def split_multi(cell):
     if pd.isna(cell):
@@ -86,7 +86,7 @@ df["interest_hobbies_list"] = (
 )
 
 # ------------------------------------------------------------
-# 4️⃣ MultiLabelBinarizer로 취미 멀티라벨 변환
+# 4️. MultiLabelBinarizer로 취미 멀티라벨 변환
 # ------------------------------------------------------------
 mlb = MultiLabelBinarizer()
 y_multi = mlb.fit_transform(df["interest_hobbies_list"])
@@ -94,15 +94,15 @@ y_multi = mlb.fit_transform(df["interest_hobbies_list"])
 HOBBY_LABELS = list(mlb.classes_)
 
 # ------------------------------------------------------------
-# 5️⃣ 범주형 특징 인코딩
+# 5️. 범주형 특징 인코딩
 # ------------------------------------------------------------
 df_encoded = pd.get_dummies(df[FEATURE_COLUMNS], dummy_na=False)
 X = df_encoded.values
 
 # ------------------------------------------------------------
-# 6️⃣ LightGBM 멀티라벨 모델 학습
+# 6️. LightGBM 멀티라벨 모델 학습
 # ------------------------------------------------------------
-print("🚀 LightGBM 모델 학습 중... (45개 취미 확률 예측)")
+print("LightGBM 모델 학습 중... (45개 취미 확률 예측)")
 
 lgb_models = {}
 params = {
@@ -120,10 +120,10 @@ for idx, hobby in enumerate(HOBBY_LABELS):
     model = lgb.train(params, train_data, num_boost_round=150)
     lgb_models[hobby] = model
 
-print("✅ LightGBM Multi-label 모델 학습 완료!")
+print("LightGBM Multi-label 모델 학습 완료!")
 
 # ------------------------------------------------------------
-# 7️⃣ React 설문 → 정규화 매핑
+# 7️. React 설문 → 정규화 매핑
 # ------------------------------------------------------------
 def normalize_input_value(key, value):
     mapping = {
@@ -178,7 +178,7 @@ def normalize_input_value(key, value):
     return mapping.get(key, {}).get(value, value)
 
 # ------------------------------------------------------------
-# 8️⃣ Hobby ID 매핑
+# 8️. Hobby ID 매핑
 # ------------------------------------------------------------
 hobby_id_map = {
     1: "그림 그리기", 2: "캘리그래피", 3: "사진 촬영", 4: "기타 연주", 5: "피아노 연주",
@@ -194,7 +194,7 @@ hobby_id_map = {
 name_to_id = {v: k for k, v in hobby_id_map.items()}
 
 # ------------------------------------------------------------
-# 🔥 9️⃣ LightGBM 추천 함수
+# 9. LightGBM 추천 함수
 # ------------------------------------------------------------
 def recommend_hobbies_lgbm(user_answers, top_n=5):
     # 1) 입력값 인코딩
@@ -215,17 +215,17 @@ def recommend_hobbies_lgbm(user_answers, top_n=5):
     return top_hobbies
 
 # ------------------------------------------------------------
-# 🔟 API Routing
+# 10. API Routing
 # ------------------------------------------------------------
 @app.route("/")
 def home():
-    return "🎯 LightGBM 기반 취미 추천 API 작동 중!"
+    return "LightGBM 기반 취미 추천 API 작동 중"
 
 @app.route("/recommend", methods=["POST"])
 def recommend():
     try:
         user_data = request.get_json()
-        print("📥 입력값:", user_data)
+        print("입력값:", user_data)
 
 
 # --------------------------------------
@@ -238,7 +238,7 @@ def recommend():
         if not user_data or all(
             user_data.get(field,"") in["", None] for field in required_fields
         ):
-            print("⚠️ 설문 데이터 없음 또는 미완료 - 빈 추천 반환")
+            print("설문 데이터 없음 또는 미완료 - 빈 추천 반환")
             return jsonify({"recommended_ids":[], "recommended_hobbies":[]}),200
         
         normalized = {k:normalize_input_value(k,v) for k, v in user_data.items()}
@@ -247,7 +247,7 @@ def recommend():
         hobby_names = [h[0] for h in recs]
         hobby_ids = [name_to_id.get(h) for h in hobby_names]
 
-        print("🎯 최종 추천:", hobby_names)
+        print("최종 추천:", hobby_names)
 
         return jsonify({
             "recommended_ids": hobby_ids,
@@ -255,12 +255,12 @@ def recommend():
         })
 
     except Exception as e:
-        print("❌ 오류:", e)
+        print("오류:", e)
         return jsonify({"error": str(e)}), 500
 
 # ------------------------------------------------------------
-# 🚀 서버 실행
+# 서버 실행
 # ------------------------------------------------------------
 if __name__ == "__main__":
-    print("🚀 Flask + LightGBM 취미 추천 서버 시작!")
+    print("Flask + LightGBM 취미 추천 서버 시작!")
     app.run(host="0.0.0.0", port=5000)

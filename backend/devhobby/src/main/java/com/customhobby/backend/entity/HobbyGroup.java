@@ -1,43 +1,33 @@
-package com.customhobby.backend.domain;
+package com.customhobby.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "hobbies")
+@Table(name = "hobby_groups")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Hobby {
+public class HobbyGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 255)
-    private String hobbyName;
+    private String groupName;
 
-    @Column(nullable = false, length = 100)
-    private String hobbyCategory; // 예술/공예, 야외활동, 음악/공연, 요리/음식
+    @Column(length = 1000)
+    private String groupDescription;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(length = 500)
-    private String oneLineDescription;
-
-    @Column(nullable = false, length = 50)
-    private String meetingType; // online, offline, hybrid
+    @Column(nullable = false, length = 255)
+    private String meetingType;
 
     @Column(length = 500)
     private String locationLink;
-
-    @Column
-    private LocalDate meetingDate;
 
     @Column(nullable = false)
     private Integer participationFee;
@@ -45,21 +35,26 @@ public class Hobby {
     @Column(length = 500)
     private String materials;
 
-    @Column(length = 500)
-    private String haveMaterial;
-
     @Column(length = 2000)
     private String reviewBoard;
 
     @Column(length = 1000)
     private String customTab;
 
-    @Column(name = "creator_id", length = 30)
-    private String creatorId;  // User의 userId (String)를 참조
+    @Column(length = 100)
+    private String category;
 
-    // ✅ 새로 추가해야 하는 부분
+    @Column(length = 100)
+    private String meetingDate;
+
+    @Column(name = "creator_id", length = 30)
+    private String creatorId;
+
+    @Column(name = "hobby_name", length = 100)
+    private String hobbyName;
+
     @Column(columnDefinition = "TEXT")
-    private String photo;
+    private String groupImage;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

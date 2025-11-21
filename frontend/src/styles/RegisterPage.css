@@ -1,4 +1,4 @@
-/* ✅ 전체 페이지 중앙 정렬 */
+/* 전체 페이지 중앙 정렬 */
 .register-container {
   display: flex;
   justify-content: center;
@@ -7,14 +7,14 @@
   background-color: #f9fafb;
 }
 
-/* ✅ 카드 본체 */
+/* 카드 본체 */
 .register-card {
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   padding: 5px 40px;
   width: 600px;
-  height: 550px;
+  height: 600px;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -22,17 +22,17 @@
   overflow: hidden;
 }
 
-/* ✅ 제목 (조금 더 아래로 내림) */
+/* 제목 (조금 더 아래로 내림) */
 .register-card h1 {
   font-size: 25px;
   font-weight: 800;
   border-left: 6px solid #2563eb;
   padding-left: 10px;
-  margin-top: 30px;   /* ✅ 추가 - 제목을 조금 아래로 내림 */
-  margin-bottom: 30px; /* 기존 45 → 살짝 줄여서 균형 맞춤 */
+  margin-top: 30px;   
+  margin-bottom: 30px;
 }
 
-/* ✅ 폼 영역 */
+/* 폼 영역 */
 .register-card form {
   flex: 1;
   display: flex;
@@ -41,7 +41,7 @@
   padding-right: 4px;
 }
 
-/* ✅ 입력창 */
+/* 입력창 */
 .register-card input {
   width: 100%;
   padding: 10px 12px;
@@ -63,16 +63,16 @@
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-/* ✅ 버튼 그룹 (위로 살짝 올림) */
+/* 버튼 그룹 (위로 살짝 올림) */
 .register-btns {
   display: flex;
   justify-content: space-between;
   gap: 14px;
-  margin-top: auto; /* ✅ 기존 auto 제거 → 여백 줄여 위로 올림 */
-  margin-bottom: 10px; /* ✅ 추가 - 버튼이 카드 하단에 너무 붙지 않게 */
+  margin-top: auto; /* 기존 auto 제거 → 여백 줄여 위로 올림 */
+  margin-bottom: 10px; 
 }
 
-/* ✅ 버튼 공통 */
+/* 버튼 공통 */
 .register-btns button {
   flex: 1;
   padding: 10px 0;

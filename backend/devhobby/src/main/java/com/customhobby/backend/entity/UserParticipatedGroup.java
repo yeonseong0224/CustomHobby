@@ -1,4 +1,4 @@
-package com.customhobby.backend.domain;
+package com.customhobby.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ public class UserParticipatedGroup {
 
     @Id
     @Column(name = "user_id", nullable = false, length = 30)
-    private String userId;  // ✅ User의 PRIMARY KEY는 String
+    private String userId;  // User의 PRIMARY KEY는 String
 
     @Id
     @Column(name = "group_id", nullable = false)

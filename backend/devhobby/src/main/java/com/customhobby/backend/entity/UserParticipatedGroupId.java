@@ -1,4 +1,4 @@
-package com.customhobby.backend.domain;
+package com.customhobby.backend.entity;
 
 import lombok.*;
 import java.io.Serializable;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserParticipatedGroupId implements Serializable {
-    private String userId;  // ✅ User의 PRIMARY KEY는 String
+    private String userId;  // User의 PRIMARY KEY는 String
     private Long groupId;
 }
 

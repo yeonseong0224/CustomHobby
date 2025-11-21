@@ -18,7 +18,7 @@ public class HobbyRequestDto {
     private Integer participationFee;
     private String materials;
     private String haveMaterial;
-    private String creatorId;  // ✅ User의 userId (String)를 참조
+    private String creatorId;  // User의 userId (String)를 참조
 }
 
 

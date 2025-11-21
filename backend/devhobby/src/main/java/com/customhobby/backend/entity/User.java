@@ -1,4 +1,4 @@
-package com.customhobby.backend.domain;
+package com.customhobby.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,7 +42,7 @@ public class User {
 
 
     @Column(name = "introduce", columnDefinition = "TEXT")
-    private String introduce;  // ✅ 자기소개 문장 저장
+    private String introduce;  // 자기소개 문장 저장
 
     // === 설문조사 응답 필드 ===
     @Column(name = "gender", length = 50)

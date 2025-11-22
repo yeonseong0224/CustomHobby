@@ -2,40 +2,40 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8080/api/hobby-groups";
 
-// 🟢 1. 모임 개설
+// 1. 모임 개설
 export const createHobbyGroup = async (groupData) => {
   try {
     const response = await axios.post(`${API_BASE_URL}`, groupData);
     return response.data;
   } catch (error) {
-    console.error("❌ 모임 개설 실패:", error);
+    console.error("모임 개설 실패:", error);
     throw error;
   }
 };
 
-// 🟢 2. 모든 모임 조회
+// 2. 모든 모임 조회
 export const getAllHobbyGroups = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL}`);
     return response.data;
   } catch (error) {
-    console.error("❌ 모임 목록 조회 실패:", error);
+    console.error("모임 목록 조회 실패:", error);
     throw error;
   }
 };
 
-// 🟢 3. 모임 상세 조회
+// 3. 모임 상세 조회
 export const getHobbyGroup = async (id) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/${id}`);
     return response.data;
   } catch (error) {
-    console.error("❌ 모임 상세 조회 실패:", error);
+    console.error("모임 상세 조회 실패:", error);
     throw error;
   }
 };
 
-// 🟢 4. 모임 참여
+// 4. 모임 참여
 export const participateHobbyGroup = async (groupId, userId) => {
   try {
     const response = await axios.post(
@@ -43,50 +43,50 @@ export const participateHobbyGroup = async (groupId, userId) => {
     );
     return response.data;
   } catch (error) {
-    console.error("❌ 모임 참여 실패:", error);
+    console.error("모임 참여 실패:", error);
     throw error;
   }
 };
 
-// 🟢 5. 사용자가 참여한 모임 목록 조회
+// 5. 사용자가 참여한 모임 목록 조회
 export const getUserParticipatedGroups = async (userId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/user/${userId}/participated`);
     return response.data;
   } catch (error) {
-    console.error("❌ 참여한 모임 조회 실패:", error);
+    console.error("참여한 모임 조회 실패:", error);
     throw error;
   }
 };
 
-// 🟢 6. 사용자가 개설한 모임 목록 조회
+// 6. 사용자가 개설한 모임 목록 조회
 export const getUserCreatedGroups = async (userId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/user/${userId}/created`);
     return response.data;
   } catch (error) {
-    console.error("❌ 개설한 모임 조회 실패:", error);
+    console.error("개설한 모임 조회 실패:", error);
     throw error;
   }
 };
 
-// 🟢 7. 모임 수정하기 (EditGroupPage용)
+// 7. 모임 수정하기 (EditGroupPage용)
 export const updateHobbyGroup = async (groupId, groupData) => {
   try {
     const response = await axios.put(`${API_BASE_URL}/${groupId}`, groupData);
     return response.data;
   } catch (error) {
-    console.error("❌ 모임 수정 실패:", error);
+    console.error("모임 수정 실패:", error);
     throw error;
   }
 };
-// 🗑️ 모임 삭제
+// 모임 삭제
 export const deleteHobbyGroup = async (id) => {
   try {
     const response = await axios.delete(`${API_BASE_URL}/${id}`);
     return response.data;
   } catch (error) {
-    console.error("❌ 모임 삭제 실패:", error);
+    console.error("모임 삭제 실패:", error);
     throw error;
   }
 };

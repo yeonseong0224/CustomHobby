@@ -2,19 +2,19 @@
 .hdp-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 35px 18px;
 }
 
 /* 상단 카테고리 제목 */
 .hdp-header {
-  margin-bottom: 40px;
+  margin-bottom: 35px;
 }
 
 /* 메인 콘텐츠 영역 */
 .hdp-content {
   display: flex;
   justify-content: space-between;
-  gap: 40px;
+  gap: 35px;
 }
 
 /* 왼쪽 영역 (고정 너비) */
@@ -22,7 +22,7 @@
   width: 750px; /* 고정 */
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 /* 오른쪽 영역 (고정 너비) */
@@ -30,7 +30,7 @@
   width: 350px; /* 고정 */
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 /* 모든 카드 기본 공통 스타일 */
@@ -39,52 +39,52 @@
 .hdp-right > div {
   background: #ffffff;
   border-radius: 14px;
-  padding: 25px 30px;
+  padding: 20px 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
 /* 📌 카드 높이 고정 */
 .hdp-card {
-  min-height: 150px;
+  min-height: 125px;
 }
 
 .hdp-row {
-  min-height: 65px;
+  min-height: 55px;
   display: flex;
   align-items: center;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .hdp-right > div {
-  min-height: 120px;
+  min-height: 100px;
 }
 
 /* 타이틀 스타일 */
 .hdp-card h2,
 .hdp-card h3,
 .hdp-right h3 {
-  margin: 0 0 12px;
-  font-size: 22px;
+  margin: 0 0 10px;
+  font-size: 20px;
   font-weight: bold;
 }
 
 /* 본문 텍스트 */
 .hdp-card p,
 .hdp-right p {
-  margin: 4px 0;
-  line-height: 1.6;
-  font-size: 16px;
+  margin: 3px 0;
+  line-height: 1.5;
+  font-size: 15px;
 }
 
 /* 참여하기 버튼 */
 .hdp-btn {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   border: none;
   border-radius: 10px;
   background: #1a73e8;
   color: white;
-  font-size: 18px;
+  font-size: 17px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 8px;
 }

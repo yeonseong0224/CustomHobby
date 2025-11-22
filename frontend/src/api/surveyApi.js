@@ -8,7 +8,7 @@ export const submitSurvey = async (surveyData) => {
     const response = await axios.post(`${API_BASE_URL}/submit`, surveyData);
     return response.data;
   } catch (error) {
-    console.error("❌ 설문조사 제출 실패:", error);
+    console.error("설문조사 제출 실패:", error);
     throw error;
   }
 };

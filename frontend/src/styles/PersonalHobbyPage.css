@@ -13,7 +13,7 @@
   color: #1e3a8a;
 }
 
-/* ⭐ 4열 고정 */
+/* 4열 고정 */
 .ph-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

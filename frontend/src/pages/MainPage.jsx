@@ -211,7 +211,7 @@ export default function MainPage() {
               ))
             ) : (
               <p className="main-empty" onClick={() => navigate("/survey")}>
-                아직 추천할 취미가 없습니다. <span>설문을 진행해주세요!</span>
+                <span>설문을 진행해주세요!</span>
               </p>
             )}
           </div>

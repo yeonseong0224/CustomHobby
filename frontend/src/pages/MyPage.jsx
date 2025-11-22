@@ -17,7 +17,7 @@ export default function MyPage() {
   const [participatedGroups, setParticipatedGroups] = useState([]);   // 사용자 모임
   const [createdGroups, setCreatedGroups] = useState([]);             // 내가 개설한 모임
 
-  // ✅ 페이지 데이터 로드
+  // 페이지 데이터 로드
   useEffect(() => {
     if (!user || !user.userId) {
       navigate("/");
@@ -31,15 +31,15 @@ export default function MyPage() {
         setIntro(userData.introduce || "");
         setProfileImage(userData.profile || "/images/profile.png");
 
-        // 🔵 공식 모임 참여 목록
+        // 공식 모임 참여 목록
         const hobbies = await getUserParticipatedHobbies(user.userId);
         setParticipatedHobbies(hobbies);
 
-        // 🟡 사용자 모임 참여 목록
+        // 사용자 모임 참여 목록
         const groupsJoined = await getUserParticipatedGroups(user.userId);
         setParticipatedGroups(groupsJoined);
 
-        // 🔴 내가 개설한 모임
+        // 내가 개설한 모임
         const groupsCreated = await getUserCreatedGroups(user.userId);
         setCreatedGroups(groupsCreated);
 
@@ -112,6 +112,8 @@ export default function MyPage() {
               src={profileImage}
               alt="프로필"
               className="profile-img"
+              onClick={() => document.getElementById("profileImageInput").click()}  // 이 줄 추가
+              style={{ cursor: "pointer" }}  // 이 줄 추가
               onError={(e) => {
                 e.target.src = "/images/profile.png";
               }}
@@ -123,32 +125,14 @@ export default function MyPage() {
               onChange={handleProfileImageChange}
               style={{ display: "none" }}
             />
-            <button
-              onClick={() =>
-                document.getElementById("profileImageInput").click()
-              }
-              style={{
-                position: "absolute",
-                bottom: "5px",
-                right: "5px",
-                backgroundColor: "#2196F3",
-                color: "white",
-                border: "none",
-                borderRadius: "50%",
-                width: "35px",
-                height: "35px",
-                cursor: "pointer",
-              }}
-            >
-              📷
-            </button>
+            
           </div>
 
           {/* 자기소개 */}
           <div className="intro-box">
             <h3>자기 소개</h3>
             <textarea
-              placeholder="자기소개를 입력하세요..."
+              placeholder="자기소개를 입력하세요."
               value={intro}
               onChange={(e) => setIntro(e.target.value)}
             />
@@ -208,7 +192,7 @@ export default function MyPage() {
               </div>
             ))}
 
-            {/* 🟡 사용자 모임 */}
+            {/* 사용자 모임 */}
             {participatedGroups.map((group) => (
               <div
                 key={`group-${group.id}`}

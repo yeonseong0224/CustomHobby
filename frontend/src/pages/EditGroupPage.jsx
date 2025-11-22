@@ -16,13 +16,13 @@ export default function EditGroupPage() {
     materials: "",
     category: "",
     meetingDate: "",
-    hobbyName: "", // ⭐ 취미 이름 추가
+    hobbyName: "", 
   });
 
   const [loading, setLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // ⭐ 데이터 불러오기
+  // 데이터 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +39,7 @@ export default function EditGroupPage() {
           meetingDate: data.meetingDate
             ? data.meetingDate.split("T")[0]
             : "",
-          hobbyName: data.hobbyName || "", // ⭐ 취미 이름 세팅
+          hobbyName: data.hobbyName || "", // 취미 이름 세팅
         });
       } catch (error) {
         alert("모임 정보를 불러오는 중 오류가 발생했습니다.");
@@ -51,7 +51,7 @@ export default function EditGroupPage() {
     fetchData();
   }, [id]);
 
-  // ⭐ 입력 변경
+  // 입력 변경
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -60,7 +60,7 @@ export default function EditGroupPage() {
     }));
   };
 
-  // ⭐ 저장
+  // 저장
   const handleSave = async () => {
     try {
       await updateHobbyGroup(id, formData); // hobbyName 포함한 모든 정보 전송됨
@@ -82,14 +82,14 @@ export default function EditGroupPage() {
   return (
     <div className="edit-group-page">
       {showSuccess && (
-        <div className="success-banner">✅ 수정이 완료되었습니다!</div>
+        <div className="success-banner">수정이 완료되었습니다!</div>
       )}
 
-      <h1 className="edit-title">🛠️ 모임 정보 수정</h1>
+      <h1 className="edit-title">모임 정보 수정</h1>
 
       <div className="edit-form">
 
-        {/* ⭐ 취미 이름 표시 */}
+        {/* 취미 이름 표시 */}
         <label>취미 이름</label>
         <input
           type="text"

@@ -15,6 +15,19 @@ import pickle
 import os
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+from tensorflow.keras import backend as K
+
+def focal_loss_custom(gamma=2., alpha=0.25):
+    def focal_loss_fixed(y_true, y_pred):
+        y_true = tf.cast(y_true, tf.float32)
+        y_pred = tf.cast(y_pred, tf.float32)
+        epsilon = K.epsilon()
+        y_pred = K.clip(y_pred, epsilon, 1. - epsilon)
+        pt_1 = tf.where(tf.equal(y_true, 1), y_pred, tf.ones_like(y_pred))
+        pt_0 = tf.where(tf.equal(y_true, 0), y_pred, tf.zeros_like(y_pred))
+        return -K.sum(alpha * K.pow(1. - pt_1, gamma) * K.log(pt_1)) - K.sum((1-alpha) * K.pow(pt_0, gamma) * K.log(1. - pt_0))
+    return focal_loss_fixed
+
 
 # ------------------------------------------------------------
 # 1. Flask 설정
@@ -37,13 +50,13 @@ model_assets = None
 # ------------------------------------------------------------
 hobby_id_map = {
     1: "그림 그리기", 2: "캘리그래피", 3: "사진 촬영", 4: "기타 연주", 5: "피아노 연주",
-    6: "요가", 7: "필라테스", 8: "헬스", 9: "러닝", 10: "수영", 11: "하이킹", 12: "자전거 타기",
+    6: "요가", 7: "필라테스", 8: "헬스", 9: "러닝", 10: "수영", 12: "자전거 타기",
     13: "차박", 14: "여행", 15: "골프", 16: "복싱", 17: "요리", 18: "베이킹", 19: "커피 브루잉",
     20: "독서", 21: "언어 공부", 22: "뜨개질", 23: "보석십자수", 24: "퍼즐 맞추기", 25: "게임",
     26: "OTT 감상", 27: "영화 보기", 28: "음악 감상", 29: "연극 관람", 30: "콘서트 관람",
     31: "야구 관람", 32: "축구 관람", 33: "풋살", 34: "배드민턴", 35: "클라이밍",
     36: "요리 클래스", 37: "디자인", 38: "악기 연주", 39: "캠핑", 40: "등산",
-    41: "홈트레이닝", 42: "자기계발", 43: "드로잉", 44: "서예", 45: "연주회 감상"
+    41: "홈트레이닝", 42: "자기계발", 43: "드로잉", 45: "연주회 감상"
 }
 name_to_id = {v: k for k, v in hobby_id_map.items()}
 
@@ -51,10 +64,16 @@ name_to_id = {v: k for k, v in hobby_id_map.items()}
 # 4. 입력값 정규화 함수
 # ------------------------------------------------------------
 def normalize_input_value(key, value):
+    """
+    코랩 4번 셀과 동일한 매핑 (필수!)
+    """
     mapping = {
         "age_group": {
-            "10대": "10대", "20대 초·중반": "20대", "20대 후반": "20대",
-            "30대": "30대", "40·50대 이상": "40대 이상",
+            "10대": "10대",
+            "20대 초·중반": "20대",
+            "20대 후반": "20대",
+            "30대": "30대",
+            "40·50대 이상": "40대 이상",
         },
         "preferred_place": {
             "실내": "실내에서 조용히 하는 걸 좋아해요",
@@ -68,23 +87,32 @@ def normalize_input_value(key, value):
             "사교적인": "상황에 따라 달라요",
         },
         "time_per_day": {
-            "30분": "30분 이하", "1시간": "1시간 이하",
-            "2시간": "1~2시간", "3시간 이상": "2시간 이상",
+            "30분": "30분 이하",
+            "1시간": "1시간 이하",
+            "2시간": "1~2시간",
+            "3시간 이상": "2시간 이상",
             "상관없음": "1시간 이하",
         },
         "frequency": {
-            "매일": "매일", "주 2~3회": "주 3회 이하",
-            "주 1회": "주 3회 이하", "월 2~3회": "불규칙하게 하고 싶어요",
+            "매일": "매일",
+            "주 2~3회": "주 3회 이하",
+            "주 1회": "주 3회 이하",
+            "월 2~3회": "불규칙하게 하고 싶어요",
             "가끔": "불규칙하게 하고 싶어요",
         },
         "hobby_time": {
-            "새벽": "오전", "오전": "오전", "오후": "오후", "저녁": "저녁",
+            "새벽": "오전",
+            "오전": "오전",
+            "오후": "오후",
+            "저녁": "저녁",
             "상관없음": "주말 중심",
         },
         "budget": {
             "무예산 (0원)": "5만원 이하",
             "저예산 (~5만원)": "5만원 이하",
+            "저예산": "5만원 이하",
             "중간 (5~15만원)": "5만원 ~ 10만원",
+            "중간": "5만원 ~ 10만원",
             "고예산 (15만원~)": "10만원 이상",
             "상관없음": "5만원 이하",
         },
@@ -100,7 +128,12 @@ def normalize_input_value(key, value):
             "상관없음": "상황에 따라 달라요",
         },
     }
+
+    # 매핑에 없으면 원본 반환
     return mapping.get(key, {}).get(value, value)
+
+
+
 
 # ------------------------------------------------------------
 # 5. 모델 로드 함수
@@ -113,7 +146,9 @@ def load_model_files():
     try:
         # 1. Keras 모델 로드
         if os.path.exists(MODEL_FILE):
-            autoencoder = load_model(MODEL_FILE)
+            custom_objects = {'focal_loss_fixed': focal_loss_custom(gamma=2.0, alpha=0.25)}
+            autoencoder = load_model(MODEL_FILE, custom_objects=custom_objects)
+
             print(f"✅ 모델 로드 성공: {MODEL_FILE}")
         else:
             print(f"❌ 모델 파일 없음: {MODEL_FILE}")
@@ -169,32 +204,56 @@ def recommend_hobbies_improved(user_answers, min_recommendations=3, max_recommen
     # 3. 학습 때와 동일한 컬럼 순서로 맞추기
     X_input = user_encoded.reindex(columns=feature_columns, fill_value=0).values
     
-    # 4. Zero Padding (취미 부분은 0으로)
+    # 🔍 디버그: 컬럼 개수 확인
+    print(f"[DEBUG] user_encoded 컬럼 개수: {len(user_encoded.columns)}")
+    print(f"[DEBUG] user_encoded 컬럼: {user_encoded.columns.tolist()}")
+    print(f"[DEBUG] feature_columns 개수: {len(feature_columns)}")
+    print(f"[DEBUG] feature_columns: {feature_columns}")
+        
+    # 4. 먼저 user features만 스케일링 (41개)
+    X_input_scaled = scaler.transform(X_input)
+
+    # 5. 가중치 적용 (스케일링된 user features에만)
+    weights = model_assets.get('weights', {
+        'propensity': 3.5, 'budget': 3.0, 'gender': 2.5,
+        'age_group': 1.5, 'preferred_place': 2.0, 'default': 1.0
+    })
+
+    num_user_features = len(feature_columns)
+    for i, col in enumerate(feature_columns):
+        if i >= num_user_features:
+            break
+        w = weights['default']
+        if 'propensity' in col: w = weights['propensity']
+        elif 'budget' in col: w = weights['budget']
+        elif 'gender' in col: w = weights['gender']
+        elif 'age_group' in col: w = weights['age_group']
+        elif 'preferred_place' in col: w = weights['preferred_place']
+        X_input_scaled[0, i] *= w
+
+    # 6. Zero Padding (취미 부분)
     dummy_hobbies = np.zeros((1, len(hobby_labels)))
-    
-    # 5. [User Features | Zero Hobbies] 결합
-    full_input = np.hstack([X_input, dummy_hobbies])
-    
-    # 6. 스케일링
-    full_input_scaled = scaler.transform(full_input)
-    
-    # 7. 오토인코더 예측
+
+    # 7. 스케일링된 user features + zero hobbies 결합
+    full_input_scaled = np.hstack([X_input_scaled, dummy_hobbies])
+
+    # 8. 오토인코더 예측
     reconstructed = autoencoder.predict(full_input_scaled, verbose=0)
-    
-    # 8. 뒷부분(취미 파트)만 추출
+
+    # 9. 뒷부분(취미 파트)만 추출
     predicted_scores = reconstructed[0, -len(hobby_labels):]
     
-    # 9. 🔥 Threshold 기반 필터링
+    # 10. 🔥 Threshold 기반 필터링
     hobby_score_pairs = [
         (label, float(score)) 
         for label, score in zip(hobby_labels, predicted_scores)
         if score >= optimal_threshold  # Threshold 이상만 선택
     ]
     
-    # 10. 점수 순 정렬
+    # 11. 점수 순 정렬
     hobby_score_pairs.sort(key=lambda x: x[1], reverse=True)
     
-    # 11. 최소/최대 개수 보장
+    # 12. 최소/최대 개수 보장
     if len(hobby_score_pairs) < min_recommendations:
         # Threshold 이하지만 상위 N개 추가
         all_hobbies = sorted(
@@ -207,7 +266,7 @@ def recommend_hobbies_improved(user_answers, min_recommendations=3, max_recommen
     # 최대 개수 제한
     hobby_score_pairs = hobby_score_pairs[:max_recommendations]
     
-    # 12. Confidence를 0~100 스케일로 변환
+    # 13. Confidence를 0~100 스케일로 변환
     results = []
     for hobby, score in hobby_score_pairs:
         confidence = round(score * 100, 1)
@@ -263,6 +322,11 @@ def recommend():
         
         # 입력값 정규화
         normalized = {k: normalize_input_value(k, v) for k, v in user_data.items()}
+
+        
+        # 🔍 디버그: 정규화 결과 출력
+        print(f"[정규화 전] {user_data}")
+        print(f"[정규화 후] {normalized}")
         
         # 🔥 개선된 추천 실행 (Threshold 기반)
         recs = recommend_hobbies_improved(normalized, min_recommendations=5, max_recommendations=10)

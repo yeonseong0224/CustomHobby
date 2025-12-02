@@ -110,7 +110,7 @@ export default function PersonalHobbyPage() {
         const recs = await getHobbyRecommendations(userData);
         setRecommendedHobbies(recs.slice(0, 5)); // 상위 5개
       } catch (error) {
-        console.error("추천 취미 불러오기 실패:", error);
+        //console.error("추천 취미 불러오기 실패:", error);
       } finally {
         setLoading(false);
       }

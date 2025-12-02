@@ -52,7 +52,7 @@ export default function HobbyDetailPage() {
           });
         }
 
-        // ⭐ 사용자 모임 (hobby_groups 테이블)
+        // 사용자 모임 (hobby_groups 테이블)
         else if (isUserGroup) {
           const g = await getHobbyGroup(groupId);
 
@@ -72,7 +72,7 @@ export default function HobbyDetailPage() {
           });
         }
       } catch (err) {
-        console.error("❌ 상세 조회 실패:", err);
+        //console.error("상세 조회 실패:", err);
       } finally {
         setLoading(false);
       }
@@ -92,22 +92,22 @@ export default function HobbyDetailPage() {
         return;
       }
 
-      // 🔵 공식 모임 참여
+      // 공식 모임 참여
       if (isOfficialGroup) {
-        console.log("📤 공식 모임 참여 요청:", { hobbyId: id, userId: user.userId });
+        //console.log("공식 모임 참여 요청:", { hobbyId: id, userId: user.userId });
         await participateHobby(id, user.userId);
       }
 
-      // 🟡 사용자 모임 참여
+      // 사용자 모임 참여
       else if (isUserGroup) {
-        console.log("📤 사용자 모임 참여 요청:", { groupId, userId: user.userId });
+        //console.log("사용자 모임 참여 요청:", { groupId, userId: user.userId });
         await participateHobbyGroup(groupId, user.userId);
       }
 
       alert("참여가 완료되었습니다!");
       navigate("/mypage");
     } catch (err) {
-      console.error("❌ 참여 실패:", err);
+      //console.error("참여 실패:", err);
       alert("참여 중 오류가 발생했습니다.");
     }
   };
@@ -115,7 +115,7 @@ export default function HobbyDetailPage() {
   if (loading) return <p className="hdp-loading">로딩 중...</p>;
   if (!data) return <p>데이터가 없습니다.</p>;
 
-  // 🟢 참여 버튼 표시 조건
+  // 참여 버튼 표시 조건
   const showParticipateButton =
     // 공식 모임은 항상 가능
     data.isOfficial ||

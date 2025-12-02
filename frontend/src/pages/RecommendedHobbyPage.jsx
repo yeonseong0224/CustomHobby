@@ -10,7 +10,7 @@ export default function RecommendedHobbyPage() {
   const [hobbies, setHobbies] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ 백엔드에서 해당 카테고리의 취미 가져오기
+  // 백엔드에서 해당 카테고리의 취미 가져오기
   useEffect(() => {
     const fetchHobbies = async () => {
       try {
@@ -21,7 +21,7 @@ export default function RecommendedHobbyPage() {
         );
         setHobbies(filtered);
       } catch (error) {
-        console.error("❌ 추천 취미 불러오기 실패:", error);
+        console.error("추천 취미 불러오기 실패:", error);
       } finally {
         setLoading(false);
       }

@@ -74,7 +74,7 @@ export const getUserCreatedHobbies = async (userId) => {
     const response = await axios.get(`${API_BASE_URL}/user/${userId}/created`);
     return response.data;
   } catch (error) {
-    console.error("❌ 개설한 취미 조회 실패:", error);
+    console.error("개설한 취미 조회 실패:", error);
     throw error;
   }
 };

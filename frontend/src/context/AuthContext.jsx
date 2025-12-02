@@ -19,26 +19,26 @@ export const AuthProvider = ({ children }) => {
 
   // 컴포넌트 마운트 시 localStorage에서 사용자 정보 불러오기
   useEffect(() => {
-    console.log("🔍 AuthContext 초기화 시작...");
+    // console.log("AuthContext 초기화 시작...");
     const storedUserId = localStorage.getItem("userId");
     const storedUserNickname = localStorage.getItem("userNickname");
     const storedHasSurvey = localStorage.getItem("hasSurvey");
     
-    console.log("📦 localStorage 내용:", {
+    console.log("localStorage 내용:", {
       userId: storedUserId,
       nickname: storedUserNickname,
       hasSurvey: storedHasSurvey
     });
 
     if (storedUserId && storedUserNickname) {
-      console.log("✅ localStorage에서 사용자 정보 복원 완료!");
+      // console.log("localStorage에서 사용자 정보 복원 완료");
       setUser({
         userId: storedUserId,
         nickname: storedUserNickname,
         hasSurvey: storedHasSurvey === "true" // 문자열을 boolean으로 변환
       });
     } else {
-      console.log("⚠️ localStorage에 사용자 정보 없음");
+      console.log("localStorage 사용자 정보 없음");
     }
     setIsLoading(false);
   }, []);
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("userNickname", userInfo.nickname);
     localStorage.setItem("hasSurvey", userInfo.hasSurvey.toString()); // boolean을 문자열로 저장
     
-    console.log("✅ 로그인 성공:", userInfo);
+    //console.log("로그인 성공:", userInfo);
   };
 
   // 로그아웃 함수
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("userNickname");
     localStorage.removeItem("hasSurvey");
     localStorage.removeItem("intro");
-    console.log("✅ 로그아웃 완료");
+    //console.log("로그아웃 완료");
   };
 
   // 사용자 정보 업데이트 함수

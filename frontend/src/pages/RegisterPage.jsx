@@ -59,7 +59,7 @@ export default function RegisterPage() {
       return;
     }
 
-    console.log("📤 전송할 회원가입 데이터:", form);
+    //console.log("전송할 회원가입 데이터:", form);
 
     try {
       const result = await registerUser(form);

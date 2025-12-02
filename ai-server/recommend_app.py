@@ -1,10 +1,7 @@
 # ============================================================
-# recommend_app_improved.py (개선된 Deep Autoencoder 추론)
+# (Deep Autoencoder 추론)
 # ============================================================
-# 주요 개선 사항:
-# 1. Threshold 기반 추천 (Top-N 강제 제거)
-# 2. Confidence Score 더 정확하게 반환
-# 3. 최소 추천 개수 보장
+
 # ============================================================
 
 from flask import Flask, request, jsonify
@@ -141,7 +138,7 @@ def normalize_input_value(key, value):
 def load_model_files():
     global autoencoder, model_assets
     
-    print("\n[로딩 시작] 개선된 모델 불러오는 중...")
+    print("\n[로딩 시작] 모델 불러오는 중...")
     
     try:
         # 1. Keras 모델 로드
@@ -149,44 +146,34 @@ def load_model_files():
             custom_objects = {'focal_loss_fixed': focal_loss_custom(gamma=2.0, alpha=0.25)}
             autoencoder = load_model(MODEL_FILE, custom_objects=custom_objects)
 
-            print(f"✅ 모델 로드 성공: {MODEL_FILE}")
+            print(f"모델 로드 성공: {MODEL_FILE}")
         else:
-            print(f"❌ 모델 파일 없음: {MODEL_FILE}")
+            print(f"모델 파일 없음: {MODEL_FILE}")
             return
         
         # 2. 전처리 도구 + Threshold 로드
         if os.path.exists(ASSETS_FILE):
             with open(ASSETS_FILE, 'rb') as f:
                 model_assets = pickle.load(f)
-            print(f"✅ 전처리 도구 로드 성공: {ASSETS_FILE}")
+            print(f"전처리 도구 로드 성공: {ASSETS_FILE}")
             print(f"   학습 정보: {model_assets.get('info', {})}")
             print(f"   Threshold: {model_assets.get('optimal_threshold', 0.5):.3f}")
         else:
-            print(f"❌ PKL 파일 없음: {ASSETS_FILE}")
+            print(f"PKL 파일 없음: {ASSETS_FILE}")
             return
             
         print("=" * 60)
-        print("🚀 개선된 모델 준비 완료! Threshold 기반 추론 활성화")
+        print("모델 준비 완료 Threshold 기반 추론 활성화")
         print("=" * 60)
         
     except Exception as e:
-        print(f"❌ 로드 실패: {e}")
+        print(f"로드 실패: {e}")
 
 # ------------------------------------------------------------
-# 6. 🔥 개선된 추천 함수 (Threshold 기반)
+# 6. 추천 함수 개선 (Threshold 기반)
 # ------------------------------------------------------------
 def recommend_hobbies_improved(user_answers, min_recommendations=3, max_recommendations=10):
-    """
-    Threshold 기반 추천 (더 정확한 Precision)
-    
-    Args:
-        user_answers: 사용자 입력
-        min_recommendations: 최소 추천 개수 (기본 3개)
-        max_recommendations: 최대 추천 개수 (기본 10개)
-    
-    Returns:
-        List of (hobby_name, confidence_score)
-    """
+
     if not autoencoder or not model_assets:
         print("[ERROR] 모델이 로드되지 않았습니다.")
         return []
@@ -204,31 +191,22 @@ def recommend_hobbies_improved(user_answers, min_recommendations=3, max_recommen
     # 3. 학습 때와 동일한 컬럼 순서로 맞추기
     X_input = user_encoded.reindex(columns=feature_columns, fill_value=0).values
     
-    # 🔍 디버그: 컬럼 개수 확인
-    print(f"[DEBUG] user_encoded 컬럼 개수: {len(user_encoded.columns)}")
-    print(f"[DEBUG] user_encoded 컬럼: {user_encoded.columns.tolist()}")
-    print(f"[DEBUG] feature_columns 개수: {len(feature_columns)}")
-    print(f"[DEBUG] feature_columns: {feature_columns}")
         
     # 4. 먼저 user features만 스케일링 (41개)
     X_input_scaled = scaler.transform(X_input)
 
-    # 5. 가중치 적용 (스케일링된 user features에만)
-    weights = model_assets.get('weights', {
-        'propensity': 3.5, 'budget': 3.0, 'gender': 2.5,
-        'age_group': 1.5, 'preferred_place': 2.0, 'default': 1.0
-    })
+    # 5. 가중치 적용 (propensity에만 약간)
+    weights = {
+        'propensity': 2.5,  # 성향에만 조금 가중치
+        'budget' : 1.5,
+        'default': 1.0
+    }
 
     num_user_features = len(feature_columns)
     for i, col in enumerate(feature_columns):
         if i >= num_user_features:
             break
-        w = weights['default']
-        if 'propensity' in col: w = weights['propensity']
-        elif 'budget' in col: w = weights['budget']
-        elif 'gender' in col: w = weights['gender']
-        elif 'age_group' in col: w = weights['age_group']
-        elif 'preferred_place' in col: w = weights['preferred_place']
+        w = weights['propensity'] if 'propensity' in col else weights['default']
         X_input_scaled[0, i] *= w
 
     # 6. Zero Padding (취미 부분)
@@ -243,7 +221,7 @@ def recommend_hobbies_improved(user_answers, min_recommendations=3, max_recommen
     # 9. 뒷부분(취미 파트)만 추출
     predicted_scores = reconstructed[0, -len(hobby_labels):]
     
-    # 10. 🔥 Threshold 기반 필터링
+    # 10. Threshold 기반 필터링
     hobby_score_pairs = [
         (label, float(score)) 
         for label, score in zip(hobby_labels, predicted_scores)
@@ -267,10 +245,13 @@ def recommend_hobbies_improved(user_answers, min_recommendations=3, max_recommen
     hobby_score_pairs = hobby_score_pairs[:max_recommendations]
     
     # 13. Confidence를 0~100 스케일로 변환
+    # 260줄 부분을 이렇게 변경
     results = []
     for hobby, score in hobby_score_pairs:
-        confidence = round(score * 100, 1)
-        results.append((hobby, confidence))
+        # Sigmoid로 0~1 범위로 변환 후 100 곱하기
+        normalized = 1 / (1 + np.exp(-10 * (score - 0.5)))
+        confidence = round(normalized * 100, 1)
+        results.append((hobby, max(confidence, 1.0)))
     
     return results
 
@@ -321,15 +302,16 @@ def recommend():
             })
         
         # 입력값 정규화
-        normalized = {k: normalize_input_value(k, v) for k, v in user_data.items()}
+        #normalized = {k: normalize_input_value(k, v) for k, v in user_data.items()}
 
         
-        # 🔍 디버그: 정규화 결과 출력
-        print(f"[정규화 전] {user_data}")
-        print(f"[정규화 후] {normalized}")
         
-        # 🔥 개선된 추천 실행 (Threshold 기반)
-        recs = recommend_hobbies_improved(normalized, min_recommendations=5, max_recommendations=10)
+        # 개선된 추천 실행 (Threshold 기반)
+        #recs = recommend_hobbies_improved(normalized, min_recommendations=5, max_recommendations=10)
+        
+        # 정규화 없이 원본 데이터를 그대로 모델에 넣음
+        print(f"[입력 데이터 그대로 사용] {user_data}")
+        recs = recommend_hobbies_improved(user_data, min_recommendations=5, max_recommendations=10)
         
         # 결과 파싱
         hobby_names = [h[0] for h in recs]
@@ -342,7 +324,7 @@ def recommend():
         return jsonify({
             "recommended_ids": hobby_ids,
             "recommended_hobbies": hobby_names,
-            "confidence": hobby_probs
+            # "confidence": hobby_probs
         })
     
     except Exception as e:

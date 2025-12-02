@@ -5,7 +5,7 @@ import { loginUser } from "../api/userApi";
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const { login } = useAuth();  // ✅ Context의 login 함수 사용
+  const { login } = useAuth();  // Context의 login 함수 사용
   const [form, setForm] = useState({ userId: "", password: "" });
 
   const handleChange = (e) => {
@@ -17,14 +17,14 @@ export default function LoginForm() {
     try {
       const user = await loginUser(form);
       
-      console.log("✅ 로그인 성공:", user);
+      console.log("로그인 성공:", user);
       
-      // ✅ Context의 login 함수로 사용자 정보 저장 (자동으로 localStorage도 저장됨)
+      // Context의 login 함수로 사용자 정보 저장 (자동으로 localStorage도 저장됨)
       login(user);
       
       alert(`${user.nickname}님, 로그인 성공!`);
       
-      // ✅ 로그인 후 무조건 메인 페이지로 이동
+      //  로그인 후 무조건 메인 페이지로 이동
       navigate("/main");
     } catch (err) {
       alert(err.response?.data || "로그인 실패");

@@ -8,7 +8,7 @@ export const registerUser = async (userData) => {
     const response = await axios.post(`${API_BASE_URL}/register`, userData);
     return response.data;
   } catch (error) {
-    console.error("❌ 회원가입 실패:", error);
+    console.error("회원가입 실패:", error);
     throw error;
   }
 };
@@ -30,7 +30,7 @@ export const getUser = async (userId) => {
     const response = await axios.get(`${API_BASE_URL}/${userId}`);
     return response.data;
   } catch (error) {
-    console.error("사용자 정보 불러오기 실패:", error);
+    // console.error("사용자 정보 불러오기 실패:", error);
     throw error;
   }
 };
@@ -41,7 +41,7 @@ export const checkUserIdAvailable = async (userId) => {
     const response = await axios.get(`${API_BASE_URL}/check/${userId}`);
     return response.data; // true: 사용 가능, false: 중복
   } catch (error) {
-    console.error("아이디 중복 체크 실패:", error);
+    // console.error("아이디 중복 체크 실패:", error);
     throw error;
   }
 };
@@ -60,7 +60,7 @@ export const updateUserProfile = async (userId, profileData) => {
     );
     return response.data;
   } catch (error) {
-    console.error("프로필 업데이트 실패:", error);
+    // console.error("프로필 업데이트 실패:", error);
     throw error;
   }
 };
@@ -72,7 +72,7 @@ export const updateUserInfo = async (userId, updatedData) => {
     });
     return response.data;
   } catch (error) {
-    console.error("사용자 정보 수정 실패:", error);
+    // console.error("사용자 정보 수정 실패:", error);
     throw error;
   }
 };

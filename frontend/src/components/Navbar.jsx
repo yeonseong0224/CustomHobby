@@ -17,7 +17,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-left">
 
-        {/* ✅ 로고 이미지를 사용 */}
+        {/* 로고 이미지를 사용 */}
         <Link to="/main" className="logo">
   <img 
     src="/images/logo.png" 

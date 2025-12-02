@@ -175,7 +175,7 @@ export default function MyPage() {
 
           <div className="hobby-grid">
 
-            {/* 🔵 공식 모임 */}
+            {/* 공식 모임 */}
             {participatedHobbies.map((hobby) => (
               <div
                 key={`official-${hobby.id}`}

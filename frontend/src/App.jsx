@@ -23,15 +23,15 @@ import MyGroupDetailPage from "./pages/MyGroupDetailPage";
 import EditGroupPage from "./pages/EditGroupPage";
 
 function AppContent() {
-  const { isLoading } = useAuth(); // ✅ 로딩 상태 가져오기
+  const { isLoading } = useAuth(); // 로딩 상태 가져오기
   const location = useLocation();
 
-  // ✅ AuthContext가 localStorage에서 로그인 복원 중이면 아무것도 렌더링하지 않음
+  // AuthContext가 localStorage에서 로그인 복원 중이면 아무것도 렌더링하지 않음
   if (isLoading) {
     return <p style={{ textAlign: "center", marginTop: "100px" }}>로그인 상태 확인 중...</p>;
   }
 
-  // ✅ 로그인/회원가입/설문조사 페이지만 NavbarSimple 표시
+  // 로그인/회원가입/설문조사 페이지만 NavbarSimple 표시
   const simpleNavbarPaths = ["/", "/register", "/survey"];
   const isSimpleNavbar = simpleNavbarPaths.includes(location.pathname);
 
@@ -46,7 +46,7 @@ function AppContent() {
           <Route path="/survey" element={<SurveyPage />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/category/:hobby" element={<CategoryPage />} />
-          <Route path="/category" element={<CategoryPage />} /> {/* ✅ 기본 카테고리 */}
+          <Route path="/category" element={<CategoryPage />} /> {/* 기본 카테고리 */}
           <Route path="/hobby-info/:id" element={<HobbyInfoPage />} />
           <Route path="/hobby-detail/:id" element={<HobbyDetailPage />} />
           <Route path="/hobby-description/:id" element={<HobbyDescriptionPage />} />

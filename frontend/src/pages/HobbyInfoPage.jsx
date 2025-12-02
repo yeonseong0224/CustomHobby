@@ -9,7 +9,7 @@ export default function HobbyInfoPage() {
   const [hobbies, setHobbies] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ 카테고리 이름 매핑
+  // 카테고리 이름 매핑
   const categoryNames = {
   art: "예술/공예",
   health: "운동/건강",
@@ -25,7 +25,7 @@ export default function HobbyInfoPage() {
 };
 
 
-  // ✅ 취미 이름별 이미지 매핑
+  // 취미 이름별 이미지 매핑
   const hobbyImages = {
     "그림 그리기": "art",
     "캘리그래피": "calligraphy",
@@ -74,7 +74,7 @@ export default function HobbyInfoPage() {
     "볼링": "bowling",
   };
 
-  // ✅ DB에서 모든 취미 불러오기
+  // DB에서 모든 취미 불러오기
   useEffect(() => {
     fetch("http://localhost:8080/api/hobbies")
       .then((res) => res.json())
@@ -82,11 +82,11 @@ export default function HobbyInfoPage() {
 
         const categoryName = categoryNames[id] || "";
 
-        // ✅ 카테고리별 필터링
+        // 카테고리별 필터링
         const filtered = data.filter(
           (hobby) => hobby.hobbyCategory === categoryName
         );
-        // ✅ 중복된 취미 이름 제거
+        // 중복된 취미 이름 제거
         const unique = filtered.filter(
           (h, i, arr) =>
             arr.findIndex((o) => o.hobbyName === h.hobbyName) === i
@@ -97,7 +97,7 @@ export default function HobbyInfoPage() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("❌ 취미 데이터 불러오기 실패:", err);
+        console.error("취미 데이터 불러오기 실패:", err);
         setLoading(false);
       });
   }, [id]);
@@ -115,7 +115,7 @@ export default function HobbyInfoPage() {
             <div
               key={hobby.id}
               className="hobbyinfo-card"
-              onClick={() => navigate(`/hobby/${hobby.id}`)} // ✅ DB id로 이동
+              onClick={() => navigate(`/hobby/${hobby.id}`)} // DB id로 이동
             >
               <img
   src={

@@ -78,7 +78,7 @@ export default function CreateGroupPage() {
       creatorId: user.userId,
       category: form.category,
       meetingDate: date.toLocaleDateString("ko-KR"),
-      hobbyName: selectedHobby, // ⭐ 핵심: 취미 이름 저장
+      hobbyName: selectedHobby, // 핵심: 취미 이름 저장
       groupImage: groupImage,
     };
 
@@ -87,7 +87,7 @@ export default function CreateGroupPage() {
       alert("모임이 성공적으로 개설되었습니다!");
       navigate(`/hobby/${encodeURIComponent(selectedHobby)}`);
     } catch (error) {
-      console.error("❌ 등록 실패:", error);
+      //console.error("등록 실패:", error);
       alert("서버 전송 실패. 다시 시도해주세요.");
     }
   };
@@ -100,7 +100,7 @@ export default function CreateGroupPage() {
 
       <div className="create-group-layout">
         <form className="create-group-left" onSubmit={handleSubmit}>
-          {/* ⭐ 취미 선택 */}
+          {/* 취미 선택 */}
           <select
             value={selectedHobby}
             onChange={(e) => setSelectedHobby(e.target.value)}

@@ -12,13 +12,13 @@ export default function SurveyForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ 설문 응답 출력 (테스트용)
+    // 설문 응답 출력 (테스트용)
     console.log("Survey Answers:", answers);
 
-    // ✅ 알림창 띄우기
+    // 알림창 띄우기
     alert("설문이 완료되었습니다! 로그인 페이지로 이동합니다.");
 
-    // ✅ 로그인(시작) 페이지로 이동
+    // 로그인(시작) 페이지로 이동
     navigate("/");
   };
 

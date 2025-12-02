@@ -6,7 +6,7 @@ import "../styles/StartPage.css";
 
 export default function StartPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();  // ✅ Context의 login 함수 사용
+  const { login } = useAuth();  // Context의 login 함수 사용
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,17 +14,17 @@ export default function StartPage() {
     e.preventDefault();
 
     try {
-      // ✅ userApi.js의 loginUser 함수 사용
+      // userApi.js의 loginUser 함수 사용
       const user = await loginUser({ userId: loginId, password });
 
-      console.log("✅ 로그인 성공:", user);
+      console.log("로그인 성공:", user);
 
-      // ✅ Context의 login 함수로 사용자 정보 저장
+      // Context의 login 함수로 사용자 정보 저장
       login(user);
       
       alert(`${user.nickname}님 환영합니다!`);
       
-      // ✅ 로그인 후 무조건 메인 페이지로 이동
+      // 로그인 후 무조건 메인 페이지로 이동
       navigate("/main");
     } catch (error) {
       console.error(error);

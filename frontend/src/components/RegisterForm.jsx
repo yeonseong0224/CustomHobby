@@ -56,29 +56,29 @@ export default function RegisterForm() {
       return;
     }
 
-    // ✅ 필수 필드 검증
+    // 필수 필드 검증
     if (!form.phoneNum || form.phoneNum.trim() === "") {
       alert("전화번호를 입력해주세요!");
       return;
     }
 
-    console.log("📤 전송할 회원가입 데이터:", form);
+    // console.log("전송할 회원가입 데이터:", form);
 
     try {
       
       const result = await registerUser(form);
       
-      console.log("✅ 회원가입 성공:", result);
+      // console.log("회원가입 성공:", result);
       
-      // ✅ 회원가입 후 자동으로 로그인 처리 (Context 사용)
+      // 회원가입 후 자동으로 로그인 처리 (Context 사용)
       login(result);
       
       alert(`회원가입 성공! 환영합니다, ${result.nickname}님`);
       
-      // ✅ 회원가입 후 바로 메인 페이지로 이동
+      // 회원가입 후 바로 메인 페이지로 이동
       navigate("/main");
     } catch (err) {
-      console.error("❌ 회원가입 실패:", err);
+      // console.error("회원가입 실패:", err);
       alert(err.response?.data || "회원가입 실패");
     }
   };
@@ -112,12 +112,12 @@ export default function RegisterForm() {
       </button>
       {idCheckStatus === false && (
         <p style={{ color: "red", fontSize: "12px", margin: "5px 0" }}>
-          ❌ 이미 사용 중인 아이디입니다.
+          이미 사용 중인 아이디입니다.
         </p>
       )}
       {idCheckStatus === true && (
         <p style={{ color: "green", fontSize: "12px", margin: "5px 0" }}>
-          ✅ 사용 가능한 아이디입니다.
+          사용 가능한 아이디입니다.
         </p>
       )}
       <input type="password" name="password" placeholder="비밀번호" value={form.password} onChange={handleChange} required />

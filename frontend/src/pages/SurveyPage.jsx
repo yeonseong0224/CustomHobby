@@ -6,14 +6,14 @@ import "../styles/SurveyPage.css";
 
 export default function SurveyPage() {
   const navigate = useNavigate();
-  const { user, updateUser } = useAuth();  // ✅ Context에서 사용자 정보 가져오기
+  const { user, updateUser } = useAuth();  // Context에서 사용자 정보 가져오기
   const [answers, setAnswers] = useState({
     gender: "",
     ageGroup: "",
     preferredPlace: "",
     propensity: "",
     budget: "",
-    currentHobbies: "없음",  // ✅ 기본값 설정 (필수 필드이므로)
+    currentHobbies: "없음",  // 기본값 설정 (필수 필드이므로)
     hobbyTime: "",
     timePerDay: "",
     frequency: "",
@@ -21,26 +21,26 @@ export default function SurveyPage() {
     sociality: ""
   });
 
-  // ✅ 페이지 로드 시 user 체크 및 localStorage에서 복구
+  // 페이지 로드 시 user 체크 및 localStorage에서 복구
   useEffect(() => {
-    console.log("📍 SurveyPage 로드됨");
-    console.log("👤 현재 user 상태:", user);
+    // console.log("SurveyPage 로드됨");
+    // console.log("현재 user 상태:", user);
     
     // user가 없으면 localStorage에서 복구 시도
     if (!user || !user.userId) {
       const storedUserId = localStorage.getItem("userId");
       const storedUserNickname = localStorage.getItem("userNickname");
       
-      console.log("📦 localStorage 확인:", { userId: storedUserId, nickname: storedUserNickname });
+      //console.log("localStorage 확인:", { userId: storedUserId, nickname: storedUserNickname });
       
       if (storedUserId && storedUserNickname) {
-        console.log("✅ localStorage에서 사용자 정보 복구!");
+        console.log("localStorage에서 사용자 정보 복구");
         updateUser({
           userId: storedUserId,
           nickname: storedUserNickname
         });
       } else {
-        console.error("❌ 사용자 정보 없음 - 로그인 페이지로 이동");
+        console.error("사용자 정보 없음 - 로그인 페이지로 이동");
         alert("로그인이 필요합니다!");
         navigate("/");
       }
@@ -53,18 +53,18 @@ export default function SurveyPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("🧠 설문 결과:", answers);
+    // console.log("설문 결과:", answers);
 
     try {
-      // ✅ Context에서 사용자 정보 가져오기 (localStorage 불필요)
+      // Context에서 사용자 정보 가져오기 (localStorage 불필요)
       if (!user || !user.userId) {
         alert("로그인이 필요합니다!");
-        console.error("❌ 사용자 정보가 없습니다!");
+        // console.error("사용자 정보가 없습니다!");
         navigate("/");
         return;
       }
 
-      console.log("✅ 사용자 정보:", user);
+      // console.log("사용자 정보:", user);
 
       // 모든 필드가 채워졌는지 확인
       const emptyFields = Object.entries(answers).filter(([key, value]) => !value);
@@ -75,19 +75,19 @@ export default function SurveyPage() {
 
       // 설문조사 데이터 전송
       const surveyData = {
-        userId: user.userId,  // ✅ Context에서 가져온 userId
+        userId: user.userId,  // Context에서 가져온 userId
         ...answers
       };
 
       await submitSurvey(surveyData);
       
-      // ✅ 설문조사 완료 후 hasSurvey 상태 업데이트
+      // 설문조사 완료 후 hasSurvey 상태 업데이트
       updateUser({
         hasSurvey: true
       });
       
       alert("설문이 제출되었습니다! 메인 페이지로 이동합니다.");
-      navigate("/main");  // ✅ 바로 메인 페이지로 이동
+      navigate("/main");  // 바로 메인 페이지로 이동
     } catch (error) {
       console.error("설문 제출 실패:", error);
       alert("설문 제출에 실패했습니다. 다시 시도해주세요.");
@@ -166,10 +166,10 @@ export default function SurveyPage() {
         {/* 8. 예산 */}
         <div className="question">
           <h3>8. 취미 활동에 사용할 수 있는 월 예산은 어느 정도인가요?(*)</h3>
-          <label><input type="radio" name="budget" value="무예산" onChange={(e)=>handleChange("budget", e.target.value)} required /> 무예산 (0원)</label>
-          <label><input type="radio" name="budget" value="저예산" onChange={(e)=>handleChange("budget", e.target.value)} /> 저예산 (~5만원)</label>
-          <label><input type="radio" name="budget" value="중간" onChange={(e)=>handleChange("budget", e.target.value)} /> 중간 (5~15만원)</label>
-          <label><input type="radio" name="budget" value="고예산" onChange={(e)=>handleChange("budget", e.target.value)} /> 고예산 (15만원~)</label>
+          <label><input type="radio" name="budget" value="무예산 (0원)" onChange={(e)=>handleChange("budget", e.target.value)} required /> 무예산 (0원)</label>
+          <label><input type="radio" name="budget" value="저예산 (~5만원)" onChange={(e)=>handleChange("budget", e.target.value)} /> 저예산 (~5만원)</label>
+          <label><input type="radio" name="budget" value="중간 (5~15만원)" onChange={(e)=>handleChange("budget", e.target.value)} /> 중간 (5~15만원)</label>
+          <label><input type="radio" name="budget" value="고예산 (15만원~)" onChange={(e)=>handleChange("budget", e.target.value)} /> 고예산 (15만원~)</label>
           <label><input type="radio" name="budget" value="상관없음" onChange={(e)=>handleChange("budget", e.target.value)} /> 상관없음</label>
         </div>
 

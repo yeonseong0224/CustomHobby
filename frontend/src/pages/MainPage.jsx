@@ -13,7 +13,7 @@ export default function MainPage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔠 취미 → 이미지 매핑
+  // 취미 → 이미지 매핑
   const imageMap = {
     "그림 그리기": "art",
     "캘리그래피": "calligraphy",
@@ -80,7 +80,7 @@ export default function MainPage() {
         if (!data.hasSurvey){
           console.log("설문조사 미완료 - 추천 API 호출 안함");
           setUserData(null); // userData를 null 로 설정하여 추천 API 호출 방지
-          setLoading(flase);
+          setLoading(false);
           return;
         }
 
@@ -141,13 +141,13 @@ export default function MainPage() {
 
         const data = await res.json();
 
-        // 1️⃣ hobbyName 기준 중복 제거
+        // 1️hobbyName 기준 중복 제거
         const uniqueList = data.filter(
           (h, idx, self) =>
             idx === self.findIndex((x) => x.hobbyName === h.hobbyName)
         );
 
-        // 2️⃣ 추천 취미 제외
+        // 2️추천 취미 제외
         const filtered = uniqueList.filter(
           (hobby) =>
             !recommendedHobbies.some(
@@ -156,7 +156,7 @@ export default function MainPage() {
             )
         );
 
-        // 3️⃣ 랜덤 3개 출력
+        // 3️랜덤 3개 출력
         const shuffled = [...filtered].sort(() => Math.random() - 0.5);
         setNewHobbies(shuffled.slice(0, 3));
       } catch (err) {
@@ -246,7 +246,7 @@ export default function MainPage() {
                 </div>
               ))
             ) : (
-              <p className="main-empty">새로운 취미가 없습니다 😢</p>
+              <p className="main-empty">새로운 취미가 없습니다</p>
             )}
           </div>
         </div>

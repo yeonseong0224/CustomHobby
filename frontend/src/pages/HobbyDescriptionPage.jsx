@@ -56,7 +56,7 @@ export default function HobbyDescriptionPage() {
 
         setMergedGroups([officialGroup, ...userGroups]);
       } catch (err) {
-        console.error("❌ 데이터 로드 실패:", err);
+        //console.error("데이터 로드 실패:", err);
         setError("데이터 불러오기 오류");
       }
     };

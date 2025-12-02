@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getHobbyGroup, deleteHobbyGroup } from "../api/hobbyGroupApi";
-import "../styles/MyGroupDetailPage.css"; // ✅ 별도 CSS 파일 분리
+import "../styles/MyGroupDetailPage.css"; // 별도 CSS 파일 분리
 
 export default function MyGroupDetailPage() {
   const { id } = useParams();
@@ -12,7 +12,7 @@ export default function MyGroupDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ 모임 상세 조회
+  // 모임 상세 조회
   useEffect(() => {
     if (!user || !user.userId) {
       alert("로그인이 필요합니다.");
@@ -25,7 +25,7 @@ export default function MyGroupDetailPage() {
         const data = await getHobbyGroup(id);
         setGroup(data);
       } catch (error) {
-        console.error("❌ 모임 조회 실패:", error);
+        //console.error("모임 조회 실패:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -35,28 +35,28 @@ export default function MyGroupDetailPage() {
     fetchGroupDetail();
   }, [id, navigate, user]);
 
-  // ✅ 삭제 기능
+  // 삭제 기능
   const handleDelete = async () => {
     if (window.confirm("정말 이 모임을 삭제하시겠습니까?")) {
       try {
         await deleteHobbyGroup(id);
-        alert("✅ 모임이 삭제되었습니다.");
+        alert("모임이 삭제되었습니다.");
         navigate("/mypage");
       } catch (error) {
-        console.error("❌ 삭제 실패:", error);
+        //console.error("삭제 실패:", error);
         alert("삭제 중 오류가 발생했습니다.");
       }
     }
   };
 
   if (loading) {
-    return <div className="loading">⏳ 모임 정보를 불러오는 중입니다...</div>;
+    return <div className="loading">모임 정보를 불러오는 중입니다...</div>;
   }
 
   if (error) {
     return (
       <div className="error-container">
-        <h2>⚠️ 모임 정보를 불러올 수 없습니다</h2>
+        <h2>모임 정보를 불러올 수 없습니다</h2>
         <p>{error}</p>
         <button className="back-btn" onClick={() => navigate("/mypage")}>
           마이페이지로 돌아가기
@@ -68,7 +68,7 @@ export default function MyGroupDetailPage() {
   if (!group) {
     return (
       <div className="error-container">
-        <h2>❌ 모임 정보를 찾을 수 없습니다</h2>
+        <h2>모임 정보를 찾을 수 없습니다</h2>
         <button className="back-btn" onClick={() => navigate("/mypage")}>
           마이페이지로 돌아가기
         </button>

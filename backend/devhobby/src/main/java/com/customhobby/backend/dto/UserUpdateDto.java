@@ -9,7 +9,7 @@ import lombok.Setter;
 public class UserUpdateDto {
     // userId, password, email은 없음! (수정 불가)
 
-    @Size(max = 20, message = "닉네임은 20자 이하여야 합니다")
+    //@Size(max = 20, message = "닉네임은 20자 이하여야 합니다")
     private String nickname;
 
     @Min(value = 1, message = "나이는 1살 이상이어야 합니다")

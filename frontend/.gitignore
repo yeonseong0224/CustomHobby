@@ -4,6 +4,7 @@ node_modules/
 # build output
 build/
 dist/
+*jar
 
 # environment variables
 .env

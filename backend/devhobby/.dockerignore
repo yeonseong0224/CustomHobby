@@ -39,7 +39,7 @@ nbdist
 
 
 # 따로 추가
-**\*.jar
+#**\*.jar
 
 # flyctl launch added from .idea\.gitignore
 # Default ignored files

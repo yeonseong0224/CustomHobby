@@ -15,10 +15,11 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         // 수정 후
-                        .allowedOrigins(
+                        .allowedOriginPatterns(
                                 "http://localhost:3000",
                                 "https://customhobby-frontend.onrender.com",
-                                "https://customhobby.vercel.app"
+                                "https://customhobby.vercel.app",
+                                "https://*.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")

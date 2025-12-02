@@ -4,9 +4,10 @@
 // ============================================================
 
 import axios from "axios";
+import { API_ENDPOINTS } from './config';
 
 // Spring Boot의 중계 API 주소
-const SPRING_API_URL = "http://localhost:8080/api/recommend";
+const SPRING_API_URL = API_ENDPOINTS.RECOMMEND;
 
 /**
  * 사용자 설문 응답(userData)을 Spring Boot를 통해 Flask로 전송하고

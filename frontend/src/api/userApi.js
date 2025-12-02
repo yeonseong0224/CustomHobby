@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_ENDPOINTS } from './config';
 
-const API_BASE_URL = "http://localhost:8080/api/users"; 
+const API_BASE_URL = API_ENDPOINTS.USERS; 
 
 // 회원가입
 export const registerUser = async (userData) => {

@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_ENDPOINTS } from './config';
 
-const API_BASE_URL = "http://localhost:8080/api/surveys";
+const API_BASE_URL = API_ENDPOINTS.SURVEYS;
 
 // 설문조사 제출
 export const submitSurvey = async (surveyData) => {

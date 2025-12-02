@@ -11,7 +11,7 @@ import java.util.Map;
 public class RecommendationService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String AI_SERVER_URL = "http://localhost:5000/recommend";
+    private static final String AI_SERVER_URL = "https://customhobby.onrender.com/recommend";
 
     public RecommendationResponse getRecommendations(Map<String, String> surveyData) {
         try {

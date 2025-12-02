@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getAllHobbyGroups } from "../api/hobbyGroupApi";
 import "../styles/HobbyDescriptionPage.css";
+import { API_BASE_URL } from "../api/config";
 
 export default function HobbyDescriptionPage() {
   const { id } = useParams();
@@ -18,11 +19,11 @@ export default function HobbyDescriptionPage() {
         let hobbyData;
 
         if (/^\d+$/.test(id)) {
-          const res = await axios.get(`http://localhost:8080/api/hobbies/${id}`);
+          const res = await axios.get(`${API_BASE_URL}/api/hobbies/${id}`);
           hobbyData = res.data;
         } else {
           const res = await axios.get(
-            `http://localhost:8080/api/hobbies/name?hobbyName=${encodeURIComponent(id)}`
+            `${API_BASE_URL}/api/hobbies/name?hobbyName=${encodeURIComponent(id)}`
           );
           hobbyData = Array.isArray(res.data) ? res.data[0] : res.data;
         }

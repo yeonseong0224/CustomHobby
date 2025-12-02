@@ -16,7 +16,7 @@ public class HobbyRecommendController {
 
     @PostMapping
     public ResponseEntity<?> getRecommendations(@RequestBody Map<String, Object> userInput) {
-        String flaskUrl = "http://127.0.0.1:5000/recommend";
+        String flaskUrl = "https://customhobby.onrender.com/recommend";
         try {
             ResponseEntity<Map> response = restTemplate.postForEntity(flaskUrl, userInput, Map.class);
             return ResponseEntity.ok(response.getBody());

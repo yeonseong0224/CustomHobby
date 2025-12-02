@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/HobbyInfoPage.css";
+import { API_BASE_URL } from "../api/config";
 
 export default function HobbyInfoPage() {
   const { id } = useParams(); // URL에서 카테고리 id 받기 (예: art, music 등)
@@ -76,7 +77,7 @@ export default function HobbyInfoPage() {
 
   // DB에서 모든 취미 불러오기
   useEffect(() => {
-    fetch("http://localhost:8080/api/hobbies")
+    fetch(`${API_BASE_URL}/api/hobbies`)
       .then((res) => res.json())
       .then((data) => {
 

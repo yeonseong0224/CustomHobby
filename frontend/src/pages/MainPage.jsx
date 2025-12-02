@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/MainPage.css";
 import { getHobbyRecommendations } from "../api/recommendApi";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../api/config";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ export default function MainPage() {
 
     const fetchUserData = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/users/${user.userId}`);
+        const res = await fetch(`${API_BASE_URL}/api/users/${user.userId}`);
         if (!res.ok) throw new Error("유저 정보 요청 실패");
 
         const data = await res.json();
@@ -136,7 +137,7 @@ export default function MainPage() {
   useEffect(() => {
     const fetchNewHobbies = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/hobbies");
+        const res = await fetch(`${API_BASE_URL}/api/hobbies`);
         if (!res.ok) throw new Error("취미 목록 요청 실패");
 
         const data = await res.json();

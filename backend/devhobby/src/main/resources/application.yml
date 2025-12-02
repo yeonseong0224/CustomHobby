@@ -1,9 +1,12 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL:jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require}
-    username: ${DB_USERNAME:postgres.oelmefqcgjtjcimlwyay}
-    password: ${DB_PASSWORD:1234} # docker 배포 시 환경변수로 주입 필요!! render에서 비번을 넣을듯
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:1234}
+    #url: ${DB_URL:jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require}
+    #username: ${DB_USERNAME:postgres.oelmefqcgjtjcimlwyay}
+    #password: ${DB_PASSWORD:1234} # docker 배포 시 환경변수로 주입 필요!! render에서 비번을 넣을듯
 
     hikari:
       maximum-pool-size: 5
@@ -28,4 +31,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
-  port: 8080
+  port: ${PORT:8080}
+  #port: 8080

@@ -14,7 +14,12 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // React 실행 주소
+                        // 수정 후
+                        .allowedOrigins(
+                                "http://localhost:3000",
+                                "https://customhobby-frontend.onrender.com",
+                                "https://customhobby.vercel.app"
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

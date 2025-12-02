@@ -9,18 +9,18 @@ import lombok.Setter;
 public class UserRegisterDto {
 
     @NotBlank(message = "아이디는 필수입니다")
-    @Size(min = 4, max = 30, message = "아이디는 4~30자 사이여야 합니다")
+    //@Size(min = 4, max = 30, message = "아이디는 4~30자 사이여야 합니다")
     private String userId;
 
     @NotBlank(message = "비밀번호는 필수입니다")
-    @Size(min = 4, max = 100, message = "비밀번호는 4자 이상이어야 합니다")
+    //@Size(min = 4, max = 100, message = "비밀번호는 4자 이상이어야 합니다")
     private String password;
 
     @NotBlank(message = "이메일은 필수입니다")
     private String email;
 
     // 선택 필드
-    @Size(max = 20, message = "닉네임은 20자 이하여야 합니다")
+    //@Size(max = 20, message = "닉네임은 20자 이하여야 합니다")
     private String nickname;
 
     @Min(value = 1, message = "나이는 1살 이상이어야 합니다")

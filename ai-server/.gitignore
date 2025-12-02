@@ -24,9 +24,9 @@ instance/
 # *.csv
 
 # 모델 파일 (용량 큰 파일)
-*.pkl
-*.h5
-*.model
+#*.pkl
+#*.h5
+#*.model
 
 # Jupyter Notebook
 .ipynb_checkpoints/

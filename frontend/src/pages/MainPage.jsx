@@ -61,6 +61,7 @@ export default function MainPage() {
     "배드민턴": "badminton",
     "여행": "travel",
     "볼링": "bowling",
+    "편집": "design",
   };
 
   // (1) 유저 정보 가져오기

@@ -314,8 +314,12 @@ def recommend():
         recs = recommend_hobbies_improved(user_data, min_recommendations=5, max_recommendations=10)
         
         # 결과 파싱
-        hobby_names = [h[0] for h in recs]
-        hobby_probs = [h[1] for h in recs]
+        # DB에 없는 취미 필터링 (이 취미들은 추천에서 제외)
+        excluded_hobbies = {"편집"}
+        filtered_recs = [(h, p) for h, p in recs if h not in excluded_hobbies]
+        
+        hobby_names = [h[0] for h in filtered_recs]
+        hobby_probs = [h[1] for h in filtered_recs]
         hobby_ids = [name_to_id.get(h, 0) for h in hobby_names]
         
         print(f"[추천 결과] {hobby_names[:5]}")  # 상위 5개만 로그
